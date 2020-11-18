@@ -30,8 +30,9 @@
         android:id="@+id/fab_noteeditor_options_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="75dp"
+        android:layout_marginBottom="5dp"
         android:clickable="true"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
         app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
         app:srcCompat="@android:drawable/arrow_down_float" />
@@ -42,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="140dp"
         android:clickable="true"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
         app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
@@ -50,8 +52,9 @@
         android:id="@+id/fab_noteeditor_options_addimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="56dp"
         android:clickable="true"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
         app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
         app:srcCompat="@android:drawable/btn_star" />
@@ -64,7 +67,7 @@
         android:layout_marginStart="332dp"
         android:layout_marginTop="644dp"
         android:clickable="true"
-        android:onClick="fab_noteeditor_options_onClick"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
@@ -91,8 +94,8 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="365dp"
-        android:layout_height="475dp"
+        android:layout_width="178dp"
+        android:layout_height="374dp"
         android:layout_marginTop="150dp"
         android:background="#FF8C00"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -109,8 +112,8 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="364dp"
-        android:layout_height="473dp"
+        android:layout_width="193dp"
+        android:layout_height="429dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/scrollView2"
         app:layout_constraintTop_toTopOf="@+id/scrollView2" />
