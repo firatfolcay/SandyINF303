@@ -1,7 +1,7 @@
 package sandy.android.assistant;
 
 import android.os.Bundle;
-import android.view.*;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +25,8 @@ public class NoteEditorController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
 
+
+
         fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,16 +40,26 @@ public class NoteEditorController extends AppCompatActivity {
     }
 
     private void showFABMenu(){
+        System.out.println("showFABMenu");
         isFABOpen=true;
-        fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
+        System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
+        fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
+        fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
+        /*fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         fab_noteeditor_options_timer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
-        fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));
+        fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));*/
     }
 
     private void closeFABMenu(){
+        System.out.println("showFABMenu");
         isFABOpen=false;
-        fab_noteeditor_options_addimage.animate().translationY(0);
+        /*fab_noteeditor_options_addimage.animate().translationY(0);
         fab_noteeditor_options_timer.animate().translationY(0);
-        fab_noteeditor_options_calendar.animate().translationY(0);
+        fab_noteeditor_options_calendar.animate().translationY(0);*/
+        fab_noteeditor_options_addimage.setVisibility(View.INVISIBLE);
+        fab_noteeditor_options_timer.setVisibility(View.INVISIBLE);
+        fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
     }
+
 }
