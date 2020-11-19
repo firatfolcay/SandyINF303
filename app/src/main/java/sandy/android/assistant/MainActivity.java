@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         button_open_note_editor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.note_editor);
+                //setContentView(R.layout.note_editor);
                 Intent intent = new Intent(getApplicationContext(), NoteEditorController.class);
                 startActivity(intent);
                 //nec.onCreate(savedInstanceState);
