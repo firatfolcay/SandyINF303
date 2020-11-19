@@ -6,30 +6,36 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.*;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class NoteEditorController extends AppCompatActivity {
 
+
     Toolbar toolbar;
     RecyclerView recyclerView;
     View view;
     boolean isFABOpen = false;
-    FloatingActionButton fab_noteeditor_options = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options); //floating action buttons to expand
-    FloatingActionButton fab_noteeditor_options_addimage = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_addimage);
-    FloatingActionButton fab_noteeditor_options_timer = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_timer);
-    FloatingActionButton fab_noteeditor_options_calendar = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_calendar);
+    FloatingActionButton fab_noteeditor_options;
+    FloatingActionButton fab_noteeditor_options_addimage;
+    FloatingActionButton fab_noteeditor_options_timer;
+    FloatingActionButton fab_noteeditor_options_calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
 
-
+        isFABOpen = false;
+        fab_noteeditor_options = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options); //floating action buttons to expand
+        fab_noteeditor_options_addimage = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_addimage);
+        fab_noteeditor_options_timer = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_timer);
+        fab_noteeditor_options_calendar = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_calendar);
 
         fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if(!isFABOpen){
                     showFABMenu();
                 }else{
@@ -52,7 +58,7 @@ public class NoteEditorController extends AppCompatActivity {
     }
 
     private void closeFABMenu(){
-        System.out.println("showFABMenu");
+        System.out.println("closeFABMenu");
         isFABOpen=false;
         /*fab_noteeditor_options_addimage.animate().translationY(0);
         fab_noteeditor_options_timer.animate().translationY(0);
