@@ -85,7 +85,13 @@ public class NoteEditorController extends AppCompatActivity {
             Bitmap bitmap;
             try {
                 bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (0.5 * noteeditor_multiline_text.getWidth()), (int) (0.5 * noteeditor_multiline_text.getHeight()), false);
+                float ratio = bitmap.getWidth() / bitmap.getHeight();
+                int bitmapHeight = (int) (noteeditor_multiline_text.getHeight() * 0.25);
+                int bitmapWidth = (int) (bitmapHeight * ratio);
+                bitmap = Bitmap.createScaledBitmap(bitmap,
+                        bitmapWidth,
+                        bitmapHeight,
+                        false);
 
                 Drawable d = new BitmapDrawable(getResources(), bitmap);
                 addImageInEditText(d);
