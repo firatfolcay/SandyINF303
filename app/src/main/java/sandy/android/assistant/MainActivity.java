@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -21,13 +23,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button_open_note_editor = (Button) findViewById(R.id.button_open_note_editor);
+        FloatingActionButton fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
 
-        button_open_note_editor.setOnClickListener(new View.OnClickListener() {
+        fab_create_new_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.note_editor);
-                Intent intent = new Intent(getApplicationContext(), NoteEditorController.class);
+                //setContentView(R.layout.note_editor);
+                Intent intent = new Intent(getApplicationContext(), NoteEditorController.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorController.java
                 startActivity(intent);
                 //nec.onCreate(savedInstanceState);
 

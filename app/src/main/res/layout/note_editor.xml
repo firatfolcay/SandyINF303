@@ -7,7 +7,7 @@
     android:background="#FFA550">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView_back"
         android:layout_width="46dp"
         android:layout_height="44dp"
         android:layout_marginStart="16dp"
@@ -17,11 +17,11 @@
         app:srcCompat="@android:drawable/btn_dialog" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView_save_note"
         android:layout_width="43dp"
         android:layout_height="38dp"
-        android:layout_marginStart="346dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="352dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/checkbox_on_background" />
@@ -30,7 +30,7 @@
         android:id="@+id/fab_noteeditor_options_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
@@ -38,21 +38,10 @@
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_noteeditor_options_calendar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
-        android:clickable="true"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
-        app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
-        app:srcCompat="@android:drawable/ic_btn_speak_now" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_noteeditor_options_addimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="84dp"
         android:clickable="true"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
@@ -61,61 +50,112 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_noteeditor_options_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="152dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
+        app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
+        app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_noteeditor_options"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginStart="332dp"
-        android:layout_marginTop="644dp"
+        android:layout_marginStart="308dp"
+        android:layout_marginTop="648dp"
         android:clickable="true"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="185dp"
-        android:layout_marginTop="19dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_notification_overlay" />
-
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_edit_font"
         android:layout_width="60dp"
         android:layout_height="46dp"
         android:layout_marginStart="86dp"
         android:layout_marginTop="16dp"
+        android:background="#FAFAFA"
+        android:backgroundTint="#FFFFFF"
         android:text="Aa"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="178dp"
-        android:layout_height="374dp"
-        android:layout_marginTop="150dp"
-        android:background="#FF8C00"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <EditText
+        android:id="@+id/noteeditor_multiline_text"
+        android:layout_width="338dp"
+        android:layout_height="517dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="184dp"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:editable="true"
+        android:ems="10"
+        android:enabled="true"
+        android:gravity="start|top"
+        android:hint="Type here..."
+        android:inputType="textMultiLine"
+        android:saveEnabled="true"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView_colorpicker_black"
+        android:layout_width="36dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="30dp"
+        android:background="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.066">
+        app:srcCompat="@android:drawable/btn_radio" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+    <ImageView
+        android:id="@+id/imageView_colorpicker_red"
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="28dp"
+        android:background="#FF0000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_radio" />
+
+    <EditText
+        android:id="@+id/noteeditor_title_text"
+        android:layout_width="241dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="110dp"
+        android:ems="10"
+        android:hint="Type title here..."
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="193dp"
-        android:layout_height="429dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/scrollView2"
-        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
+        android:id="@+id/textView_remaining_time"
+        android:layout_width="96dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="296dp"
+        android:layout_marginTop="120dp"
+        android:text="3 days to ring"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_db"
+        android:layout_width="59dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="271dp"
+        android:layout_marginTop="13dp"
+        android:text="DB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
