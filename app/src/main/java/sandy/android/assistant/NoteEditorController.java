@@ -91,7 +91,7 @@ public class NoteEditorController extends AppCompatActivity {
         imageView_back = (ImageView) findViewById(R.id.imageView_back);
         imageView_save_note = (ImageView) findViewById(R.id.imageView_save_note);
 
-        fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {      //onClick listener for Noteeditor options floating action button
+        fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {      //onClick listener for NoteEditor options floating action button
             @Override
             public void onClick(View v) {
                 if(!isFABOpen){
@@ -102,7 +102,7 @@ public class NoteEditorController extends AppCompatActivity {
             }
         });
 
-        imageView_back.setOnClickListener(new View.OnClickListener() {      //onClick listener for Noteeditor back button
+        imageView_back.setOnClickListener(new View.OnClickListener() {      //onClick listener for NoteEditor back button
             @Override
             public void onClick(View v) {
                 finish();

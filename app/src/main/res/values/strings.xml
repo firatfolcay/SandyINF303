@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sandy Personal Assistant</string>
+    <string name="noteeditor_title_text">Type title here…</string>
 </resources>
