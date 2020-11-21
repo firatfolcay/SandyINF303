@@ -133,7 +133,7 @@
         android:layout_marginStart="37dp"
         android:layout_marginTop="110dp"
         android:ems="10"
-        android:hint="Type title here..."
+        android:hint="@string/noteeditor_title_text"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
