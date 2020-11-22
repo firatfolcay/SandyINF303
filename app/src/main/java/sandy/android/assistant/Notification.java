@@ -1,4 +1,4 @@
-package main.java.sandy.android.assistant;
+package sandy.android.assistant;
 
 public class Notification {
 }
