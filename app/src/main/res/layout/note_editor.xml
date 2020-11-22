@@ -4,48 +4,110 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFA550">
+    android:background="@color/orange">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_inside"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/noteeditor_title_text"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/noteeditor_title_text"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_remaining_time"
+            android:layout_width="88dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="3 days to ring"
+            android:textAlignment="textStart"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/noteeditor_title_text"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/noteeditor_multiline_text"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="#FFFFFF"
+            android:clickable="true"
+            android:editable="true"
+            android:ems="10"
+            android:enabled="true"
+            android:gravity="start|top"
+            android:hint="Type here..."
+            android:inputType="textMultiLine"
+            android:saveEnabled="true"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noteeditor_title_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/imageView_back"
-        android:layout_width="46dp"
-        android:layout_height="44dp"
+        android:layout_width="@dimen/button_48"
+        android:layout_height="@dimen/button_48"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_dialog" />
 
     <ImageView
         android:id="@+id/imageView_save_note"
-        android:layout_width="43dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="352dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="@dimen/button_48"
+        android:layout_height="@dimen/button_48"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/checkbox_on_background" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_noteeditor_options_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
-        app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
+        app:layout_constraintEnd_toEndOf="@+id/constraint_inside"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_noteeditor_options_addimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="84dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
-        app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
+        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options_timer"
+        app:layout_constraintEnd_toEndOf="@+id/constraint_inside"
         app:srcCompat="@android:drawable/btn_star" />
 
 
@@ -53,109 +115,70 @@
         android:id="@+id/fab_noteeditor_options_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="152dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options"
-        app:layout_constraintStart_toStartOf="@+id/fab_noteeditor_options"
+        app:layout_constraintBottom_toTopOf="@+id/fab_noteeditor_options_addimage"
+        app:layout_constraintEnd_toEndOf="@+id/constraint_inside"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_noteeditor_options"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="308dp"
-        android:layout_marginTop="648dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/constraint_inside"
+        app:layout_constraintEnd_toEndOf="@+id/constraint_inside"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <Button
         android:id="@+id/button_edit_font"
-        android:layout_width="60dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="86dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="@dimen/button_48"
+        android:layout_height="@dimen/button_48"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:background="#FAFAFA"
         android:backgroundTint="#FFFFFF"
         android:text="Aa"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/noteeditor_multiline_text"
-        android:layout_width="338dp"
-        android:layout_height="517dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="184dp"
-        android:background="#FFFFFF"
-        android:clickable="true"
-        android:editable="true"
-        android:ems="10"
-        android:enabled="true"
-        android:gravity="start|top"
-        android:hint="Type here..."
-        android:inputType="textMultiLine"
-        android:saveEnabled="true"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
+        app:layout_constraintStart_toEndOf="@+id/imageView_back" />
 
     <ImageView
         android:id="@+id/imageView_colorpicker_black"
-        android:layout_width="36dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="@dimen/button_32"
+        android:layout_height="@dimen/button_32"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="16dp"
         android:background="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
+        app:layout_constraintStart_toEndOf="@+id/button_edit_font"
         app:srcCompat="@android:drawable/btn_radio" />
 
     <ImageView
         android:id="@+id/imageView_colorpicker_red"
-        android:layout_width="37dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="220dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="@dimen/button_32"
+        android:layout_height="@dimen/button_32"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:background="#FF0000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
+        app:layout_constraintStart_toEndOf="@+id/imageView_colorpicker_black"
         app:srcCompat="@android:drawable/btn_radio" />
-
-    <EditText
-        android:id="@+id/noteeditor_title_text"
-        android:layout_width="241dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="37dp"
-        android:layout_marginTop="110dp"
-        android:ems="10"
-        android:hint="@string/noteeditor_title_text"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView_remaining_time"
-        android:layout_width="96dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="296dp"
-        android:layout_marginTop="120dp"
-        android:text="3 days to ring"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_db"
-        android:layout_width="59dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="271dp"
-        android:layout_marginTop="13dp"
+        android:layout_width="@dimen/button_48"
+        android:layout_height="@dimen/button_48"
+        android:layout_marginBottom="16dp"
         android:text="DB"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/constraint_inside"
+        app:layout_constraintEnd_toStartOf="@+id/imageView_save_note"
+        app:layout_constraintHorizontal_bias="0.67"
+        app:layout_constraintStart_toEndOf="@+id/imageView_colorpicker_red" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
