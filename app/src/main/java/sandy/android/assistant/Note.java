@@ -1,4 +1,4 @@
-package main.java.sandy.android.assistant;
+package sandy.android.assistant;
 
 import java.time.LocalDateTime;
 import java.io.File;
