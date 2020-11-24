@@ -1,5 +1,10 @@
 package sandy.android.assistant;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.time.LocalDateTime;
 import java.io.File;
 
@@ -55,11 +60,13 @@ public class Note {
         this.image = image;
     }
 
-    public LocalDateTime getSaveDate() {
-        return saveDate;
+    public String getSaveDate() {
+        return saveDate.toString();
     }
 
-    public void setSaveDate(LocalDateTime saveDate) {
-        this.saveDate = saveDate;
+    @SuppressLint("NewApi")
+    //min. API Level_26 required for parse function
+    public void setSaveDate(String saveDate) {
+        this.saveDate = LocalDateTime.parse(saveDate.subSequence(0,saveDate.length()));
     }
 }
