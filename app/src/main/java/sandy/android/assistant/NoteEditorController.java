@@ -30,9 +30,11 @@ import android.widget.ImageView;
 import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.*;
 
@@ -48,6 +50,8 @@ public class NoteEditorController extends AppCompatActivity {
     View view;
     DatabaseManagement db;
     boolean isFABOpen = false;
+
+    Drawable d;
 
     Button button_db;
     FloatingActionButton fab_noteeditor_options;
@@ -67,6 +71,7 @@ public class NoteEditorController extends AppCompatActivity {
     int multiline_width;
 
     String htmlstring;
+    Uri targetUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +131,8 @@ public class NoteEditorController extends AppCompatActivity {
         imageView_save_note.setOnClickListener(new View.OnClickListener() {     //onClick listener for save note button in noteeditor.
             @Override
             public void onClick(View v) {
-                SpannableStringBuilder builder = new SpannableStringBuilder(noteeditor_multiline_text.getText());
-                htmlstring = Html.toHtml(builder);
+                /*SpannableStringBuilder builder = new SpannableStringBuilder(noteeditor_multiline_text.getText());
+                htmlstring = Html.toHtml(builder);*/
                 System.out.println("last HTML: " + htmlstring);
                 if (noteeditor_multiline_text.getText().length() < 1) {
                     //todo
@@ -138,14 +143,23 @@ public class NoteEditorController extends AppCompatActivity {
             }
         });
 
-        /*button_db.setOnClickListener(new View.OnClickListener() {       //onClick listener for fetchContent() database test operation
+        button_db.setOnClickListener(new View.OnClickListener() {       //onClick listener for fetchContent() database test operation
             @Override
             public void onClick(View v) {
-                String fromHtml = dbt.fetchContent();
-                System.out.println("fromHTML: " + fromHtml);
-                noteeditor_multiline_text.setText(Html.fromHtml(fromHtml));
+                String fromHtmltostring = dbt.fetchContent();
+
+                System.out.println("fromHTML: " + fromHtmltostring);
+                //noteeditor_multiline_text.setText(Html.fromHtml(fromHtml));
+                noteeditor_multiline_text.setText(Html.fromHtml(fromHtmltostring, new Html.ImageGetter() {
+                    @Override public Drawable getDrawable(String source) {
+                        Drawable drawFromPath = d;
+                        drawFromPath.setBounds(0, 0, drawFromPath.getIntrinsicWidth(),
+                                drawFromPath.getIntrinsicHeight());
+                        return drawFromPath;
+                    }
+                }, null));
             }
-        });*/
+        });
 
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
@@ -163,11 +177,14 @@ public class NoteEditorController extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Uri targetUri = data.getData();
+            targetUri = data.getData();
             //System.out.println("targetUri: " + targetUri.toString());
             Bitmap bitmap;
+            File bitmapfile;
             try {
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));       //fetches bitmap from InputStream
+                //bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));       //fetches bitmap from InputStream
+                //bitmap = BitmapFactory.decodeFile(String.valueOf(getContentResolver().openInputStream(targetUri)));
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), targetUri);
                 float ratio = bitmap.getWidth() / bitmap.getHeight();                                   //aspect ratio function for scaling of bitmap
                 int bitmapHeight = (int) (noteeditor_multiline_text.getHeight() * 0.25);
                 int bitmapWidth = (int) (bitmapHeight * ratio);
@@ -175,12 +192,56 @@ public class NoteEditorController extends AppCompatActivity {
                         bitmapWidth,
                         bitmapHeight,
                         false);
-
-                Drawable d = new BitmapDrawable(getResources(), bitmap);                        //converts bitmap to drawable format and calls addImageInText method
+                d = new BitmapDrawable(getResources(), bitmap);                        //converts bitmap to drawable format and calls addImageInText method
                 addImageInEditText(d);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    private void addImageInEditText(Drawable drawable) {        //method to add selected image from external storage inside Note Editor EditText component
+
+        noteeditor_multiline_text = (EditText) findViewById(R.id.noteeditor_multiline_text);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+        int selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
+        noteeditor_multiline_text.getText().insert(selectionCursorPos, ".");
+        selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
+        SpannableStringBuilder builder = new SpannableStringBuilder(noteeditor_multiline_text.getText());
+        int startPos = selectionCursorPos - ".".length();
+        builder.setSpan(new ImageSpan(drawable), startPos, selectionCursorPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        noteeditor_multiline_text.setText(builder);
+        noteeditor_multiline_text.setSelection(selectionCursorPos);
+        htmlstring = Html.toHtml(builder);
+        System.out.println("html ilk hal : " + htmlstring.toString());
+        String target = targetUri.toString();
+        System.out.println("target : " + target);
+        CharSequence cs1 = "<img src=" + '"' + "null" + '"' + ">";
+        CharSequence cs2 = target;
+        //htmlstring.replace("<img src=" + '"' + "null" + '"' + ">", "<img src=" + '"' + targetUri.toString() + '"' + ">");
+        htmlstring = htmlstring.replace(cs1, cs2);
+        System.out.println("html son hal : " + htmlstring.toString());
+
+    }
+
+    private void deleteImageFromEditText() {         //method to delete selected image from Note Editor EditText component
+        String msgEditText = noteeditor_multiline_text.getText().toString();
+        if (msgEditText.length() > 0) {
+            int selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
+            int endPosition = noteeditor_multiline_text.getText().length();
+
+            if (selectionCursorPos > 0) {
+                int deletingObjectStartPos = selectionCursorPos - 1;
+                noteeditor_multiline_text.getText().delete(deletingObjectStartPos, selectionCursorPos);
+                noteeditor_multiline_text.setSelection(deletingObjectStartPos);
+                //htmlstring = htmlstring -
+            }
+        } else {
+            noteeditor_multiline_text.setText("");
+            //htmlstring = "";
         }
     }
 
@@ -208,36 +269,7 @@ public class NoteEditorController extends AppCompatActivity {
     }
 
 
-    private void addImageInEditText(Drawable drawable) {        //method to add selected image from external storage inside Note Editor EditText component
-        noteeditor_multiline_text = (EditText) findViewById(R.id.noteeditor_multiline_text);
 
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-
-        int selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
-        noteeditor_multiline_text.getText().insert(selectionCursorPos, ".");
-        selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
-        SpannableStringBuilder builder = new SpannableStringBuilder(noteeditor_multiline_text.getText());
-        int startPos = selectionCursorPos - ".".length();
-        builder.setSpan(new ImageSpan(drawable), startPos, selectionCursorPos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        noteeditor_multiline_text.setText(builder);
-        noteeditor_multiline_text.setSelection(selectionCursorPos);
-    }
-
-    private void deleteImageFromEditText() {         //method to delete selected image from Note Editor EditText component
-        String msgEditText = noteeditor_multiline_text.getText().toString();
-        if (msgEditText.length() > 0) {
-            int selectionCursorPos = noteeditor_multiline_text.getSelectionStart();
-            int endPosition = noteeditor_multiline_text.getText().length();
-
-            if (selectionCursorPos > 0) {
-                int deletingObjectStartPos = selectionCursorPos - 1;
-                noteeditor_multiline_text.getText().delete(deletingObjectStartPos, selectionCursorPos);
-                noteeditor_multiline_text.setSelection(deletingObjectStartPos);
-            }
-        } else {
-            noteeditor_multiline_text.setText("");
-        }
-    }
 
 
 }

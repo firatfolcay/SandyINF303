@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.EditText;
 
 import java.util.Vector;
 
@@ -14,6 +15,9 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
     public static final String TEST_TABLE_NAME = "test";
     public static final String TEST_COLUMN_TITLE = "note_title";
     public static final String TEST_COLUMN_CONTENT = "note_content";
+    public static final String TEST_COLUMN_IMAGES = "note_images";
+
+    EditText noteeditor_title_text;
 
     public DatabaseTest(Context context) {        //DatabaseManagement constructor method
         super(context, TEST_DATABASE_NAME, null, 1);
@@ -24,9 +28,9 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
     @Override
     public void onCreate(SQLiteDatabase db) {       //SQLiteOpenHelper class-dependent method to create database tables
 
+        noteeditor_title_text = (EditText) noteeditor_title_text.findViewById(R.id.noteeditor_title_text);
         db.execSQL("CREATE TABLE test " +
                 "(note_title text PRIMARY KEY, note_content text)");
-
     }
 
     @Override
@@ -51,9 +55,11 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
         //return true;
     }
 
-    /*public String fetchContent () {     //method to fetch note data from test database
+    public String fetchContent () {     //method to fetch note data from test database
         String str = null;
-        String arman = "Arman";
+
+        //String title = noteeditor_title_text.toString();
+        String arman = "Denemeee";
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         Cursor res = db.rawQuery("select note_content from test where " + "note_title" + "=?", new String[]{arman});
@@ -63,5 +69,5 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
         }
 
         return str;
-    }*/
+    }
 }
