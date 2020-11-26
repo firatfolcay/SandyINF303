@@ -31,18 +31,28 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
     @Override
     public void onCreate(SQLiteDatabase db) {       //SQLiteOpenHelper class-dependent method to create database tables
-        db.execSQL("create table notes " +
-                "(note_id integer primary key AUTOINCREMENT, note_title text, note_text text, note_savedate text, FOREIGN KEY(note_notification_id) REFERENCES notification(notification_id))");
+        String notes_sql = "create table " + NOTES_TABLE_NAME +
+                " (" + NOTES_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
+                NOTES_COLUMN_TITLE + " text, " +
+                NOTES_COLUMN_TEXT + " text, " +
+                NOTES_COLUMN_SAVEDATE + " text, " +
+                "FOREIGN KEY" + "(" + NOTES_COLUMN_NOTIFICATION_ID + ") " +
+                "REFERENCES " + NOTIFICATIONS_TABLE_NAME + "(" + NOTIFICATIONS_COLUMN_ID + ")" + ")";
+        db.execSQL(notes_sql);
 
-        db.execSQL("create table notifications " +
-                "(notification_id integer primary key AUTOINCREMENT, notification_date text, FOREIGN KEY(notification_note_id) REFERENCES notes(note_id))");
+        String notifications_sql = "create table " + NOTIFICATIONS_TABLE_NAME  +
+                " (" + NOTIFICATIONS_COLUMN_ID + "integer primary key AUTOINCREMENT, " +
+                NOTIFICATIONS_COLUMN_DATE + "text, " +
+                "FOREIGN KEY" + "(" + NOTIFICATIONS_COLUMN_NOTE_ID + ")" +
+                "REFERENCES "+ NOTES_TABLE_NAME + "(" + NOTES_COLUMN_ID + ")" + ")";
+        db.execSQL(notifications_sql);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {      //SQLiteOpenHelper class-dependent method to refresh database tables
-        db.execSQL("DROP TABLE IF EXISTS notes");
-        db.execSQL("DROP TABLE IF EXISTS notifications");
+        db.execSQL("DROP TABLE IF EXISTS " + NOTES_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE_NAME);
         onCreate(db);
     }
 
@@ -50,37 +60,41 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
     /*methods below are for manipulating note data in database*/
 
-    public boolean insertNote (String note_title, String note_text, String note_savedate) {    //method to insert a new note to database
+    public boolean insertNote (Note n) {    //method to insert a new note to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("note_title", note_title);
-        contentValues.put("note_text", note_text);
-        contentValues.put("note_savedate", note_savedate);
+        contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
+        contentValues.put(NOTES_COLUMN_TEXT, n.getText());
+        contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
         db.insert("notes", null, contentValues);
         return true;
     }
 
-    public boolean updateNote (Integer note_id, String note_title, String note_text, String note_savedate) {    //method to update a note from database
+    public boolean updateNote (Note n, Note key) {    //method to update a note from database //key is the note to be updated #serdar
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("note_title", note_title);
-        contentValues.put("note_text", note_text);
-        contentValues.put("note_savedate", note_savedate);
+        contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
+        contentValues.put(NOTES_COLUMN_TEXT, n.getText());
+        contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        db.update("notes", contentValues, "id = ? ", new String[] { Integer.toString(note_id) } );
+        db.update(NOTES_TABLE_NAME,
+                contentValues,
+                "id = ? ",
+                new String[] { Integer.toString(n.getId()) } );
         return true;
     }
 
-    public Integer deleteNote (Integer note_id) {        //method to delete a note from database
+    public Integer deleteNote (Note n) {        //method to delete a note from database
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("notes",
-                "note_id = ? ",
-                new String[] { Integer.toString(note_id) });
+        return db.delete(NOTES_TABLE_NAME,
+                NOTES_COLUMN_ID + " = ? ",
+                new String[] { Integer.toString(n.getId()) });
     }
 
     public Cursor getDataFromNoteID(int note_id) {       //method to fetch note data from given note id from database
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from notes where note_id="+note_id+"", null );
+        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_ID +"= " + note_id,
+                null );
         return res;
     }
 
@@ -94,7 +108,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         ArrayList<String> array_list = new ArrayList<String>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from notes", null );
+        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
         res.moveToFirst();
 
         while(res.isAfterLast() == false){
@@ -108,34 +122,38 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
     /*methods below are for manipulating notification data in database*/
 
-    public boolean insertNotification (String notification_date) {    //method to insert a new notification to database
+    public boolean insertNotification (Notification n) {    //method to insert a new notification to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("notification_title", notification_date);
+        contentValues.put(NOTIFICATIONS_COLUMN_DATE, n.getDate());
 
-        db.insert("notifications", null, contentValues);
+        db.insert(NOTIFICATIONS_TABLE_NAME, null, contentValues);
         return true;
     }
 
-    public boolean updateNotification (Integer notification_id, String notification_date) {    //method to update a notification from database
+    public boolean updateNotification (Notification n, Notification key) {    //method to update a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("date", notification_date);
+        contentValues.put(NOTIFICATIONS_COLUMN_DATE, n.getDate());
 
-        db.update("notifications", contentValues, "notification_id = ? ", new String[] { Integer.toString(notification_id) } );
+        db.update(NOTIFICATIONS_TABLE_NAME,
+                contentValues,
+                NOTIFICATIONS_COLUMN_ID + "= ? ",
+                new String[] { Integer.toString(n.getId()) } );
         return true;
     }
 
-    public Integer deleteNotification (Integer notification_id) {        //method to delete a notification from database
+    public Integer deleteNotification (Notification n) {        //method to delete a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("notifications",
-                "notification_id = ? ",
-                new String[] { Integer.toString(notification_id) });
+        return db.delete(NOTIFICATIONS_TABLE_NAME,
+                NOTIFICATIONS_COLUMN_ID + "= ? ",
+                new String[] { Integer.toString(n.getId()) });
     }
 
     public Cursor getDataFromNotificationID(int notification_id) {       //method to fetch notification data from given notification id from database
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from notifications where notification_id="+notification_id+"", null );
+        Cursor res =  db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID + "=" + notification_id,
+                null );
         return res;
     }
 
