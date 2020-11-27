@@ -1,70 +1,29 @@
 package sandy.android.assistant;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.annotation.SuppressLint;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import java.time.LocalDateTime;
 
-public class Notification extends AppCompatActivity {
+public class Notification {
+    private Integer id;
+    private LocalDateTime date;
 
-
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification);
-        createNotificationChannel();
-
-        ImageView buttonMainActivity = findViewById(R.id.mainActivity);
-        Button denemeNotification = findViewById(R.id.alarmbutton);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channel1")
-                .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
-                .setContentTitle("Alarm Notification")
-                .setContentText("Aga kalk düğüne geç kaldın")
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        buttonMainActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        denemeNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notificationManager.notify(100,builder.build());
-
-            }
-        });
-
-
-
-
-}
-
-
-    private void createNotificationChannel(){
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "denemeChannel";
-            String description="denemek icin kanal";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("ch1",name,importance);
-            channel.setDescription(description);
-        }
+    public Integer getId(){
+        return id;
     }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public String getDate() {
+        return date.toString();
+    }
+
+    @SuppressLint("NewApi")
+    //min. API Level_26 required for parse function
+    public void setDate(String date) {
+        this.date = LocalDateTime.parse(date.subSequence(0,date.length()));
+    }
+
 }
