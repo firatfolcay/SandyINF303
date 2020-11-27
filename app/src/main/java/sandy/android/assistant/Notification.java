@@ -26,5 +26,4 @@ public class Notification {
         this.date = LocalDateTime.parse(date.subSequence(0,date.length()));
     }
 
-
 }
