@@ -5,8 +5,8 @@ import android.annotation.SuppressLint;
 import java.time.LocalDateTime;
 
 public class Notification {
-    private Integer id;
-    private LocalDateTime date;
+    private Integer id = 0;
+    private String date = "";
 
     public Integer getId(){
         return id;
@@ -17,13 +17,12 @@ public class Notification {
     }
 
     public String getDate() {
-        return date.toString();
+        return date;
     }
 
-    @SuppressLint("NewApi")
-    //min. API Level_26 required for parse function
+
     public void setDate(String date) {
-        this.date = LocalDateTime.parse(date.subSequence(0,date.length()));
+        this.date = date;
     }
 
 

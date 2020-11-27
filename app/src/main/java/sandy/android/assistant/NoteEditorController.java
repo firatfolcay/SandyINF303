@@ -36,6 +36,8 @@ import android.widget.Toast;
 import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -87,6 +89,7 @@ public class NoteEditorController extends AppCompatActivity {
         setContentView(R.layout.note_editor);
         editor = (Editor) findViewById(R.id.editor);
         DatabaseTest dbt = new DatabaseTest(this);
+        db = new DatabaseManagement(this);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
         htmlstring = "";
@@ -121,19 +124,28 @@ public class NoteEditorController extends AppCompatActivity {
         imageView_save_note.setOnClickListener(new View.OnClickListener() {     //onClick listener for save note button in noteeditor.
             @Override
             public void onClick(View v) {
-                String content_to_html_string = editor.getContentAsHTML();
-                dbt.insertNote(noteeditor_title_text.getText().toString(), content_to_html_string);
+                String content = editor.getContentAsHTML();
+                String title = noteeditor_title_text.getText().toString();
+                Date currentTime = Calendar.getInstance().getTime();
+                String date = currentTime.toString();
+                //notification & date are null
+                Note n = new Note(title,
+                        content,
+                        null,
+                        date);
+                db.insertNote(n);
+                finish();
             }
         });
 
-        button_db.setOnClickListener(new View.OnClickListener() {       //onClick listener for fetchContent() database test operation
+        /*button_db.setOnClickListener(new View.OnClickListener() {       //onClick listener for fetchContent() database test operation //database test button
             @Override
             public void onClick(View v) {
                 String from_html_to_string = dbt.fetchContent();
                 editor.clearAllContents();
                 editor.render(from_html_to_string);
             }
-        });
+        });*/
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options
             @Override
@@ -192,6 +204,7 @@ public class NoteEditorController extends AppCompatActivity {
         });
 
         findViewById(R.id.action_color).setOnClickListener(new View.OnClickListener() {         //onClick listener for color selection
+            //FIXME this function makes the font red and you can't change it back to black
             @Override
             public void onClick(View v) {
                 editor.updateTextColor("#FF3333");
