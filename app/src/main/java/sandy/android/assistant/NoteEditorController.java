@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -78,6 +79,8 @@ public class NoteEditorController extends AppCompatActivity {
 
     String htmlstring;
 
+    Uri targetUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +130,7 @@ public class NoteEditorController extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String from_html_to_string = dbt.fetchContent();
+                editor.clearAllContents();
                 editor.render(from_html_to_string);
             }
         });
@@ -256,8 +260,7 @@ public class NoteEditorController extends AppCompatActivity {
 
             @Override
             public void onUpload(Bitmap image, String uuid) {
-                //editor.onImageUploadComplete("http://www.videogamesblogger.com/wp-content/uploads/2015/08/metal-gear-solid-5-the-phantom-pain-cheats-640x325.jpg", uuid);
-                editor.onImageUploadComplete("http://google.com.tr", uuid);
+                editor.onImageUploadComplete(targetUri.toString(), uuid);
                 // editor.onImageUploadFailed(uuid);
             }
 
@@ -285,11 +288,24 @@ public class NoteEditorController extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //fetches selected image from media storage and insert into editor
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == editor.PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
-            Uri uri = data.getData();
+            if (Build.VERSION.SDK_INT < 19) {
+                targetUri = data.getData();
+            }
+            else {
+                targetUri = data.getData();
+                final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                try {
+                    getContentResolver().takePersistableUriPermission(targetUri, takeFlags);
+                } catch (SecurityException se) {
+                    se.printStackTrace();
+                }
+            }
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
                 // Log.d(TAG, String.valueOf(bitmap));
                 editor.insertImage(bitmap);
+                String html = editor.getContentAsHTML();
+                System.out.println("html : " + html);
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

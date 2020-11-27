@@ -59,7 +59,7 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
         String str = null;
 
         //String title = noteeditor_title_text.toString();
-        String arman = "Denemeee";
+        String arman = "Denemexyz";
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         Cursor res = db.rawQuery("select note_content from test where " + "note_title" + "=?", new String[]{arman});
