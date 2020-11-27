@@ -1,25 +1,32 @@
 package sandy.android.assistant;
 
+import android.annotation.SuppressLint;
+
 import java.time.LocalDateTime;
 import java.io.File;
 
 public class Note {
-    private String title = "";
-    private Notification notification;
     private int id = 0;
+    private String title = "";
+    private String content = "";
+    private Notification notification;
+    private String saveDate = null;
 
-    //FIXME should these be in a wrapper class for easier management? (something like: private contents List<Element<String>>)
-    private String text = "";
-    private File image;             // an Image class doesn't exist, java.io.File is probably what we need
-
-    // Datetime of when the note was saved
-    private LocalDateTime saveDate = null;  //FIXME LocalDateTime doesn't have a time zone attached, should probably be changed
+    public Note(String title, String content, Notification notification, String date){
+        setTitle(title);
+        this.content = content;
+        this.notification = notification;
+        this.saveDate = date;
+    }
 
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
+        if(title == null){
+            title = "";
+        }
         this.title = title;
     }
 
@@ -39,27 +46,19 @@ public class Note {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
-    }
-
-    public LocalDateTime getSaveDate() {
+    public String getSaveDate() {
         return saveDate;
     }
 
-    public void setSaveDate(LocalDateTime saveDate) {
+    public void setSaveDate(String saveDate) {
         this.saveDate = saveDate;
     }
 }
