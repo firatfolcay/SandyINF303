@@ -2,8 +2,10 @@ package sandy.android.assistant;
 
 import android.annotation.SuppressLint;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Note {
     private int id = 0;
@@ -11,12 +13,21 @@ public class Note {
     private String content = "";
     private Notification notification;
     private String saveDate = null;
+    private ArrayList<Note> notesArrayList = new ArrayList<Note>();
 
     public Note(String title, String content, Notification notification, String date){
         setTitle(title);
         this.content = content;
         this.notification = notification;
         this.saveDate = date;
+    }
+
+    public ArrayList<Note> getNotesArrayList() {
+        return notesArrayList;
+    }
+
+    public void setNotesArrayList(ArrayList<Note> notesArrayList) {
+        this.notesArrayList = notesArrayList;
     }
 
     public String getTitle() {
