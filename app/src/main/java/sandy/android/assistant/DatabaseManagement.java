@@ -108,16 +108,31 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public ArrayList<String> getAllNotes() {        //method to fetch data of all notes from database
-        ArrayList<String> array_list = new ArrayList<String>();
+    public ArrayList<Note> getAllNotes() {        //method to fetch data of all notes from database
+        Notification foundNotification = new Notification();
+        //Note foundNote = null;
+        ArrayList<Note> array_list = new ArrayList<Note>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
-        res.moveToFirst();
+        Cursor resNotes =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
+        resNotes.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)));
-            res.moveToNext();
+        while(resNotes.isAfterLast() == false){
+
+            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+                Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
+                        null );
+                if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
+                    foundNotification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                    foundNotification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+                }
+            }
+            Note foundNote = new Note(resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_TITLE)),
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_CONTENT)),
+                    foundNotification,
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+            array_list.add(foundNote);
+            resNotes.moveToNext();
         }
         return array_list;
     }

@@ -36,6 +36,7 @@ import android.widget.Toast;
 import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -58,7 +59,7 @@ import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorContent;
 import com.github.irshulx.models.EditorTextStyle;
 
-public class NoteEditorController extends AppCompatActivity {
+public class NoteEditorActivity extends AppCompatActivity {
 
 
     Toolbar toolbar;
@@ -66,6 +67,7 @@ public class NoteEditorController extends AppCompatActivity {
     View view;
     DatabaseManagement db;
     boolean isFABOpen = false;
+    ArrayList notesFromDB = new ArrayList();
 
     Editor editor;
     EditText noteeditor_title_text;
@@ -79,6 +81,7 @@ public class NoteEditorController extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
+    RecyclerView listOfNotes;
     String htmlstring;
 
     Uri targetUri;
@@ -88,8 +91,9 @@ public class NoteEditorController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
         editor = (Editor) findViewById(R.id.editor);
-        DatabaseTest dbt = new DatabaseTest(this);
+        //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
+        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
         htmlstring = "";
@@ -134,18 +138,12 @@ public class NoteEditorController extends AppCompatActivity {
                         null,
                         date);
                 db.insertNote(n);
+                notesFromDB = db.getAllNotes();
+                listOfNotes = findViewById(R.id.listOfNotes);
+                listOfNotes.setAdapter(noteAdapter);
                 finish();
             }
         });
-
-        /*button_db.setOnClickListener(new View.OnClickListener() {       //onClick listener for fetchContent() database test operation //database test button
-            @Override
-            public void onClick(View v) {
-                String from_html_to_string = dbt.fetchContent();
-                editor.clearAllContents();
-                editor.render(from_html_to_string);
-            }
-        });*/
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options
             @Override
