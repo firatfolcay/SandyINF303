@@ -88,7 +88,7 @@ public class NoteEditorController extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
         editor = (Editor) findViewById(R.id.editor);
-        DatabaseTest dbt = new DatabaseTest(this);
+//        DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method

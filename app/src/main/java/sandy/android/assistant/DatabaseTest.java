@@ -22,15 +22,15 @@ public class DatabaseTest extends SQLiteOpenHelper {        //this is a test cla
     public DatabaseTest(Context context) {        //DatabaseManagement constructor method
         super(context, TEST_DATABASE_NAME, null, 1);
         //getReadableDatabase();
-        getWritableDatabase();
+        //getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {       //SQLiteOpenHelper class-dependent method to create database tables
 
-        noteeditor_title_text = (EditText) noteeditor_title_text.findViewById(R.id.noteeditor_title_text);
-        db.execSQL("CREATE TABLE test " +
-                "(note_title text PRIMARY KEY, note_content text)");
+        //noteeditor_title_text = (EditText) noteeditor_title_text.findViewById(R.id.noteeditor_title_text);
+       // db.execSQL("CREATE TABLE test " +
+         //       "(note_title text PRIMARY KEY, note_content text)");
     }
 
     @Override
