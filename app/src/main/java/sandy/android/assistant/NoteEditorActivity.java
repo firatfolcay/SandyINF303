@@ -1,32 +1,13 @@
 package sandy.android.assistant;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.SpannedString;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,29 +15,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.*;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.*;
 
+import com.github.irshulx.models.Node;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 
 import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
-import com.github.irshulx.models.EditorContent;
 import com.github.irshulx.models.EditorTextStyle;
 
 public class NoteEditorActivity extends AppCompatActivity {
@@ -81,47 +54,35 @@ public class NoteEditorActivity extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
-    Integer idFromDB;
+
 
     RecyclerView listOfNotes;
-    String htmlstring;
+
 
     Uri targetUri;
 
+    Note editNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //INITIALIZE VARIABLES BEFORE EVERYTHING ELSE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
+
         editor = (Editor) findViewById(R.id.editor);
+
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
+
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
 
-        try {
-            idFromDB = Integer.parseInt(getIntent().getStringExtra("NOTES_FROM_DB_ID"));
-        } catch (NumberFormatException nfe) {
-            idFromDB = null;
-        }
-        String titleFromDB = getIntent().getStringExtra("NOTES_FROM_DB_TITLE");
-        String contentFromDB = getIntent().getStringExtra("NOTES_FROM_DB_CONTENT");
-        String saveDateFromDB = getIntent().getStringExtra("NOTES_FROM_DB_SAVEDATE");
-        String notificationIdFromDB = getIntent().getStringExtra("NOTES_FROM_DB_NOTIFICATION_ID");
-        //System.out.println("titlefromdb : " + titleFromDB);
-        //System.out.println("contentFromDB : " + contentFromDB);
-
-        if (titleFromDB != null) {
-            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
-        }
-        else if (contentFromDB != null) {
-            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
-        }
-
-
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
-        htmlstring = "";
+
         button_db = (Button) findViewById(R.id.button_db);
+
         noteeditor_title_text = (EditText) findViewById(R.id.noteeditor_title_text);
+
         fab_noteeditor_options = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options);      //initialization of attributes that are referenced into note_editor.xml
         fab_noteeditor_options_addimage = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_addimage);
         fab_noteeditor_options_timer = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options_timer);
@@ -129,6 +90,18 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         imageView_back = (ImageView) findViewById(R.id.imageView_back);
         imageView_save_note = (ImageView) findViewById(R.id.imageView_save_note);
+
+        // GET ID FOR NOTE EDITING
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            if(b.get("NOTE_ID") != null){
+                editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
+                //System.out.println("NOTE ID: " + editNote.getId() + "\n");
+                updateEditor(editNote);
+            }
+        }
+
+        // FUNCTIONS
 
         fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {      //onClick listener for NoteEditor options floating action button
             @Override
@@ -151,12 +124,23 @@ public class NoteEditorActivity extends AppCompatActivity {
         imageView_save_note.setOnClickListener(new View.OnClickListener() {     //onClick listener for save note button in noteeditor.
             @Override
             public void onClick(View v) {
-                if (titleFromDB == null && contentFromDB == null) {     //if new Note will be created
+                for(Node item: editor.getContent().nodes){
+                    if(item.content.get(0).toString().isEmpty()){
+                        //System.out.println("STRING IS EMPTY\n");
+                        finish(); // note content input is empty. do not save and return back
+                    }
+                    else{
+                        //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
+                        break; // content is not empty therefore move on.
+                    }
+                }
+
+                if (editNote == null) {     //if new Note will be created
                     String content = editor.getContentAsHTML();
                     String title = noteeditor_title_text.getText().toString();
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
-                    //notification & date are null
+                    //!!! notification null !!!
                     Note n = new Note(title,
                             content,
                             null,
@@ -166,17 +150,16 @@ public class NoteEditorActivity extends AppCompatActivity {
                     listOfNotes = findViewById(R.id.listOfNotes);
                     finish();
                 }
-                else if (titleFromDB != null || contentFromDB != null) {        //if selected Note will be edited
+                else{        //if selected Note will be edited
                     //notification will be implemented here instead of sending null.
-                    Note oldNote = new Note (titleFromDB, contentFromDB, null, saveDateFromDB);
-                    oldNote.setId(idFromDB);
+
                     String content = editor.getContentAsHTML();
                     String title = noteeditor_title_text.getText().toString();
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
 
                     Note newNote = new Note (title, content, null, date);
-                    db.updateNote(newNote, oldNote);
+                    db.updateNote(newNote, editNote);
                     notesFromDB = db.getAllNotes();
                     listOfNotes = findViewById(R.id.listOfNotes);
                     finish();
@@ -327,7 +310,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
             public void onClick(View v) {
-                editor.openImagePicker();
+                //editor.openImagePicker();
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -390,11 +375,12 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
     }
 
-    public void fillNoteEditorFromDB(String title, String Content) {
-        noteeditor_title_text = findViewById(R.id.noteeditor_title_text);
-        noteeditor_title_text.setText(title.toString());
-        editor = findViewById(R.id.editor);
-        editor.render(Content);
+    public void updateEditor(Note n) {
+        //noteeditor_title_text = findViewById(R.id.noteeditor_title_text); // !! already defined !!
+        noteeditor_title_text.setText(n.getTitle());
+
+        //editor = findViewById(R.id.editor); // !! already defined !!
+        editor.render(n.getContent());
     }
 
 

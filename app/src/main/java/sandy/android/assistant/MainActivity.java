@@ -29,40 +29,41 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseManagement db;
-    Toolbar toolbar;
     LinearLayoutManager linearLayoutManager;
-    RecyclerView recyclerView;
     RecyclerView listOfNotes;
-    View view;
-    NoteEditorActivity nec = new NoteEditorActivity();
+    FloatingActionButton fab_create_new_note;
+    ImageView buttonShowNotification;
+    ArrayList<Note> notes;
+    NoteAdapter noteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         db = new DatabaseManagement(this);
 
+        fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
 
-        FloatingActionButton fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
+        buttonShowNotification = findViewById(R.id.showNotification);
 
-        ImageView buttonShowNotification = findViewById(R.id.showNotification);
         listOfNotes = findViewById(R.id.listOfNotes);
-        ArrayList<Note> notesFromDB = new ArrayList<Note>();
-        notesFromDB = db.getAllNotes();
-        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
+
+        notes = db.getAllNotes();
+        noteAdapter = new NoteAdapter(this, notes, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
         linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotes.setLayoutManager(linearLayoutManager);
+
+        // Unused variables ??
         ConstraintLayout mainActivityConstraintLayout = findViewById(R.id.mainActivityConstraintLayout);
-
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
         buttonShowNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 setContentView(R.layout.notification);
                 Intent intent = new Intent(getApplicationContext(),Notification.class);
                 startActivity(intent);
@@ -73,20 +74,19 @@ public class MainActivity extends AppCompatActivity {
         fab_create_new_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
                 startActivity(intent);
-
             }
-
-
         });
-
-
-
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notes = db.getAllNotes();
+        noteAdapter = new NoteAdapter(this, notes, db, this);
+        listOfNotes.setAdapter(noteAdapter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -119,13 +119,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
         startActivity(intent);
     }
-
-
-
-
-
-
-
-
-
-    }
+}

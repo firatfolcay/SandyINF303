@@ -124,21 +124,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
         private void openNote(int position) {
             Note noteToOpen = mNoteList.get(position);
-            ArrayList<Note> allNotesFromDB = db.getAllNotes();
 
-            for (int i = 0; i < allNotesFromDB.size(); i++) {
-                if (noteToOpen.getId() == allNotesFromDB.get(i).getId()){
-                    Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
-                    intent.putExtra("NOTES_FROM_DB_ID", Integer.toString(allNotesFromDB.get(i).getId()));
-                    intent.putExtra("NOTES_FROM_DB_TITLE", allNotesFromDB.get(i).getTitle());
-                    intent.putExtra("NOTES_FROM_DB_CONTENT", allNotesFromDB.get(i).getContent());
-                    intent.putExtra("NOTES_FROM_DB_SAVEDATE", allNotesFromDB.get(i).getSaveDate());
-                    intent.putExtra("NOTES_FROM_DB_NOTIFICATION_ID", allNotesFromDB.get(i).getNotification().getId());
-                    mainActivity.startActivity(intent);
-                }
-                else {
-                    Toast.makeText(activity, "Selected note couldn't be found in DB.", Toast.LENGTH_LONG);
-                }
+            try {
+                db.getNoteFromNoteId(noteToOpen.getId());
+                Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
+                intent.putExtra("NOTE_ID",noteToOpen.getId());
+                mainActivity.startActivity(intent);
+            }
+            catch(Exception e){
+                Toast.makeText(activity, "Selected note couldn't be found in DB.", Toast.LENGTH_LONG);
             }
         }
 

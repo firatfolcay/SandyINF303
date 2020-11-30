@@ -15,7 +15,18 @@ public class Note {
     private String saveDate = null;
     private ArrayList<Note> notesArrayList = new ArrayList<Note>();
 
+    public Note(){
+    }
+
     public Note(String title, String content, Notification notification, String date){
+        setTitle(title);
+        this.content = content;
+        this.notification = notification;
+        this.saveDate = date;
+    }
+
+    public Note(int id, String title, String content, Notification notification, String date){
+        this.id = id;
         setTitle(title);
         this.content = content;
         this.notification = notification;
