@@ -126,8 +126,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
             for (int i = 0; i < allNotesFromDB.size(); i++) {
                 if (noteToOpen.getId() == allNotesFromDB.get(i).getId()){
-                    mainActivity.startNoteEditorActivity();
-                    noteEditorActivity.fillNoteEditorFromDB(allNotesFromDB.get(i).getTitle(), allNotesFromDB.get(i).getContent());
+                    Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
+                    intent.putExtra("NOTES_FROM_DB_TITLE", allNotesFromDB.get(i).getTitle());
+                    intent.putExtra("NOTES_FROM_DB_CONTENT", allNotesFromDB.get(i).getContent());
+                    mainActivity.startActivity(intent);
                 }
                 else {
                     Toast.makeText(activity, "Selected note couldn't be found in DB.", Toast.LENGTH_LONG);

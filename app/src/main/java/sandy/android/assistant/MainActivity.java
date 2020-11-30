@@ -30,7 +30,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     DatabaseManagement db;
     Toolbar toolbar;
+    LinearLayoutManager linearLayoutManager;
     RecyclerView recyclerView;
+    RecyclerView listOfNotes;
     View view;
     NoteEditorActivity nec = new NoteEditorActivity();
 
@@ -44,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
 
         ImageView buttonShowNotification = findViewById(R.id.showNotification);
-        RecyclerView listOfNotes = findViewById(R.id.listOfNotes);
+        listOfNotes = findViewById(R.id.listOfNotes);
         ArrayList<Note> notesFromDB = new ArrayList<Note>();
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
+        linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotes.setLayoutManager(linearLayoutManager);
         ConstraintLayout mainActivityConstraintLayout = findViewById(R.id.mainActivityConstraintLayout);
@@ -95,19 +97,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         switch (id) {
 
             case R.id.linearViewVertical:
-                linearLayoutManager = new LinearLayoutManager(this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(linearLayoutManager);
+                listOfNotes.setLayoutManager(linearLayoutManager);
                 break;
             case R.id.gridView:
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-                recyclerView.setLayoutManager(gridLayoutManager);
+                listOfNotes.setLayoutManager(gridLayoutManager);
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                listOfNotes.setLayoutManager(staggeredGridLayoutManager);
                 break;
 
 

@@ -96,6 +96,19 @@ public class NoteEditorActivity extends AppCompatActivity {
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
 
+        String titleFromDB = getIntent().getStringExtra("NOTES_FROM_DB_TITLE");
+        String contentFromDB = getIntent().getStringExtra("NOTES_FROM_DB_CONTENT");
+        System.out.println("titlefromdb : " + titleFromDB);
+        System.out.println("contentFromDB : " + contentFromDB);
+
+        if (titleFromDB != null) {
+            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
+        }
+        else if (contentFromDB != null) {
+            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
+        }
+
+
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
         htmlstring = "";
         button_db = (Button) findViewById(R.id.button_db);
@@ -352,7 +365,9 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     public void fillNoteEditorFromDB(String title, String Content) {
-        noteeditor_title_text.setText(title);
+        noteeditor_title_text = findViewById(R.id.noteeditor_title_text);
+        noteeditor_title_text.setText(title.toString());
+        editor = findViewById(R.id.editor);
         editor.render(Content);
     }
 
