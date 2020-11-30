@@ -93,7 +93,8 @@ public class NoteEditorActivity extends AppCompatActivity {
         editor = (Editor) findViewById(R.id.editor);
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
-        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB);
+        notesFromDB = db.getAllNotes();
+        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
         htmlstring = "";
@@ -140,7 +141,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                 db.insertNote(n);
                 notesFromDB = db.getAllNotes();
                 listOfNotes = findViewById(R.id.listOfNotes);
-                listOfNotes.setAdapter(noteAdapter);
                 finish();
             }
         });
@@ -298,7 +298,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //fetches selected image from media storage and insert into editor
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == editor.PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+        if (resultCode == Activity.RESULT_OK) {
             if (Build.VERSION.SDK_INT < 19) {
                 targetUri = data.getData();
             }
@@ -349,6 +349,11 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_timer.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
+    }
+
+    public void fillNoteEditorFromDB(String title, String Content) {
+        noteeditor_title_text.setText(title);
+        editor.render(Content);
     }
 
 

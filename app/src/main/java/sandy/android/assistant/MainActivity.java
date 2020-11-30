@@ -6,11 +6,15 @@ import androidx.constraintlayout.solver.state.State;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView listOfNotes = findViewById(R.id.listOfNotes);
         ArrayList<Note> notesFromDB = new ArrayList<Note>();
         notesFromDB = db.getAllNotes();
-        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
+        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         fab_create_new_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +85,40 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main_layout_options, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        switch (id) {
+
+            case R.id.linearViewVertical:
+                linearLayoutManager = new LinearLayoutManager(this);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                break;
+            case R.id.gridView:
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                break;
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void startNoteEditorActivity () {
+        Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
+        startActivity(intent);
+    }
 
 
 
