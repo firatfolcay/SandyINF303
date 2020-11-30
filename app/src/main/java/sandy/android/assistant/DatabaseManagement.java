@@ -84,7 +84,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.update(NOTES_TABLE_NAME,
                 contentValues,
                 "id = ? ",
-                new String[] { Integer.toString(n.getId()) } );
+                new String[] { Integer.toString(key.getId()) } );
         return true;
     }
 

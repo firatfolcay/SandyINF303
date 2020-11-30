@@ -81,6 +81,8 @@ public class NoteEditorActivity extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
+    Integer idFromDB;
+
     RecyclerView listOfNotes;
     String htmlstring;
 
@@ -95,6 +97,26 @@ public class NoteEditorActivity extends AppCompatActivity {
         db = new DatabaseManagement(this);
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
+
+        try {
+            idFromDB = Integer.parseInt(getIntent().getStringExtra("NOTES_FROM_DB_ID"));
+        } catch (NumberFormatException nfe) {
+            idFromDB = null;
+        }
+        String titleFromDB = getIntent().getStringExtra("NOTES_FROM_DB_TITLE");
+        String contentFromDB = getIntent().getStringExtra("NOTES_FROM_DB_CONTENT");
+        String saveDateFromDB = getIntent().getStringExtra("NOTES_FROM_DB_SAVEDATE");
+        String notificationIdFromDB = getIntent().getStringExtra("NOTES_FROM_DB_NOTIFICATION_ID");
+        //System.out.println("titlefromdb : " + titleFromDB);
+        //System.out.println("contentFromDB : " + contentFromDB);
+
+        if (titleFromDB != null) {
+            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
+        }
+        else if (contentFromDB != null) {
+            this.fillNoteEditorFromDB(titleFromDB, contentFromDB);
+        }
+
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
         htmlstring = "";
@@ -129,19 +151,36 @@ public class NoteEditorActivity extends AppCompatActivity {
         imageView_save_note.setOnClickListener(new View.OnClickListener() {     //onClick listener for save note button in noteeditor.
             @Override
             public void onClick(View v) {
-                String content = editor.getContentAsHTML();
-                String title = noteeditor_title_text.getText().toString();
-                Date currentTime = Calendar.getInstance().getTime();
-                String date = currentTime.toString();
-                //notification & date are null
-                Note n = new Note(title,
-                        content,
-                        null,
-                        date);
-                db.insertNote(n);
-                notesFromDB = db.getAllNotes();
-                listOfNotes = findViewById(R.id.listOfNotes);
-                finish();
+                if (titleFromDB == null && contentFromDB == null) {     //if new Note will be created
+                    String content = editor.getContentAsHTML();
+                    String title = noteeditor_title_text.getText().toString();
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String date = currentTime.toString();
+                    //notification & date are null
+                    Note n = new Note(title,
+                            content,
+                            null,
+                            date);
+                    db.insertNote(n);
+                    notesFromDB = db.getAllNotes();
+                    listOfNotes = findViewById(R.id.listOfNotes);
+                    finish();
+                }
+                else if (titleFromDB != null || contentFromDB != null) {        //if selected Note will be edited
+                    //notification will be implemented here instead of sending null.
+                    Note oldNote = new Note (titleFromDB, contentFromDB, null, saveDateFromDB);
+                    oldNote.setId(idFromDB);
+                    String content = editor.getContentAsHTML();
+                    String title = noteeditor_title_text.getText().toString();
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String date = currentTime.toString();
+
+                    Note newNote = new Note (title, content, null, date);
+                    db.updateNote(newNote, oldNote);
+                    notesFromDB = db.getAllNotes();
+                    listOfNotes = findViewById(R.id.listOfNotes);
+                    finish();
+                }
             }
         });
 
@@ -352,7 +391,9 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     public void fillNoteEditorFromDB(String title, String Content) {
-        noteeditor_title_text.setText(title);
+        noteeditor_title_text = findViewById(R.id.noteeditor_title_text);
+        noteeditor_title_text.setText(title.toString());
+        editor = findViewById(R.id.editor);
         editor.render(Content);
     }
 
