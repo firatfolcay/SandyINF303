@@ -10,18 +10,6 @@
     tools:context=".MainActivity">
 
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="24dp"
-        android:background="@color/orange"
-        app:layout_constraintBottom_toTopOf="@+id/listOfNotes"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <ImageButton
         android:id="@+id/showNotification"
         android:layout_width="48dp"
@@ -39,7 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -59,7 +47,6 @@
 
 
     </androidx.recyclerview.widget.RecyclerView>
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
