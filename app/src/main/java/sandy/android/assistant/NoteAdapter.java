@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
@@ -112,8 +113,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             if (returnVal) {
                 mNoteList.remove(position);
                 mNoteList = db.getAllNotes();
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mNoteList.size());
+                notifyRemoved(position);
+                //notifyItemRemoved(position);
+                //notifyItemRangeChanged(position, mNoteList.size());
             }
             else {
                 Toast.makeText(activity, "Note couldn't be deleted.", Toast.LENGTH_LONG);
@@ -127,14 +129,31 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             for (int i = 0; i < allNotesFromDB.size(); i++) {
                 if (noteToOpen.getId() == allNotesFromDB.get(i).getId()){
                     Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
+                    intent.putExtra("NOTES_FROM_DB_ID", Integer.toString(allNotesFromDB.get(i).getId()));
                     intent.putExtra("NOTES_FROM_DB_TITLE", allNotesFromDB.get(i).getTitle());
                     intent.putExtra("NOTES_FROM_DB_CONTENT", allNotesFromDB.get(i).getContent());
+                    intent.putExtra("NOTES_FROM_DB_SAVEDATE", allNotesFromDB.get(i).getSaveDate());
+                    intent.putExtra("NOTES_FROM_DB_NOTIFICATION_ID", allNotesFromDB.get(i).getNotification().getId());
                     mainActivity.startActivity(intent);
                 }
                 else {
                     Toast.makeText(activity, "Selected note couldn't be found in DB.", Toast.LENGTH_LONG);
                 }
             }
+        }
+
+        public void notifyRemoved(int position) {
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, mNoteList.size());
+        }
+
+        public void notifyInserted(int position) {
+            notifyItemInserted(position);
+            notifyItemRangeChanged(position, mNoteList.size());
+        }
+
+        public void notifyChanged() {
+            notifyDataSetChanged();
         }
 
 
