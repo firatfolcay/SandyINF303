@@ -310,7 +310,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
             public void onClick(View v) {
-                editor.openImagePicker();
+                //editor.openImagePicker();
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
+                startActivityForResult(intent, 0);
             }
         });
 
