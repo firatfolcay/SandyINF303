@@ -11,43 +11,42 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManagement class that inherits SQLiteOpenHelper Functions
 
-    public static final String NOTES_DATABASE_NAME = "notes.db";      //defining of note attributes that will be used while fetching and storing note data to database.
+    public static final String DATABASE_NAME = "san.db";      //defining of note attributes that will be used while fetching and storing note data to database.
     public static final String NOTES_TABLE_NAME = "notes";
-    public static final String NOTES_COLUMN_ID = "note_id";
-    public static final String NOTES_COLUMN_TITLE = "note_title";
-    public static final String NOTES_COLUMN_TEXT = "note_text";
-    public static final String NOTES_COLUMN_SAVEDATE = "note_savedate";
-    public static final String NOTES_COLUMN_NOTIFICATION_ID = "note_notification_id";
+    public static final String NOTES_COLUMN_ID = "id";
+    public static final String NOTES_COLUMN_TITLE = "title";
+    public static final String NOTES_COLUMN_CONTENT = "content";
+    public static final String NOTES_COLUMN_SAVEDATE = "savedate";
+    public static final String NOTES_COLUMN_NOTIFICATION_ID = "notification_id";
 
-    public static final String NOTIFICATIONS_DATABASE_NAME = "notifications.db";        //defining of notification attributes that will be used while fetching and storing notification data to database.
-    public static final String NOTIFICATIONS_TABLE_NAME = "notifications";
-    public static final String NOTIFICATIONS_COLUMN_ID = "notification_id";
-    public static final String NOTIFICATIONS_COLUMN_DATE = "notification_date";
+    public static final String NOTIFICATIONS_TABLE_NAME = "notifications"; //defining of notification attributes that will be used while fetching and storing notification data to database.
+    public static final String NOTIFICATIONS_COLUMN_ID = "id";
+    public static final String NOTIFICATIONS_COLUMN_DATE = "date";
     public static final String NOTIFICATIONS_COLUMN_NOTE_ID = "notification_note_id";
 
     public DatabaseManagement(Context context) {        //DatabaseManagement constructor method
-        super(context, NOTES_DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 1);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {       //SQLiteOpenHelper class-dependent method to create database tables
+        String fk = "PRAGMA foreign_keys = 1";
+        db.execSQL(fk);
+
+        String notifications_sql = "create table " + NOTIFICATIONS_TABLE_NAME  +
+                " (" + NOTIFICATIONS_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
+                NOTIFICATIONS_COLUMN_DATE + "text " + ")";
+        db.execSQL(notifications_sql);
+
         String notes_sql = "create table " + NOTES_TABLE_NAME +
                 " (" + NOTES_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
                 NOTES_COLUMN_TITLE + " text, " +
-                NOTES_COLUMN_TEXT + " text, " +
+                NOTES_COLUMN_CONTENT + " text, " +
                 NOTES_COLUMN_SAVEDATE + " text, " +
+                NOTES_COLUMN_NOTIFICATION_ID + " integer, " +
                 "FOREIGN KEY" + "(" + NOTES_COLUMN_NOTIFICATION_ID + ") " +
                 "REFERENCES " + NOTIFICATIONS_TABLE_NAME + "(" + NOTIFICATIONS_COLUMN_ID + ")" + ")";
         db.execSQL(notes_sql);
-
-        String notifications_sql = "create table " + NOTIFICATIONS_TABLE_NAME  +
-                " (" + NOTIFICATIONS_COLUMN_ID + "integer primary key AUTOINCREMENT, " +
-                NOTIFICATIONS_COLUMN_DATE + "text, " +
-                "FOREIGN KEY" + "(" + NOTIFICATIONS_COLUMN_NOTE_ID + ")" +
-                "REFERENCES "+ NOTES_TABLE_NAME + "(" + NOTES_COLUMN_ID + ")" + ")";
-        db.execSQL(notifications_sql);
-
     }
 
     @Override
@@ -65,9 +64,13 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
-        contentValues.put(NOTES_COLUMN_TEXT, n.getText());
+        contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
-        db.insert("notes", null, contentValues);
+
+        if(n.getNotification() != null)
+            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, n.getNotification().getId());
+
+        db.insert(NOTES_TABLE_NAME, null, contentValues);
         return true;
     }
 
@@ -75,7 +78,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
-        contentValues.put(NOTES_COLUMN_TEXT, n.getText());
+        contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
         db.update(NOTES_TABLE_NAME,
@@ -85,11 +88,18 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Integer deleteNote (Note n) {        //method to delete a note from database
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(NOTES_TABLE_NAME,
-                NOTES_COLUMN_ID + " = ? ",
-                new String[] { Integer.toString(n.getId()) });
+    public Boolean deleteNote (Note n) {        //method to delete a note from database
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(NOTES_TABLE_NAME,
+                    NOTES_COLUMN_ID + " = ? ",
+                    new String[] { Integer.toString(n.getId()) });
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     public Cursor getDataFromNoteID(int note_id) {       //method to fetch note data from given note id from database
@@ -105,16 +115,32 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public ArrayList<String> getAllNotes() {        //method to fetch data of all notes from database
-        ArrayList<String> array_list = new ArrayList<String>();
+    public ArrayList<Note> getAllNotes() {        //method to fetch data of all notes from database
+        Notification foundNotification = new Notification();
+        //Note foundNote = null;
+        ArrayList<Note> array_list = new ArrayList<Note>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
-        res.moveToFirst();
+        Cursor resNotes =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
+        resNotes.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)));
-            res.moveToNext();
+        while(resNotes.isAfterLast() == false){
+
+            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+                Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
+                        null );
+                if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
+                    foundNotification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                    foundNotification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+                }
+            }
+            Note foundNote = new Note(resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_TITLE)),
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_CONTENT)),
+                    foundNotification,
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+            foundNote.setId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID)));
+            array_list.add(foundNote);
+            resNotes.moveToNext();
         }
         return array_list;
     }

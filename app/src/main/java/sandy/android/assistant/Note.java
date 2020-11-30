@@ -1,30 +1,43 @@
 package sandy.android.assistant;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
-
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Note {
-    private String title = "";
-    private Notification notification;
     private int id = 0;
+    private String title = "";
+    private String content = "";
+    private Notification notification;
+    private String saveDate = null;
+    private ArrayList<Note> notesArrayList = new ArrayList<Note>();
 
-    //FIXME should these be in a wrapper class for easier management? (something like: private contents List<Element<String>>)
-    private String text = "";
-    private File image;             // an Image class doesn't exist, java.io.File is probably what we need
+    public Note(String title, String content, Notification notification, String date){
+        setTitle(title);
+        this.content = content;
+        this.notification = notification;
+        this.saveDate = date;
+    }
 
-    // Datetime of when the note was saved
-    private LocalDateTime saveDate = null;  //FIXME LocalDateTime doesn't have a time zone attached, should probably be changed
+    public ArrayList<Note> getNotesArrayList() {
+        return notesArrayList;
+    }
+
+    public void setNotesArrayList(ArrayList<Note> notesArrayList) {
+        this.notesArrayList = notesArrayList;
+    }
 
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
+        if(title == null){
+            title = "";
+        }
         this.title = title;
     }
 
@@ -44,29 +57,19 @@ public class Note {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getSaveDate() {
-        return saveDate.toString();
+        return saveDate;
     }
 
-    @SuppressLint("NewApi")
-    //min. API Level_26 required for parse function
     public void setSaveDate(String saveDate) {
-        this.saveDate = LocalDateTime.parse(saveDate.subSequence(0,saveDate.length()));
+        this.saveDate = saveDate;
     }
 }

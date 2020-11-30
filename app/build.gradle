@@ -31,7 +31,6 @@ android {
 dependencies {
 
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
-    implementation group: 'com.google.android.material', name: 'material', version: '1.1.0-alpha05'
     implementation 'com.github.irshulx:laser-native-editor:3.0.3'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
