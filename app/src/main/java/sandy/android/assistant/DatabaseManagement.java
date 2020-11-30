@@ -84,22 +84,47 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.update(NOTES_TABLE_NAME,
                 contentValues,
                 "id = ? ",
-                new String[] { Integer.toString(n.getId()) } );
+                new String[] { Integer.toString(key.getId()) } );
         return true;
     }
 
-    public Integer deleteNote (Note n) {        //method to delete a note from database
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(NOTES_TABLE_NAME,
-                NOTES_COLUMN_ID + " = ? ",
-                new String[] { Integer.toString(n.getId()) });
+    public Boolean deleteNote (Note n) {        //method to delete a note from database
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(NOTES_TABLE_NAME,
+                    NOTES_COLUMN_ID + " = ? ",
+                    new String[] { Integer.toString(n.getId()) });
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
-    public Cursor getDataFromNoteID(int note_id) {       //method to fetch note data from given note id from database
+    public Note getNoteFromNoteId(int note_id) {       //method to fetch note data from given note id from database
         SQLiteDatabase db = this.getReadableDatabase();
+        Notification notification = new Notification();
+
         Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_ID +"= " + note_id,
                 null );
-        return res;
+        res.moveToFirst();
+
+        if (res.getString(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+            Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
+                    null );
+            resNotifications.moveToFirst();
+            if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
+                notification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                notification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+            }
+        }
+
+        return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
+                res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)),
+                res.getString(res.getColumnIndex(NOTES_COLUMN_CONTENT)),
+                notification,
+                res.getString(res.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
     }
 
     public int getNoteCount(){      //method to fetch number of notes that exist in database
@@ -108,16 +133,33 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public ArrayList<String> getAllNotes() {        //method to fetch data of all notes from database
-        ArrayList<String> array_list = new ArrayList<String>();
+    public ArrayList<Note> getAllNotes() {        //method to fetch data of all notes from database
+        Notification foundNotification = new Notification();
+        //Note foundNote = null;
+        ArrayList<Note> array_list = new ArrayList<Note>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
-        res.moveToFirst();
+        Cursor resNotes =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
+        resNotes.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)));
-            res.moveToNext();
+        while(resNotes.isAfterLast() == false){
+            // gets the notification if the note has one
+            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+                Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
+                        null );
+                if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
+                    foundNotification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                    foundNotification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+                }
+            }
+            // creates and adds note to the array to be returned
+            Note foundNote = new Note(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID)),
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_TITLE)),
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_CONTENT)),
+                    foundNotification,
+                    resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+            array_list.add(foundNote);
+            resNotes.moveToNext();
         }
         return array_list;
     }
