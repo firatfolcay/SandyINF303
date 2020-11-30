@@ -88,11 +88,18 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Integer deleteNote (Note n) {        //method to delete a note from database
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(NOTES_TABLE_NAME,
-                NOTES_COLUMN_ID + " = ? ",
-                new String[] { Integer.toString(n.getId()) });
+    public Boolean deleteNote (Note n) {        //method to delete a note from database
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(NOTES_TABLE_NAME,
+                    NOTES_COLUMN_ID + " = ? ",
+                    new String[] { Integer.toString(n.getId()) });
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     public Cursor getDataFromNoteID(int note_id) {       //method to fetch note data from given note id from database
@@ -131,6 +138,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                     resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_CONTENT)),
                     foundNotification,
                     resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+            foundNote.setId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID)));
             array_list.add(foundNote);
             resNotes.moveToNext();
         }
