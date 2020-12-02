@@ -28,6 +28,7 @@ public class NotificationController extends AppCompatActivity {
 
         ImageView buttonMainActivity = findViewById(R.id.mainActivity);
         Button denemeNotification = findViewById(R.id.alarmbutton);
+        Button buttonNotificationEditor = (Button) findViewById(R.id.notificationEditorButton);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channel1")
                 .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
                 .setContentTitle("Alarm Notification")
@@ -43,6 +44,15 @@ public class NotificationController extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        buttonNotificationEditor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),NotificationEditorActivity.class);
+                startActivity(intent);
+            }
+        });
+
         denemeNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
