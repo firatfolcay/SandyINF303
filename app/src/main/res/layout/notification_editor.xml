@@ -28,8 +28,8 @@
 
     <TextView
         android:id="@+id/datePickertextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="114dp"
+        android:layout_height="39dp"
         android:layout_marginBottom="24dp"
         android:text="Date"
         app:layout_constraintBottom_toTopOf="@+id/datePickerButton"
@@ -48,8 +48,8 @@
 
     <TextView
         android:id="@+id/timePickertextView"
-        android:layout_width="42dp"
-        android:layout_height="22dp"
+        android:layout_width="134dp"
+        android:layout_height="65dp"
         android:layout_marginBottom="64dp"
         android:text="Time"
         app:layout_constraintBottom_toTopOf="@+id/timePickerButton"
