@@ -54,10 +54,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
-
-
     RecyclerView listOfNotes;
-
 
     Uri targetUri;
 
@@ -128,6 +125,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                     if(item.content.get(0).toString().isEmpty()){
                         //System.out.println("STRING IS EMPTY\n");
                         finish(); // note content input is empty. do not save and return back
+                        return;
                     }
                     else{
                         //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
@@ -146,9 +144,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                             null,
                             date);
                     db.insertNote(n);
-                    notesFromDB = db.getAllNotes();
-                    listOfNotes = findViewById(R.id.listOfNotes);
-                    finish();
                 }
                 else{        //if selected Note will be edited
                     //notification will be implemented here instead of sending null.
@@ -160,10 +155,13 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                     Note newNote = new Note (title, content, null, date);
                     db.updateNote(newNote, editNote);
-                    notesFromDB = db.getAllNotes();
-                    listOfNotes = findViewById(R.id.listOfNotes);
-                    finish();
                 }
+
+                notesFromDB = db.getAllNotes();
+                listOfNotes = findViewById(R.id.listOfNotes);
+                finish();
+
+                return;
             }
         });
 
@@ -317,6 +315,13 @@ public class NoteEditorActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        editNote = null;
+        System.out.println(this.getClass().getName() + " ON STOP FUNCTION");
     }
 
     @Override
