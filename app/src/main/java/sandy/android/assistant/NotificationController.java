@@ -30,7 +30,6 @@ public class NotificationController extends AppCompatActivity {
         Button denemeNotification = findViewById(R.id.alarmbutton);
         Button buttonNotificationEditor = (Button) findViewById(R.id.notificationEditorButton);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channel1")
-                .setSmallIcon(R.drawable.ic_baseline_access_alarm_24)
                 .setContentTitle("Alarm Notification")
                 .setContentText("Aga kalk düğüne geç kaldın")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
