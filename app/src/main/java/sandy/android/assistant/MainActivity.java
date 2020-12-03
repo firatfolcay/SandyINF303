@@ -24,6 +24,7 @@ import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 
@@ -49,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         listOfNotes = findViewById(R.id.listOfNotes);
 
-        notes = db.getAllNotes();
+        try {
+            notes = db.getAllNotes();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         noteAdapter = new NoteAdapter(this, notes, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
@@ -83,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        notes = db.getAllNotes();
+        try {
+            notes = db.getAllNotes();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         noteAdapter = new NoteAdapter(this, notes, db, this);
         listOfNotes.setAdapter(noteAdapter);
     }

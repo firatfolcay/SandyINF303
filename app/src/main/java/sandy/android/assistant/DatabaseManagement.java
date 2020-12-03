@@ -1,5 +1,6 @@
 package sandy.android.assistant;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
@@ -102,7 +103,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Note getNoteFromNoteId(int note_id) {       //method to fetch note data from given note id from database
+    public Note getNoteFromNoteId(int note_id) throws ParseException {       //method to fetch note data from given note id from database
         SQLiteDatabase db = this.getReadableDatabase();
         Notification notification = new Notification();
 
@@ -133,7 +134,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public ArrayList<Note> getAllNotes() {        //method to fetch data of all notes from database
+    public ArrayList<Note> getAllNotes() throws ParseException {        //method to fetch data of all notes from database
         Notification foundNotification = new Notification();
         //Note foundNote = null;
         ArrayList<Note> array_list = new ArrayList<Note>();
