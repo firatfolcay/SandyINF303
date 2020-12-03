@@ -23,6 +23,7 @@ public class Notification {
     @SuppressLint("NewApi")
     //min. API Level_26 required for parse function
     public void setDate(String date) {
+
         this.date = LocalDateTime.parse(date.subSequence(0,date.length()));
     }
 
