@@ -25,12 +25,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener {
+public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     Notification notification = new Notification();
+    DatabaseManagement db;
 
-
-
-    String date,time;
+    String date, time;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +39,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
         Button timePickerButton = (Button) findViewById(R.id.timePickerButton);
         Button saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
+        db = new DatabaseManagement(this);
 
 
 
@@ -56,7 +56,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(date[3]));
                 calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
                 calendar.set(Calendar.SECOND,0);*/
-                String currentDateString = date+"T"+time+":00"+"Z";     //I use this format because others did not work
+                String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
 
 
                 try {
@@ -65,8 +65,13 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     e.printStackTrace();
                 }
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(intent);
+
+                System.out.println(notification.getDate());
+                db.insertNotification(notification);
+                System.out.println(db.getLastAddedNotificationId());
+
+                NotificationEditorActivity.this.onBackPressed();
+
 
                 //notification.setDate(""+a);
                 //notification.setDate(String.valueOf(calendar.getTime()));
@@ -78,7 +83,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(),"time picker");
+                timePicker.show(getSupportFragmentManager(), "time picker");
 
             }
         });
@@ -87,7 +92,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(),"date picker");
+                datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
 
@@ -95,7 +100,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {           //cancel button
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -104,15 +109,15 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) { //choosing date
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,year);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
 
-        TextView datePickertextView = (TextView)findViewById(R.id.datePickertextView);
+        TextView datePickertextView = (TextView) findViewById(R.id.datePickertextView);
         datePickertextView.setText(currentDateString);
-        date=year+"-"+month+"-"+dayOfMonth;
+        date = year + "-" + month + "-" + dayOfMonth;
 
     }
 
@@ -120,9 +125,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) { // choosing time
         TextView textView = (TextView) findViewById(R.id.timePickertextView);
 
-        textView.setText("Hour: "+hourOfDay+" Minute: "+minute);
-        time = hourOfDay+":"+minute;
-
+        textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+        time = hourOfDay + ":" + minute;
 
 
     }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class Notification {
     private Integer id=0;
-    private Date date=null;
+    private Date date=new Date(1999,9,7);
 
     public Integer getId(){
         return id;

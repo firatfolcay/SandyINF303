@@ -45,6 +45,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     Editor editor;
     EditText noteeditor_title_text;
+    Notification notification;
 
     Button button_db;
     FloatingActionButton fab_noteeditor_options;
@@ -105,6 +106,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
                 //System.out.println("NOTE ID: " + editNote.getId() + "\n");
                 updateEditor(editNote);
             }
@@ -171,7 +173,12 @@ public class NoteEditorActivity extends AppCompatActivity {
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
 
-                    Note newNote = new Note (title, content, null, date);
+                    Note newNote = null;
+                    try {
+                        newNote = new Note(title, content, db.getDataFromNotificationID(db.getLastAddedNotificationId()), date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     db.updateNote(newNote, editNote);
                     try {
                         notesFromDB = db.getAllNotes();
