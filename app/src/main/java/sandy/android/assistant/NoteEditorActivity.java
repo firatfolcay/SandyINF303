@@ -35,6 +35,8 @@ import com.github.irshulx.models.EditorTextStyle;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
+    private static final int REQUEST_IMAGE = 0;
+    private static final int REQUEST_NOTIFICATION = 1;
 
     Toolbar toolbar;
     RecyclerView recyclerView;
@@ -45,7 +47,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     Editor editor;
     EditText noteeditor_title_text;
-    Notification notification;
 
     Button button_db;
     FloatingActionButton fab_noteeditor_options;
@@ -56,14 +57,12 @@ public class NoteEditorActivity extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
-
-
     RecyclerView listOfNotes;
-
 
     Uri targetUri;
 
     Note editNote;
+    Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +72,13 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         editor = (Editor) findViewById(R.id.editor);
 
+        notification = new Notification();
+
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
 
-        try {
-            notesFromDB = db.getAllNotes();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
@@ -101,12 +99,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b != null){
             if(b.get("NOTE_ID") != null){
-                try {
-                    editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
+                editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
                 //System.out.println("NOTE ID: " + editNote.getId() + "\n");
                 updateEditor(editNote);
             }
@@ -139,6 +132,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                     if(item.content.get(0).toString().isEmpty()){
                         //System.out.println("STRING IS EMPTY\n");
                         finish(); // note content input is empty. do not save and return back
+                        return; // without return, the function will keep on.
                     }
                     else{
                         //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
@@ -146,48 +140,39 @@ public class NoteEditorActivity extends AppCompatActivity {
                     }
                 }
 
+                if(notification.getDate().isEmpty())
+                    notification = null; //set it to null if it doesn't have a date otherwise an empty notification would be added into the database
+
                 if (editNote == null) {     //if new Note will be created
                     String content = editor.getContentAsHTML();
                     String title = noteeditor_title_text.getText().toString();
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
-                    //!!! notification null !!!
+
                     Note n = new Note(title,
                             content,
-                            null,
+                            notification,
                             date);
+
                     db.insertNote(n);
-                    try {
-                        notesFromDB = db.getAllNotes();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    listOfNotes = findViewById(R.id.listOfNotes);
-                    finish();
                 }
                 else{        //if selected Note will be edited
-                    //notification will be implemented here instead of sending null.
-
                     String content = editor.getContentAsHTML();
                     String title = noteeditor_title_text.getText().toString();
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
 
-                    Note newNote = null;
-                    try {
-                        newNote = new Note(title, content, db.getDataFromNotificationID(db.getLastAddedNotificationId()), date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    Note newNote = new Note(title,
+                            content,
+                            notification,
+                            date);
+
                     db.updateNote(newNote, editNote);
-                    try {
-                        notesFromDB = db.getAllNotes();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    listOfNotes = findViewById(R.id.listOfNotes);
-                    finish();
                 }
+
+                notesFromDB = db.getAllNotes();
+                listOfNotes = findViewById(R.id.listOfNotes);
+                finish();
             }
         });
 
@@ -274,7 +259,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -283,7 +268,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -329,59 +314,79 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         });
 
-        editor.render();
-
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
         fab_noteeditor_options_timer.setOnClickListener(new View.OnClickListener() {        //onClick Listener for notification timer
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),NotificationEditorActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), NotificationEditorActivity.class);
 
+                if(editNote != null)    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
+                    if(editNote.getNotification() != null)
+                        intent.putExtra("NOTIFICATION_ID", editNote.getNotification().getId());
+
+                startActivityForResult(intent, REQUEST_NOTIFICATION);
             }
         });
 
-
+        editor.render(); //what is this doing here ? #serdar
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //fetches selected image from media storage and insert into editor
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (Build.VERSION.SDK_INT < 19) {
-                targetUri = data.getData();
-            }
-            else {
-                targetUri = data.getData();
-                final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                try {
-                    getContentResolver().takePersistableUriPermission(targetUri, takeFlags);
-                } catch (SecurityException se) {
-                    se.printStackTrace();
+
+        switch(requestCode) {
+            case REQUEST_IMAGE:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        if (Build.VERSION.SDK_INT < 19) {
+                            targetUri = data.getData();
+                        } else {
+                            targetUri = data.getData();
+                            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            try {
+                                getContentResolver().takePersistableUriPermission(targetUri, takeFlags);
+                            } catch (SecurityException se) {
+                                se.printStackTrace();
+                            }
+                        }
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
+                            // Log.d(TAG, String.valueOf(bitmap));
+                            editor.insertImage(bitmap);
+                            String html = editor.getContentAsHTML();
+                            System.out.println("html : " + html);
+                        } catch (IOException e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        break;
                 }
-            }
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                editor.insertImage(bitmap);
-                String html = editor.getContentAsHTML();
-                System.out.println("html : " + html);
-            } catch (IOException e) {
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            //Write your code if there's no result
-            Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-            // editor.RestoreState();
+                break;
+
+            case REQUEST_NOTIFICATION:
+                switch(resultCode){
+                    case Activity.RESULT_OK:
+                        //gets back data from NotificationEditorActivity
+                        notification.setDate(data.getStringExtra("NOTIFICATION_DATE"));
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        break;
+                }
+                break;
         }
     }
 

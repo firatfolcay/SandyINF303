@@ -9,8 +9,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Notification {
-    private Integer id=0;
-    private Date date=new Date(1999,9,7);
+    private int id; //this one better not have any default value; if it must, define it -1 or something negative
+    private Date date;
+
+    public Notification(){
+        date = new Date();
+    }
 
     public Integer getId(){
         return id;
@@ -26,10 +30,12 @@ public class Notification {
 
     @SuppressLint("NewApi")
     //min. API Level_26 required for parse function
-    public void setDate(String date) throws ParseException {
+    public void setDate(String date){
 
         //date = "2020-12-3T09:27:37Z";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //dont ask
+
+        //if the exception is handled here then there is no need for "throws" statement
         try {
             this.date = format.parse(date);
 
