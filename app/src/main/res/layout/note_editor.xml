@@ -35,6 +35,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="?attr/actionBarSize"
@@ -47,7 +48,7 @@
                 android:id="@+id/fab_noteeditor_options_calendar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignBottom="@+id/fab_noteeditor_options"
+                android:layout_alignBottom="@+id/fab_noteeditor_options_addimage"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options_addimage"
@@ -83,10 +84,10 @@
                 android:id="@+id/fab_noteeditor_options"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_above="@+id/tools"
+                android:layout_alignBottom="@id/tools"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="6dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="50dp"
                 android:clickable="true"
                 android:textAlignment="center"
                 android:visibility="visible"
@@ -97,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="-54dp"
+                android:layout_marginTop="-27dp"
                 android:layout_marginBottom="40dp"
                 android:scrollbars="vertical">
 
@@ -106,9 +107,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="20dp"
-                    android:paddingBottom="100dp"
+                    android:paddingBottom="150dp"
                     app:placeholder="Start writing here..."
                     app:render_type="Editor">
 
@@ -143,7 +144,6 @@
         android:layout_width="46dp"
         android:layout_height="51dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="14dp"
         app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_close_white_48dp" />
@@ -153,7 +153,6 @@
         android:layout_width="40dp"
         android:layout_height="41dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="18dp"
         app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/tick" />
@@ -165,7 +164,6 @@
         android:layout_width="51dp"
         android:layout_height="56dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="14dp"
         android:drawableBottom="@drawable/download_down"
         app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintEnd_toStartOf="@+id/imageView_save_note" />
