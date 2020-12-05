@@ -143,8 +143,8 @@
         android:layout_width="46dp"
         android:layout_height="51dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="570dp"
-        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout2"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_close_white_48dp" />
 
@@ -153,8 +153,8 @@
         android:layout_width="40dp"
         android:layout_height="41dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="580dp"
-        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout2"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/tick" />
 
@@ -165,9 +165,9 @@
         android:layout_width="51dp"
         android:layout_height="56dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="570dp"
+        android:layout_marginBottom="14dp"
         android:drawableBottom="@drawable/download_down"
-        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
         app:layout_constraintEnd_toStartOf="@+id/imageView_save_note" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
