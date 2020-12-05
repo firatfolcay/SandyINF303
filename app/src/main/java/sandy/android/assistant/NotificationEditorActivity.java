@@ -25,11 +25,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener {
+public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     Notification notification = new Notification();
+    DatabaseManagement db;
 
-
-    String date,time;
+    String date, time;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,34 +39,51 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
         Button timePickerButton = (Button) findViewById(R.id.timePickerButton);
         Button saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
+        db = new DatabaseManagement(this);
 
 
 
         saveNotificationButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onClick(View v) {//first get all date infos from other classes
-                String[] dates = date.split("-");
-                String[] times = time.split("-");
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR,Integer.parseInt(dates[0]));
-                calendar.set(Calendar.MONTH,Integer.parseInt(dates[1]));
-                calendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(dates[2]));
-                calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(times[0]));
-                calendar.set(Calendar.MINUTE,Integer.parseInt(times[1]));
-                calendar.set(Calendar.SECOND,0);
-                System.out.println(calendar.getTime());
-                //LocalDateTime a = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId());
+            public void onClick(View v) {                               //save button
+                //String dates = date+"-"+time;
+                //String[] date = dates.split("-");
+                /*Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR,Integer.parseInt(date[0]));
+                calendar.set(Calendar.MONTH,Integer.parseInt(date[1]));
+                calendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date[2]));
+                calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(date[3]));
+                calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
+                calendar.set(Calendar.SECOND,0);*/
+                String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
+
+
+                try {
+                    notification.setDate(currentDateString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+                System.out.println(notification.getDate());
+                db.insertNotification(notification);
+                System.out.println(db.getLastAddedNotificationId());
+
+                NotificationEditorActivity.this.onBackPressed();
+
+
                 //notification.setDate(""+a);
                 //notification.setDate(String.valueOf(calendar.getTime()));
 
             }
+
         });
         timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(),"time picker");
+                timePicker.show(getSupportFragmentManager(), "time picker");
 
             }
         });
@@ -75,39 +92,41 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(),"date picker");
+                datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
 
         buttonMainActivity.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {           //cancel button
 
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
         });
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) { //choosing date
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,year);
-        calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
 
-        TextView datePickertextView = (TextView)findViewById(R.id.datePickertextView);
+        TextView datePickertextView = (TextView) findViewById(R.id.datePickertextView);
         datePickertextView.setText(currentDateString);
-        date = year+"-"+month+"-"+dayOfMonth;
+        date = year + "-" + month + "-" + dayOfMonth;
+
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) { // choosing time
         TextView textView = (TextView) findViewById(R.id.timePickertextView);
-        textView.setText("Hour: "+hourOfDay+" Minute: "+minute);
-        time = hourOfDay+"-"+minute;
+
+        textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+        time = hourOfDay + ":" + minute;
 
 
     }

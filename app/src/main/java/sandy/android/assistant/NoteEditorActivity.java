@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     Editor editor;
     EditText noteeditor_title_text;
+    Notification notification;
 
     Button button_db;
     FloatingActionButton fab_noteeditor_options;
@@ -74,7 +76,11 @@ public class NoteEditorActivity extends AppCompatActivity {
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
 
-        notesFromDB = db.getAllNotes();
+        try {
+            notesFromDB = db.getAllNotes();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
@@ -95,7 +101,12 @@ public class NoteEditorActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if(b != null){
             if(b.get("NOTE_ID") != null){
-                editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
+                try {
+                    editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 //System.out.println("NOTE ID: " + editNote.getId() + "\n");
                 updateEditor(editNote);
             }
@@ -146,7 +157,11 @@ public class NoteEditorActivity extends AppCompatActivity {
                             null,
                             date);
                     db.insertNote(n);
-                    notesFromDB = db.getAllNotes();
+                    try {
+                        notesFromDB = db.getAllNotes();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     listOfNotes = findViewById(R.id.listOfNotes);
                     finish();
                 }
@@ -158,9 +173,18 @@ public class NoteEditorActivity extends AppCompatActivity {
                     Date currentTime = Calendar.getInstance().getTime();
                     String date = currentTime.toString();
 
-                    Note newNote = new Note (title, content, null, date);
+                    Note newNote = null;
+                    try {
+                        newNote = new Note(title, content, db.getDataFromNotificationID(db.getLastAddedNotificationId()), date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     db.updateNote(newNote, editNote);
-                    notesFromDB = db.getAllNotes();
+                    try {
+                        notesFromDB = db.getAllNotes();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     listOfNotes = findViewById(R.id.listOfNotes);
                     finish();
                 }
@@ -313,6 +337,15 @@ public class NoteEditorActivity extends AppCompatActivity {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
                 startActivityForResult(intent, 0);
+            }
+        });
+
+        fab_noteeditor_options_timer.setOnClickListener(new View.OnClickListener() {        //onClick Listener for notification timer
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),NotificationEditorActivity.class);
+                startActivity(intent);
+
             }
         });
 

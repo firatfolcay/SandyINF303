@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
 
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.ArrayList;
 
@@ -98,7 +99,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         @Override
         public void onClick(View v) {
             if (v == deleteNote) {
-                deleteNote(getLayoutPosition());
+                try {
+                    deleteNote(getLayoutPosition());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
             else if (v == noteSelectionLinearLayout) {
                 openNote(getLayoutPosition());
@@ -106,7 +111,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
         }
 
-        private void deleteNote(int position) {
+        private void deleteNote(int position) throws ParseException {
             Boolean returnVal = false;
             Note noteToDelete = mNoteList.get(position);
             returnVal = db.deleteNote(noteToDelete);

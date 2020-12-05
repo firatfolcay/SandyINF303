@@ -52,7 +52,7 @@ public class NotificationController extends AppCompatActivity {
             }
         });
 
-        denemeNotification.setOnClickListener(new View.OnClickListener() {
+        denemeNotification.setOnClickListener(new View.OnClickListener() { //notification test
             @Override
             public void onClick(View v) {
                 notificationManager.notify(100,builder.build());
