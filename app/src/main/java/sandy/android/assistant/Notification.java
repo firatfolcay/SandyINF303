@@ -36,12 +36,7 @@ public class Notification {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //dont ask
 
         //if the exception is handled here then there is no need for "throws" statement
-        try {
-            this.date = format.parse(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.date = new Date();
 
     }
 

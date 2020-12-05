@@ -62,7 +62,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     Uri targetUri;
 
     Note editNote;
-    Notification notification;
+    Notification notification; //will be null until a notification from notification screen is added
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         editor = (Editor) findViewById(R.id.editor);
 
-        notification = new Notification();
 
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
@@ -140,8 +139,12 @@ public class NoteEditorActivity extends AppCompatActivity {
                     }
                 }
 
-                if(notification.getDate().isEmpty())
-                    notification = null; //set it to null if it doesn't have a date otherwise an empty notification would be added into the database
+                if(notification == null){
+                    System.out.println("NOTIFICATION IS NULL");
+                }
+                else{
+                    System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                }
 
                 if (editNote == null) {     //if new Note will be created
                     String content = editor.getContentAsHTML();
@@ -380,6 +383,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 switch(resultCode){
                     case Activity.RESULT_OK:
                         //gets back data from NotificationEditorActivity
+                        notification = new Notification();
                         notification.setDate(data.getStringExtra("NOTIFICATION_DATE"));
                         break;
 
