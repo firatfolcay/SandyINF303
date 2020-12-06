@@ -28,7 +28,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
 
     public DatabaseManagement(Context context) {        //DatabaseManagement constructor method
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
 
     @Override
@@ -69,35 +69,49 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public boolean insertNote (Note n) {    //method to insert a new note to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        if(n.getNotification() != null)
-            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, n.getNotification().getId());
+        if(n.getNotification() != null) {
+            insertNotification(n.getNotification());
+            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());
+        }
 
         db.insert(NOTES_TABLE_NAME, null, contentValues);
+
         return true;
     }
 
     public boolean updateNote (Note n, Note key) {    //method to update a note from database //key is the note to be updated #serdar
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(NOTES_COLUMN_TITLE, n.getTitle());
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
-        if(n.getNotification() != null)
-            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, n.getNotification().getId());
+
+        if(n.getNotification() != null) {
+            updateNotification(n.getNotification(), key.getNotification()); // key must carry the notification id
+            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, key.getNotification().getId());
+        }
+
         db.update(NOTES_TABLE_NAME,
                 contentValues,
                 "id = ? ",
                 new String[] { Integer.toString(key.getId()) } );
+
         return true;
     }
 
     public Boolean deleteNote (Note n) {        //method to delete a note from database
+        SQLiteDatabase db = this.getWritableDatabase();
+
         try {
-            SQLiteDatabase db = this.getWritableDatabase();
+            if(n.getNotification() != null) //delete the note's notification if it has one
+                deleteNotification(n.getNotification()); // n must carry the notification id
+
             db.delete(NOTES_TABLE_NAME,
                     NOTES_COLUMN_ID + " = ? ",
                     new String[] { Integer.toString(n.getId()) });
@@ -109,7 +123,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Note getNoteFromNoteId(int note_id) throws ParseException {       //method to fetch note data from given note id from database
+    public Note getNoteFromNoteId(int note_id){       //method to fetch note data from given note id from database
         SQLiteDatabase db = this.getReadableDatabase();
         Notification notification = new Notification();
 
@@ -117,15 +131,10 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 null );
         res.moveToFirst();
 
-        if (res.getString(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
-            Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
-                    null );
-            resNotifications.moveToFirst();
-            if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
-                notification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-                notification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
-            }
+        if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+            notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
         }
+        //else notification is null since it doesn't have one
 
         return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
                 res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)),
@@ -137,36 +146,35 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public int getNoteCount(){      //method to fetch number of notes that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTES_TABLE_NAME);
+
         return numRows;
     }
 
-    public ArrayList<Note> getAllNotes() throws ParseException {        //method to fetch data of all notes from database
+    public ArrayList<Note> getAllNotes(){        //method to fetch data of all notes from database
+        SQLiteDatabase db = this.getReadableDatabase();
         Notification foundNotification = new Notification();
-        //Note foundNote = null;
         ArrayList<Note> array_list = new ArrayList<Note>();
 
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor resNotes =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
         resNotes.moveToFirst();
 
         while(resNotes.isAfterLast() == false){
             // gets the notification if the note has one
-            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
-                Cursor resNotifications = db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID +"= " + resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)),
-                        null );
-                if (!resNotifications.isNull(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)))) {
-                    foundNotification.setId(resNotifications.getInt(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-                    foundNotification.setDate(resNotifications.getString(resNotifications.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
-                }
+            if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+                foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
             }
+            //else notification is null
+
             // creates and adds note to the array to be returned
             Note foundNote = new Note(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID)),
                     resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_TITLE)),
                     resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_CONTENT)),
                     foundNotification,
                     resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+
             array_list.add(foundNote);
             resNotes.moveToNext();
+            foundNotification = null;
         }
         return array_list;
     }
@@ -178,56 +186,75 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public boolean insertNotification (Notification n) {    //method to insert a new notification to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(NOTIFICATIONS_COLUMN_DATE, n.getDate());
 
         db.insert(NOTIFICATIONS_TABLE_NAME,null, contentValues);
+
         return true;
     }
 
     public boolean updateNotification (Notification n, Notification key) {    //method to update a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put(NOTIFICATIONS_COLUMN_DATE, n.getDate());
 
         db.update(NOTIFICATIONS_TABLE_NAME,
                 contentValues,
                 NOTIFICATIONS_COLUMN_ID + "= ? ",
-                new String[] { Integer.toString(n.getId()) } );
+                new String[] { Integer.toString(key.getId()) } );
+
         return true;
     }
 
     public Integer deleteNotification (Notification n) {        //method to delete a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
+
         return db.delete(NOTIFICATIONS_TABLE_NAME,
                 NOTIFICATIONS_COLUMN_ID + "= ? ",
                 new String[] { Integer.toString(n.getId()) });
     }
 
-    public Notification getDataFromNotificationID(int notification_id) throws ParseException {       //method to fetch notification data from given notification id from database
+    public Notification getNotificationFromNotificationID(int notificationId){       //method to fetch notification data from given notification id from database
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID + "=" + notification_id,
-                null );
         Notification n = new Notification();
-        n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-        n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
-        return new Notification();
+
+        Cursor res =  db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID + "= " + notificationId,
+                null );
+        res.moveToFirst();
+
+        if(!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))){
+            n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+            n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+        }
+
+        return n;
     }
 
     public int getNotificationCount(){      //method to fetch number of notifications that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTIFICATIONS_TABLE_NAME);
+
         return numRows;
     }
-    public int getLastAddedNotificationId (){
+
+    public Notification getLastAddedNotification (){
         String selectQuery= "SELECT * FROM " + NOTIFICATIONS_TABLE_NAME;
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+
         Cursor cursor = db.rawQuery(selectQuery, null);
-        int id;
-
         cursor.moveToLast();
-        id =cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID));
 
-        return id;
+        Notification lastNotification = new Notification();
+
+        if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
+            lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+            lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+        }
+        //else notification is null
+
+        return lastNotification;
     }
 
     /*public ArrayList<String> getAllNotifications() {        //method to fetch data of all notifications from database

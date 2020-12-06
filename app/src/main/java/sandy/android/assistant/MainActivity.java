@@ -50,11 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         listOfNotes = findViewById(R.id.listOfNotes);
 
-        try {
-            notes = db.getAllNotes();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        notes = db.getAllNotes();
         noteAdapter = new NoteAdapter(this, notes, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
@@ -88,11 +85,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            notes = db.getAllNotes();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        notes = db.getAllNotes();
         noteAdapter = new NoteAdapter(this, notes, db, this);
         listOfNotes.setAdapter(noteAdapter);
     }
@@ -112,14 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 listOfNotes.setLayoutManager(linearLayoutManager);
                 break;
+
             case R.id.gridView:
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
                 listOfNotes.setLayoutManager(gridLayoutManager);
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
                 listOfNotes.setLayoutManager(staggeredGridLayoutManager);
                 break;
-
-
         }
         return super.onOptionsItemSelected(item);
     }

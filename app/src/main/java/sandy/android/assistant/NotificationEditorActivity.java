@@ -1,6 +1,8 @@
 package sandy.android.assistant;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Instrumentation;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -31,22 +33,36 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     String date, time;
 
+    Button buttonMainActivity;
+    Button datePickerButton;
+    Button timePickerButton;
+    Button saveNotificationButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_editor);
-        Button buttonMainActivity = findViewById(R.id.returnMain);
-        Button datePickerButton = (Button) findViewById(R.id.datePickerButton);
-        Button timePickerButton = (Button) findViewById(R.id.timePickerButton);
-        Button saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
+
+        buttonMainActivity = findViewById(R.id.returnMain);
+        datePickerButton = (Button) findViewById(R.id.datePickerButton);
+        timePickerButton = (Button) findViewById(R.id.timePickerButton);
+        saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
+
         db = new DatabaseManagement(this);
 
 
+        //getting notification of the note if it has one and updates the screen
+        Bundle b = new Bundle();
+        if(b != null){
+            if(b.get("NOTIFICATION_ID") != null){
+                updateNotificationActivity(db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID")));
+            }
+        }
 
-        saveNotificationButton.setOnClickListener(new View.OnClickListener() {
+        saveNotificationButton.setOnClickListener(new View.OnClickListener() {  //save button
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onClick(View v) {                               //save button
+            public void onClick(View v) {
                 //String dates = date+"-"+time;
                 //String[] date = dates.split("-");
                 /*Calendar calendar = Calendar.getInstance();
@@ -58,27 +74,22 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 calendar.set(Calendar.SECOND,0);*/
                 String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
 
+                //System.out.println(notification.getDate()); //debug code
 
-                try {
-                    notification.setDate(currentDateString);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                //FIXME this currently passes back only the date not the object, makes the code a bit spaghetti. It is possible to pass the object itself but painful to do so.
+                Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
+                data.putExtra("NOTIFICATION_DATE", currentDateString);
+                setResult(Activity.RESULT_OK, data);
+                finish();
 
-
-                System.out.println(notification.getDate());
-                db.insertNotification(notification);
-                System.out.println(db.getLastAddedNotificationId());
-
-                NotificationEditorActivity.this.onBackPressed();
-
-
+                return;
                 //notification.setDate(""+a);
                 //notification.setDate(String.valueOf(calendar.getTime()));
 
             }
 
         });
+
         timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,8 +126,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
 
-        TextView datePickertextView = (TextView) findViewById(R.id.datePickertextView);
-        datePickertextView.setText(currentDateString);
+        TextView datePickerTextView = (TextView) findViewById(R.id.datePickertextView);
+        datePickerTextView.setText(currentDateString);
         date = year + "-" + month + "-" + dayOfMonth;
 
     }
@@ -128,6 +139,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
         time = hourOfDay + ":" + minute;
 
+    }
 
+    public void updateNotificationActivity(Notification n){
+        //TODO this function shall update the screen with the Notification object n passed from the NoteEditorActivity
     }
 }

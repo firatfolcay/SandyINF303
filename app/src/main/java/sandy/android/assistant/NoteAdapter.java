@@ -30,7 +30,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     Editor editor;
     Activity activity;
     MainActivity mainActivity = new MainActivity();
-    NoteEditorActivity noteEditorActivity = new NoteEditorActivity();
 
     public NoteAdapter(Context context, ArrayList<Note> notes, DatabaseManagement db, MainActivity ma) {
         inflater = LayoutInflater.from(context);
@@ -99,11 +98,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         @Override
         public void onClick(View v) {
             if (v == deleteNote) {
-                try {
-                    deleteNote(getLayoutPosition());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                deleteNote(getLayoutPosition());
             }
             else if (v == noteSelectionLinearLayout) {
                 openNote(getLayoutPosition());
@@ -111,7 +106,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
         }
 
-        private void deleteNote(int position) throws ParseException {
+        private void deleteNote(int position) {
             Boolean returnVal = false;
             Note noteToDelete = mNoteList.get(position);
             returnVal = db.deleteNote(noteToDelete);
@@ -137,7 +132,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 mainActivity.startActivity(intent);
             }
             catch(Exception e){
-                Toast.makeText(activity, "Selected note couldn't be found in DB.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, "Selected note couldn't be found.", Toast.LENGTH_LONG);
             }
         }
 
