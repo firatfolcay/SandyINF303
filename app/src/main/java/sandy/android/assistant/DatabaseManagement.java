@@ -174,6 +174,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
             array_list.add(foundNote);
             resNotes.moveToNext();
+            foundNotification = null;
         }
         return array_list;
     }
