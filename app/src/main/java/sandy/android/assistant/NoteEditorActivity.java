@@ -85,8 +85,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
 
-        button_db = (Button) findViewById(R.id.button_db);
-
         noteeditor_title_text = (EditText) findViewById(R.id.noteeditor_title_text);
 
         fab_noteeditor_options = (FloatingActionButton) findViewById(R.id.fab_noteeditor_options);      //initialization of attributes that are referenced into note_editor.xml

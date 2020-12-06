@@ -5,30 +5,10 @@
     android:id="@+id/mainActivityConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange"
+    android:background="@color/darkBlue"
     android:scaleX="1"
     tools:context=".MainActivity">
 
-
-    <ImageButton
-        android:id="@+id/showNotification"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toEndOf="@id/mainActivity"
-        app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
-
-    <ImageButton
-        android:id="@+id/mainActivity"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listOfNotes"
@@ -38,7 +18,7 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
-        android:background="@color/orange"
+        android:background="@color/darkBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -59,6 +39,39 @@
         app:layout_constraintBottom_toBottomOf="@+id/listOfNotes"
         app:layout_constraintEnd_toEndOf="@+id/listOfNotes"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="413dp"
+        android:layout_height="74dp"
+        android:background="@color/orange"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/showNotification"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/listOfNotes"
+        app:layout_constraintStart_toEndOf="@id/mainActivity"
+        app:srcCompat="@drawable/ic_baseline_access_alarm_24" />
+
+    <ImageButton
+        android:id="@+id/mainActivity"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/listOfNotes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_dialog_dialer" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

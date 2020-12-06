@@ -13,5 +13,6 @@
     <color name="colorPrimary">#FF0000</color>
     <color name="colorPrimaryDark">#FF000000</color>
     <color name="colorAccent">#FF6200EE</color>
+    <color name="darkOrange">#e86f52</color>
 
 </resources>

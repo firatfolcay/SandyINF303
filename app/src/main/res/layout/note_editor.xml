@@ -78,7 +78,7 @@
                 android:layout_toStartOf="@+id/fab_noteeditor_options"
                 android:clickable="true"
                 android:visibility="invisible"
-                app:srcCompat="@android:drawable/arrow_down_float" />
+                app:srcCompat="@drawable/circle_clock" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_noteeditor_options"
@@ -157,15 +157,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/tick" />
 
-
-    <Button
-        android:id="@+id/button_db"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="51dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="24dp"
-        android:drawableBottom="@drawable/download_down"
-        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout2"
-        app:layout_constraintEnd_toStartOf="@+id/imageView_save_note" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
