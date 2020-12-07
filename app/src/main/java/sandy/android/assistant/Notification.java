@@ -10,11 +10,7 @@ import java.util.Date;
 
 public class Notification {
     private int id; //this one better not have any default value; if it must, define it -1 or something negative
-    private Date date;
-
-    public Notification(){
-        date = new Date();
-    }
+    private String date;
 
     public Integer getId(){
         return id;
@@ -25,18 +21,12 @@ public class Notification {
     }
 
     public String getDate() {
-        return date.toString();
+        return date;
     }
 
-    @SuppressLint("NewApi")
-    //min. API Level_26 required for parse function
     public void setDate(String date){
 
-        //date = "2020-12-3T09:27:37Z";
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //dont ask
-
-        //if the exception is handled here then there is no need for "throws" statement
-        this.date = new Date();
+        this.date = date;
 
     }
 
