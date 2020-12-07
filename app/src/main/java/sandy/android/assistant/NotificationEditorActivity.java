@@ -13,7 +13,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -31,6 +34,12 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     Button timePickerButton;
     Button saveNotificationButton;
 
+    DialogFragment timePicker;
+    DialogFragment datePicker;
+
+    TextView datePickerTextView;
+    TextView timePickerTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +49,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
         timePickerButton = (Button) findViewById(R.id.timePickerButton);
         saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
+
+        datePickerTextView = (TextView) findViewById(R.id.datePickertextView);
+        timePickerTextView = (TextView) findViewById(R.id.timePickertextView);
 
         db = new DatabaseManagement(this);
 
@@ -86,7 +98,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment timePicker = new TimePickerFragment();
+                timePicker = new TimePickerFragment();
                 timePicker.show(getSupportFragmentManager(), "time picker");
 
             }
@@ -95,7 +107,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         datePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
+                datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
@@ -103,7 +115,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         cancelNotificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {           //cancel button
-
                 finish();       //notification screen cancelled. go back to note editor.
             }
         });
@@ -114,11 +125,10 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
+        month = month + 1;
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-
-        TextView datePickerTextView = (TextView) findViewById(R.id.datePickertextView);
         datePickerTextView.setText(currentDateString);
         date = year + "-" + month + "-" + dayOfMonth;
 
@@ -126,9 +136,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) { // choosing time
-        TextView textView = (TextView) findViewById(R.id.timePickertextView);
 
-        textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+        timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
         time = hourOfDay + ":" + minute;
 
     }

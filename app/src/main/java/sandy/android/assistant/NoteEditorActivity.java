@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorTextStyle;
+import com.google.gson.Gson;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
@@ -331,15 +332,18 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NotificationEditorActivity.class);
 
-                if(editNote != null)    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
-                    if(editNote.getNotification() != null)
-                        intent.putExtra("NOTIFICATION_ID", editNote.getNotification().getId());
+                if(editNote != null) {    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
+                    if (editNote.getNotification() != null) {
+                        Gson gson = new Gson();
+                        String notificationToSend = gson.toJson(editNote.getNotification());
+                        intent.putExtra("notificationToSend", notificationToSend);
+                    }
+                }
 
                 startActivityForResult(intent, REQUEST_NOTIFICATION);
             }
         });
 
-        editor.render(); //what is this doing here ? #serdar
     }
 
     @Override
