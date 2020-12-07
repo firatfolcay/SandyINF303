@@ -12,6 +12,14 @@ public class Notification {
     private int id; //this one better not have any default value; if it must, define it -1 or something negative
     private String date;
 
+    public Notification(){
+
+    }
+
+    public Notification(String date){
+        this.setDate(date);
+    }
+
     public Integer getId(){
         return id;
     }

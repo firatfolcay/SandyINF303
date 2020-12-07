@@ -382,11 +382,16 @@ public class NoteEditorActivity extends AppCompatActivity {
                 switch(resultCode){
                     case Activity.RESULT_OK:
                         //gets back data from NotificationEditorActivity
-                        notification = new Notification();
-                        notification.setDate(data.getStringExtra("NOTIFICATION_DATE"));
+                        String date = data.getStringExtra("NOTIFICATION_DATE");
+
+                        if(date.contains("null"))
+                            break;
+
+                        notification = new Notification(date);
                         break;
 
                     case Activity.RESULT_CANCELED:
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
