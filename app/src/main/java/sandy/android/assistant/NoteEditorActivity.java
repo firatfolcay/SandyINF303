@@ -129,53 +129,53 @@ public class NoteEditorActivity extends AppCompatActivity {
                 for(Node item: editor.getContent().nodes){
                     if(item.content.get(0).toString().isEmpty()){
                         //System.out.println("STRING IS EMPTY\n");
-                        finish(); // note content input is empty. do not save and return back
-                        return; // without return, the function will keep on.
+                        continue;   //if the current one is empty move to next item
                     }
-                    else{
+                    else{       //content is not empty therefore move on.
                         //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
-                        break; // content is not empty therefore move on.
+                        if(notification == null){
+                            System.out.println("NOTIFICATION IS NULL");
+                        }
+                        else{
+                            System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                        }
+
+                        if (editNote == null) {     //if new Note will be created
+                            String content = editor.getContentAsHTML();
+                            String title = noteeditor_title_text.getText().toString();
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String date = currentTime.toString();
+
+                            Note n = new Note(title,
+                                    content,
+                                    notification,
+                                    date);
+
+                            db.insertNote(n);
+                        }
+                        else{        //if selected Note will be edited
+                            String content = editor.getContentAsHTML();
+                            String title = noteeditor_title_text.getText().toString();
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String date = currentTime.toString();
+
+                            Note newNote = new Note(title,
+                                    content,
+                                    notification,
+                                    date);
+
+                            db.updateNote(newNote, editNote);
+                        }
+
+                        notesFromDB = db.getAllNotes();
+                        listOfNotes = findViewById(R.id.listOfNotes);
+                        break;
                     }
                 }
-
-                if(notification == null){
-                    System.out.println("NOTIFICATION IS NULL");
-                }
-                else{
-                    System.out.println("NOTIFICATION_DATE: " + notification.getDate());
-                }
-
-                if (editNote == null) {     //if new Note will be created
-                    String content = editor.getContentAsHTML();
-                    String title = noteeditor_title_text.getText().toString();
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String date = currentTime.toString();
-
-                    Note n = new Note(title,
-                            content,
-                            notification,
-                            date);
-
-                    db.insertNote(n);
-                }
-                else{        //if selected Note will be edited
-                    String content = editor.getContentAsHTML();
-                    String title = noteeditor_title_text.getText().toString();
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String date = currentTime.toString();
-
-                    Note newNote = new Note(title,
-                            content,
-                            notification,
-                            date);
-
-                    db.updateNote(newNote, editNote);
-                }
-
-                notesFromDB = db.getAllNotes();
-                listOfNotes = findViewById(R.id.listOfNotes);
                 finish();
-            }
+
+                return;
+                }
         });
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options

@@ -79,7 +79,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());
         }
 
-        db.insert(NOTES_TABLE_NAME, null, contentValues);
+        db.insert(NOTES_TABLE_NAME, NOTES_COLUMN_NOTIFICATION_ID, contentValues);
 
         return true;
     }
@@ -141,7 +141,9 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
             notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
         }
-        //else notification is null since it doesn't have one
+        else{
+            notification = null;
+        }
 
         return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
                 res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)),
