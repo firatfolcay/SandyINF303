@@ -79,6 +79,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
+        notification = null;
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
 
