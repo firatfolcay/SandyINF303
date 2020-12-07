@@ -2,7 +2,6 @@ package sandy.android.assistant;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Instrumentation;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -10,17 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -33,7 +26,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     String date, time;
 
-    Button buttonMainActivity;
+    Button notificationCancelButton;
     Button datePickerButton;
     Button timePickerButton;
     Button saveNotificationButton;
@@ -43,7 +36,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_editor);
 
-        buttonMainActivity = findViewById(R.id.returnMain);
+        notificationCancelButton = findViewById(R.id.notificationCancelButton);
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
         timePickerButton = (Button) findViewById(R.id.timePickerButton);
         saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
@@ -63,18 +56,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                //String dates = date+"-"+time;
-                //String[] date = dates.split("-");
-                /*Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR,Integer.parseInt(date[0]));
-                calendar.set(Calendar.MONTH,Integer.parseInt(date[1]));
-                calendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date[2]));
-                calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(date[3]));
-                calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
-                calendar.set(Calendar.SECOND,0);*/
                 String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
-
-                //System.out.println(notification.getDate()); //debug code
 
                 //FIXME this currently passes back only the date not the object, makes the code a bit spaghetti. It is possible to pass the object itself but painful to do so.
                 Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
@@ -83,8 +65,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 finish();
 
                 return;
-                //notification.setDate(""+a);
-                //notification.setDate(String.valueOf(calendar.getTime()));
 
             }
 
@@ -107,12 +87,11 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             }
         });
 
-        buttonMainActivity.setOnClickListener(new View.OnClickListener() {
+        notificationCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {           //cancel button
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                finish();  //finish notification selection screen if cancel button is pressed.
             }
         });
     }

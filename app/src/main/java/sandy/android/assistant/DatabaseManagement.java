@@ -92,9 +92,17 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        if(n.getNotification() != null) {
-            updateNotification(n.getNotification(), key.getNotification()); // key must carry the notification id
-            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, key.getNotification().getId());
+        if (key.getNotification() == null) {        //if old notification is null
+            if (n.getNotification() != null) {      //if new notification isn't null
+                insertNotification(n.getNotification());    //insert new notification
+            }
+        }
+        else {      //if old notification isn't null
+            if (n.getNotification() != null) {      //if new notification isn't null
+                updateNotification(n.getNotification(), key.getNotification());     //update old notification with new one
+                contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());        //put id of last added notification to notes notification id column
+            }
+            //else new notification is null
         }
 
         db.update(NOTES_TABLE_NAME,
@@ -131,9 +139,15 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 null );
         res.moveToFirst();
 
-        if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
-            notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
+        while (res.isAfterLast() == false) {
+            if (res.getString(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+                notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
+            }
         }
+
+        /*if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+            notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
+        }*/
         //else notification is null since it doesn't have one
 
         return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
@@ -160,9 +174,13 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         while(resNotes.isAfterLast() == false){
             // gets the notification if the note has one
-            if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+
+            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
                 foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
             }
+            /*if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+                foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
+            }*/
             //else notification is null
 
             // creates and adds note to the array to be returned
@@ -224,10 +242,14 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 null );
         res.moveToFirst();
 
-        if(!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))){
-            n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-            n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+        while (res.isAfterLast() == false) {
+            if((res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) != null){
+                n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+            }
         }
+
+
 
         return n;
     }
@@ -248,10 +270,15 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         Notification lastNotification = new Notification();
 
-        if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
+        while (cursor.isAfterLast() == false) {
             lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
             lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
         }
+
+        /*if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
+            lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+            lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+        }*/
         //else notification is null
 
         return lastNotification;
