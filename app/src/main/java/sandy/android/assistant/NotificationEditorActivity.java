@@ -2,7 +2,6 @@ package sandy.android.assistant;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Instrumentation;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -10,17 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -33,7 +26,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     String date, time;
 
-    Button buttonMainActivity;
+    Button cancelNotificationButton;
     Button datePickerButton;
     Button timePickerButton;
     Button saveNotificationButton;
@@ -43,7 +36,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_editor);
 
-        buttonMainActivity = findViewById(R.id.returnMain);
+        cancelNotificationButton = findViewById(R.id.cancelNotificationButton);
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
         timePickerButton = (Button) findViewById(R.id.timePickerButton);
         saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
@@ -107,12 +100,11 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             }
         });
 
-        buttonMainActivity.setOnClickListener(new View.OnClickListener() {
+        cancelNotificationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {           //cancel button
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                finish();       //notification screen cancelled. go back to note editor.
             }
         });
     }
