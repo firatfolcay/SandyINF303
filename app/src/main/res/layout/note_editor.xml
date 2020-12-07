@@ -110,7 +110,6 @@
                     android:paddingTop="20dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="150dp"
-                    app:placeholder="Start writing here..."
                     app:render_type="Editor">
 
                 </com.github.irshulx.Editor>

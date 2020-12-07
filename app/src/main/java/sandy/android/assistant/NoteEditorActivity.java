@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -428,10 +429,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     public void updateEditor(Note n) {
-        //noteeditor_title_text = findViewById(R.id.noteeditor_title_text); // !! already defined !!
         noteeditor_title_text.setText(n.getTitle());
-
-        //editor = findViewById(R.id.editor); // !! already defined !!
         editor.render(n.getContent());
     }
 

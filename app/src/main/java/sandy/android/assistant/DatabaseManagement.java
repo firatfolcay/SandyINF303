@@ -92,8 +92,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        if(n.getNotification().getDate() != null) {                   //if new notification isn't null
-            if (key.getNotification().getDate() == null) {            //if old notification is null
+        if(n.getNotification() != null) {                   //if new notification isn't null
+            if (key.getNotification() == null) {            //if old notification is null
                 insertNotification(n.getNotification());    //insert new notification
                 contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());    //put id of last added notification to notes notification id column
             }
