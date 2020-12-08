@@ -102,7 +102,9 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             }
 
         }
-        //else new notification is null
+        else{
+            //contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, (byte[]) null); //experimental
+        }
 
         db.update(NOTES_TABLE_NAME,
                 contentValues,
@@ -185,6 +187,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             resNotes.moveToNext();
             foundNotification = null;
         }
+
         return array_list;
     }
 
@@ -218,9 +221,13 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     }
 
     public boolean deleteNotification (Notification n) {        //method to delete a notification from database
-
         SQLiteDatabase db = this.getWritableDatabase();
         try {
+            ContentValues cv = new ContentValues();
+            cv.put(NOTES_COLUMN_NOTIFICATION_ID,"");
+
+            db.update(NOTES_TABLE_NAME, cv, NOTES_COLUMN_NOTIFICATION_ID + "= ?", new String[] { Integer.toString(n.getId()) });
+
             db.delete(NOTIFICATIONS_TABLE_NAME,
                     NOTIFICATIONS_COLUMN_ID + " = ? ",
                     new String[] { Integer.toString(n.getId()) });
@@ -251,6 +258,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public int getNotificationCount(){      //method to fetch number of notifications that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTIFICATIONS_TABLE_NAME);
+        db.close();
 
         return numRows;
     }

@@ -30,17 +30,7 @@ public class NotificationViewActivity extends AppCompatActivity {
 
         listOfNotifications = findViewById(R.id.listOfNotifications);
 
-        notes = db.getAllNotes();
-        notesWithNotification = new ArrayList<Note>();
-        int index = 0;
-        for (index = 0; index < notes.size(); index++) {
-            if (notes.get(index).getNotification() != null) {
-                notesWithNotification.add(notes.get(index));
-            }
-        }
 
-        notificationAdapter = new NotificationAdapter(this, notesWithNotification, db);
-        listOfNotifications.setAdapter(notificationAdapter);
 
         linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -53,9 +43,9 @@ public class NotificationViewActivity extends AppCompatActivity {
         super.onResume();
 
         notes = db.getAllNotes();
+        notesWithNotification = new ArrayList<Note>();
 
-        int index = 0;
-        for (index = 0; index < notes.size(); index++) {
+        for (int index = 0; index < notes.size(); index++) {
             if (notes.get(index).getNotification() != null) {
                 notesWithNotification.add(notes.get(index));
             }
