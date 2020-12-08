@@ -217,12 +217,19 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Integer deleteNotification (Notification n) {        //method to delete a notification from database
-        SQLiteDatabase db = this.getWritableDatabase();
+    public boolean deleteNotification (Notification n) {        //method to delete a notification from database
 
-        return db.delete(NOTIFICATIONS_TABLE_NAME,
-                NOTIFICATIONS_COLUMN_ID + "= ? ",
-                new String[] { Integer.toString(n.getId()) });
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.delete(NOTIFICATIONS_TABLE_NAME,
+                    NOTIFICATIONS_COLUMN_ID + " = ? ",
+                    new String[] { Integer.toString(n.getId()) });
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
     public Notification getNotificationFromNotificationID(int notificationId){       //method to fetch notification data from given notification id from database

@@ -67,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(),NotificationController.class);
+                /*Intent intent = new Intent(getApplicationContext(),NotificationController.class);
+                startActivity(intent);*/
+
+                Intent intent = new Intent(getApplicationContext(), NotificationViewActivity.class);
                 startActivity(intent);
             }
         });
