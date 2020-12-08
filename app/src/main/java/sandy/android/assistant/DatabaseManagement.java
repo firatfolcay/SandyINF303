@@ -174,7 +174,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
                 foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
             }
-            //else notification is null
+            else
+                foundNotification = null;
 
             // creates and adds note to the array to be returned
             Note foundNote = new Note(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID)),
@@ -185,7 +186,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
             array_list.add(foundNote);
             resNotes.moveToNext();
-            foundNotification = null;
+
         }
 
         return array_list;

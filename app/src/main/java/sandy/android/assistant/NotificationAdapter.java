@@ -51,7 +51,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Note selectedNote = mNoteWithNotificationList.get(position);
-        holder.setData(selectedNote, position);
+
+        if(selectedNote != null)
+            holder.setData(selectedNote, position);
     }
 
     @Override
@@ -81,10 +83,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void setData(Note selectedNote, int position) {
 
-            if (selectedNote.getNotification() != null) {
+
                 this.notificationTitle.setText(selectedNote.getTitle());
                 this.notificationDescription.setText(selectedNote.getNotification().getDate());
-            }
+
         }
 
 
@@ -100,12 +102,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         private void deleteNotification(int position) {
-            Boolean returnVal = false;
             Notification notificationToDelete = mNoteWithNotificationList.get(position).getNotification();
-            returnVal = db.deleteNotification(notificationToDelete);
+
+            Boolean returnVal = db.deleteNotification(notificationToDelete);
+
+            ArrayList<Note> notes = db.getAllNotes();
+
             if (returnVal) {
                 mNoteWithNotificationList.remove(position);
-                mNoteWithNotificationList = db.getAllNotes();
+
+                for (int index = 0; index < notes.size(); index++) {
+                    if (notes.get(index).getNotification() != null) {
+                        mNoteWithNotificationList.add(notes.get(index));
+                    }
+                }
+
                 notifyRemoved(position);
             }
             else {
