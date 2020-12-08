@@ -109,15 +109,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             ArrayList<Note> notes = db.getAllNotes();
 
             if (returnVal) {
-                mNoteWithNotificationList.remove(position);
+                ArrayList<Note> notesWithNotification = new ArrayList<Note>();
 
                 for (int index = 0; index < notes.size(); index++) {
                     if (notes.get(index).getNotification() != null) {
-                        mNoteWithNotificationList.add(notes.get(index));
+                        notesWithNotification.add(notes.get(index));
                     }
                 }
-
                 notifyRemoved(position);
+                mNoteWithNotificationList = notesWithNotification;
             }
             else {
                 Toast.makeText(activity, "Notification couldn't be deleted.", Toast.LENGTH_LONG);
