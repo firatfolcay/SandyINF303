@@ -224,7 +224,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues cv = new ContentValues();
-            cv.put(NOTES_COLUMN_NOTIFICATION_ID,"");
+            cv.put(NOTES_COLUMN_NOTIFICATION_ID, (Integer) null);
 
             db.update(NOTES_TABLE_NAME, cv, NOTES_COLUMN_NOTIFICATION_ID + "= ?", new String[] { Integer.toString(n.getId()) });
 
@@ -247,9 +247,13 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 null );
         res.moveToFirst();
 
-        if(!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))){
-            n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-            n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+        while (res.isAfterLast() == false) {
+            if(!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))){
+                n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
+                n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
+                break;
+            }
+            res.moveToNext();
         }
 
         return n;

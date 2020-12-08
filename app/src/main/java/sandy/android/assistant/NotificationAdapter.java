@@ -82,8 +82,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void setData(Note selectedNote, int position) {
 
             this.notificationTitle.setText(selectedNote.getTitle());
-            this.notificationDescription.setText(selectedNote.getNotification().getDate());
-
+            if (selectedNote.getNotification().getDate() != null) {
+                this.notificationDescription.setText(selectedNote.getNotification().getDate());
+            }
         }
 
 
