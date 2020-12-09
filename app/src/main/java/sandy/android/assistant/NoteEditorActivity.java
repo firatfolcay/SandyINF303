@@ -334,9 +334,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                 if(editNote != null) {    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
                     if (editNote.getNotification() != null) {
-                        Gson gson = new Gson();
-                        String notificationToSend = gson.toJson(editNote.getNotification());
-                        intent.putExtra("notificationToSend", notificationToSend);
+                        //do not send the object, send the id. It is handled that way in NotificationEditorActivity.
+                        intent.putExtra("NOTIFICATION_ID", editNote.getNotification().getId());
                     }
                 }
 

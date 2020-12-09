@@ -95,9 +95,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             if (v == deleteNotification) {
                 deleteNotification(getLayoutPosition());
             }
-            /*else if (v == notificationSelectionLinearLayout) {
+            else if (v == notificationSelectionLinearLayout) {
                 openNotification(getLayoutPosition());
-            }*/
+            }
 
         }
 
@@ -109,34 +109,43 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             ArrayList<Note> notes = db.getAllNotes();
 
             if (returnVal) {
-                ArrayList<Note> notesWithNotification = new ArrayList<Note>();
-
-                for (int index = 0; index < notes.size(); index++) {
-                    if (notes.get(index).getNotification() != null) {
-                        notesWithNotification.add(notes.get(index));
-                    }
-                }
                 notifyRemoved(position);
-                mNoteWithNotificationList = notesWithNotification;
             }
             else {
                 Toast.makeText(activity, "Notification couldn't be deleted.", Toast.LENGTH_LONG);
             }
+
+            refresh();
         }
 
-        /*private void openNote(int position) {
-            Note noteToOpen = mNoteList.get(position);
+        private void openNotification(int position) {
+            Notification notificationToOpen = mNoteWithNotificationList.get(position).getNotification();
 
             try {
-                db.getNoteFromNoteId(noteToOpen.getId());
-                Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
-                intent.putExtra("NOTE_ID",noteToOpen.getId());
-                mainActivity.startActivity(intent);
+                db.getNotificationFromNotificationID(notificationToOpen.getId());
+                Intent intent = new Intent(activity.getApplicationContext(), NotificationEditorActivity.class);
+                intent.putExtra("NOTIFICATION_ID", notificationToOpen.getId());
+                activity.startActivityForResult(intent,0);
             }
             catch(Exception e){
-                Toast.makeText(activity, "Selected note couldn't be found.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, "The notification couldn't be opened.", Toast.LENGTH_LONG);
             }
-        }*/
+
+            refresh();
+        }
+
+        private void refresh(){
+            ArrayList<Note> notes = db.getAllNotes();
+            ArrayList<Note> notesWithNotification = new ArrayList<Note>();
+
+            for (int index = 0; index < notes.size(); index++) {
+                if (notes.get(index).getNotification() != null) {
+                    notesWithNotification.add(notes.get(index));
+                }
+            }
+
+            mNoteWithNotificationList = notesWithNotification;
+        }
 
         public void notifyRemoved(int position) {
             notifyItemRemoved(position);
@@ -153,9 +162,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
 
-
-
-
     }
+
 
 }

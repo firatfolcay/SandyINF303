@@ -15,6 +15,7 @@ import android.widget.TimePicker;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,6 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    public static String CLASS_NOTE_EDITOR_ACTIVITY_NAME = NoteEditorActivity.class.toString();
+    public static String CLASS_NOTIFICATION_ADAPTER_NAME = NotificationAdapter.class.toString();
+
     Notification notification = new Notification();
     DatabaseManagement db;
 
@@ -39,6 +43,10 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     TextView datePickerTextView;
     TextView timePickerTextView;
+
+    Notification editNotification;
+
+    String year,month,day,hour,minute;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,10 +65,12 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
 
         //getting notification of the note if it has one and updates the screen
-        Bundle b = new Bundle();
+        Bundle b = getIntent().getExtras();
         if(b != null){
             if(b.get("NOTIFICATION_ID") != null){
-                updateNotificationActivity(db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID")));
+                editNotification = db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID"));
+                updateNotificationActivity(editNotification);
+                //System.out.println(b.getInt("NOTIFICATION_ID"));
             }
         }
 
@@ -77,14 +87,24 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(date[3]));
                 calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
                 calendar.set(Calendar.SECOND,0);*/
+                //FIXME date-time format is a mess rn ngl
                 String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
 
                 //System.out.println(notification.getDate()); //debug code
 
-                //FIXME this currently passes back only the date not the object, makes the code a bit spaghetti. It is possible to pass the object itself but painful to do so.
-                Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
-                data.putExtra("NOTIFICATION_DATE", currentDateString);
-                setResult(Activity.RESULT_OK, data);
+                //this currently passes back only the date not the object, makes the code a bit spaghetti.
+
+                if(getCallingActivity().getClassName().equals(NoteEditorActivity.class.toString().replace("class ",""))){
+                    Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
+                    data.putExtra("NOTIFICATION_DATE", currentDateString);
+                    setResult(Activity.RESULT_OK, data);
+                }
+                else if(getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ",""))){
+                    db.updateNotification(new Notification(currentDateString)
+                                                            ,editNotification);
+                }
+
+
                 finish();
 
                 return;
@@ -98,7 +118,12 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerFragment();
+                if(editNotification != null){
+                    timePicker = new TimePickerFragment(new Integer(hour), new Integer(minute));
+                }
+                else
+                    timePicker = new TimePickerFragment();
+
                 timePicker.show(getSupportFragmentManager(), "time picker");
 
             }
@@ -107,7 +132,12 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         datePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePicker = new DatePickerFragment();
+                if(editNotification != null){
+                    datePicker = new DatePickerFragment(new Integer(year), new Integer(month), new Integer(day));
+                }
+                else
+                    datePicker = new DatePickerFragment();
+
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
@@ -124,8 +154,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) { //choosing date
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        month = month + 1;
+        calendar.set(Calendar.MONTH, month +1);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
@@ -143,6 +172,27 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     }
 
     public void updateNotificationActivity(Notification n){
-        //TODO this function shall update the screen with the Notification object n passed from the NoteEditorActivity
+
+        parse();
+        timePickerTextView.setText("Hour: " + hour + " Minute: " + minute);
+        datePickerTextView.setText("TO BE FIXED");
+
+    }
+
+    public void parse(){
+        String date = "";
+        String time = "";
+        String date_time = editNotification.getDate();
+
+
+        date = date_time.substring(0,date_time.indexOf('T'));
+        time = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+
+        year = date.split("-")[0];
+        month = date.split("-")[1];
+        day = date.split("-")[2];
+
+        hour = time.split(":")[0];
+        minute = time.split(":")[1];
     }
 }
