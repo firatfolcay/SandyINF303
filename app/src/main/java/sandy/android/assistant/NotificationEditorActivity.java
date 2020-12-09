@@ -88,6 +88,10 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
                 calendar.set(Calendar.SECOND,0);*/
                 //FIXME date-time format is a mess rn ngl
+                if(date == null || time == null){
+                    return;
+                }
+
                 String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
 
                 //System.out.println(notification.getDate()); //debug code
@@ -194,5 +198,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
         hour = time.split(":")[0];
         minute = time.split(":")[1];
+
+        this.date = year + "-" + month + "-" + day;
+        this.time = hour + ":"  + minute;
     }
 }
