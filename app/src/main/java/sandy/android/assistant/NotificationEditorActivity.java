@@ -158,8 +158,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) { //choosing date
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month +1);
+        calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        month = month + 1;
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         datePickerTextView.setText(currentDateString);
