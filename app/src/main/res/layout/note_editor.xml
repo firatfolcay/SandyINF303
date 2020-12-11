@@ -54,7 +54,7 @@
                 android:layout_toStartOf="@+id/fab_noteeditor_options_addimage"
                 android:clickable="true"
                 android:visibility="invisible"
-                app:srcCompat="@android:drawable/ic_btn_speak_now" />
+                app:srcCompat="@android:drawable/ic_menu_agenda" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_noteeditor_options_addimage"

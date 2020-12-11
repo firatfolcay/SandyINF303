@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
@@ -46,6 +47,8 @@ public class NoteEditorActivity extends AppCompatActivity {
     DatabaseManagement db;
     boolean isFABOpen = false;
     ArrayList notesFromDB = new ArrayList();
+
+    CalendarSync calendarSync;
 
     Editor editor;
     EditText noteeditor_title_text;
@@ -327,7 +330,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
-        fab_noteeditor_options_timer.setOnClickListener(new View.OnClickListener() {        //onClick Listener for notification timer
+        fab_noteeditor_options_timer.setOnClickListener(new View.OnClickListener() {        //onClick Listener for notification editor
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NotificationEditorActivity.class);
@@ -343,14 +346,29 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
+        fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
+            @Override
+            public void onClick(View v) {
+                if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
+                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification().getDate(), editNote.getContent());      //instantiate new calendarSync object
+                    addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription());     //call method that sends Note info to Calendar API
+                }
+                else {          //if there's no notifications attached to note,
+                    Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+        });
+
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //fetches selected image from media storage and insert into editor
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //activity result handler.
         super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode) {
-            case REQUEST_IMAGE:
+            case REQUEST_IMAGE:     //if image from external storage is selected
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         if (Build.VERSION.SDK_INT < 19) {
@@ -364,7 +382,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 se.printStackTrace();
                             }
                         }
-                        try {
+                        try {       //fetches selected image from media storage and insert into editor
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
                             // Log.d(TAG, String.valueOf(bitmap));
                             editor.insertImage(bitmap);
@@ -382,7 +400,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 }
                 break;
 
-            case REQUEST_NOTIFICATION:
+            case REQUEST_NOTIFICATION:      //if a notification is added
                 switch(resultCode){
                     case Activity.RESULT_OK:
                         //gets back data from NotificationEditorActivity
@@ -403,6 +421,12 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        this.closeFABMenu();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         notification = null;
@@ -414,7 +438,11 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
         System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
-        fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
+        if (editNote != null) {
+            if (editNote.getNotification() != null) {
+                fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
+            }
+        }
         /*fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         fab_noteeditor_options_timer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));*/
@@ -431,9 +459,24 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
     }
 
-    public void updateEditor(Note n) {
+    public void updateEditor(Note n) {      //function that updates Editor context
         noteeditor_title_text.setText(n.getTitle());
         editor.render(n.getContent());
+    }
+
+    private void addCalendarEvent(String title, String description) {       //function to add note information as calendar event
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.Events.TITLE, title)
+                .putExtra(CalendarContract.Events.DESCRIPTION, description);
+        //.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
+        //.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(this, "There is no appropriate application installed in this phone to run calendar synchronization.", Toast.LENGTH_LONG);
+        }
     }
 
 
