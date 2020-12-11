@@ -1,10 +1,7 @@
 package sandy.android.assistant;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.solver.state.State;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,22 +13,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
-import java.lang.reflect.Array;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
     DatabaseManagement db;
     LinearLayoutManager linearLayoutManager;
+    ConstraintLayout mainActivityConstraintLayout;
     RecyclerView listOfNotes;
+    NavigationView notebookNavigationView;
+    ImageView mainActivityNavigationViewImageView;
     FloatingActionButton fab_create_new_note;
     ImageView buttonShowNotification;
     ArrayList<Note> notes;
@@ -45,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
         db = new DatabaseManagement(this);
 
         fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
+
+        mainActivityConstraintLayout = (ConstraintLayout) findViewById(R.id.mainActivityConstraintLayout);
+        mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.mainActivityNavigationViewImageView);
+        notebookNavigationView = (NavigationView) findViewById(R.id.mainActivityNavigationView);
 
         buttonShowNotification = findViewById(R.id.showNotification);
 
@@ -81,6 +81,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
                 startActivity(intent);
+            }
+        });
+
+        mainActivityConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (notebookNavigationView.getVisibility() == View.VISIBLE) {
+                    notebookNavigationView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+
+        mainActivityNavigationViewImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notebookNavigationView.setVisibility(View.VISIBLE);
             }
         });
     }

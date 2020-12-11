@@ -10,6 +10,21 @@
     tools:context=".MainActivity">
 
 
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/mainActivityNavigationView"
+        android:layout_width="158dp"
+        android:layout_height="657dp"
+        android:layout_marginTop="2dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listOfNotebooks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.navigation.NavigationView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listOfNotes"
         android:layout_width="0dp"
@@ -59,11 +74,11 @@
         android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toEndOf="@id/mainActivity"
+        app:layout_constraintStart_toEndOf="@id/mainActivityNavigationViewImageView"
         app:srcCompat="@drawable/ic_baseline_access_alarm_24" />
 
     <ImageButton
-        android:id="@+id/mainActivity"
+        android:id="@+id/mainActivityNavigationViewImageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"

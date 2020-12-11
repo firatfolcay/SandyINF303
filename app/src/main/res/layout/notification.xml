@@ -38,11 +38,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toEndOf="@id/mainActivity"
+        app:layout_constraintStart_toEndOf="@id/mainActivityNavigationViewImageView"
         app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
 
     <ImageButton
-        android:id="@+id/mainActivity"
+        android:id="@+id/mainActivityNavigationViewImageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
