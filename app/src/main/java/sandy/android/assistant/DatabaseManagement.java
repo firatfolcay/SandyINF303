@@ -390,7 +390,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notebooks;
     }
 
-    public ArrayList<Note> getNotesFromNotebook(Notebook n){
+    public ArrayList<Note> getNotesFromNotebook(Notebook n){    //Use this function to display the notes inside of a notebook
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Note> notes = new ArrayList<Note>();
 
@@ -411,6 +411,30 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             }
         }
         return notes;
+    }
+
+    public void addNoteToNotebook(Note note, Notebook notebook){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTES_COLUMN_NOTEBOOK_ID, notebook.getId());
+
+        db.update(NOTES_TABLE_NAME,
+                contentValues,
+                "id= ?",
+                new String[]{"" + note.getId()});
+    }
+
+    public void removeNoteFromNotebook(Note note){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTES_COLUMN_NOTEBOOK_ID, (Integer) null);
+
+        db.update(NOTES_TABLE_NAME,
+                contentValues,
+                "id= ?",
+                new String[]{"" + note.getId()});
     }
 }
 
