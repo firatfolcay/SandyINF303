@@ -28,10 +28,10 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public static final String NOTIFICATIONS_COLUMN_DATE = "date";
     //public static final String NOTIFICATIONS_COLUMN_NOTE_ID = "notification_note_id";
 
-    public static final String NOTEBOOK_TABLE_NAME = "notebooks";
-    public static final String NOTEBOOK_COLUMN_ID = "id";
-    public static final String NOTEBOOK_COLUMN_TITLE = "title";
-    //public static final String NOTEBOOK_COLUMN_NOTE_IDS = "note_ids";
+    public static final String NOTEBOOKS_TABLE_NAME = "notebooks";
+    public static final String NOTEBOOKS_COLUMN_ID = "id";
+    public static final String NOTEBOOKS_COLUMN_TITLE = "title";
+    //public static final String NOTEBOOKS_COLUMN_NOTE_IDS = "note_ids";
 
     public DatabaseManagement(Context context) {        //DatabaseManagement constructor method
         super(context, DATABASE_NAME, null, 3);
@@ -54,13 +54,14 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 NOTES_COLUMN_CONTENT + " text, " +
                 NOTES_COLUMN_SAVEDATE + " text, " +
                 NOTES_COLUMN_NOTIFICATION_ID + " integer, " +
+                NOTES_COLUMN_NOTEBOOK_ID + " integer, " +
                 "FOREIGN KEY" + "(" + NOTES_COLUMN_NOTIFICATION_ID + ") " +
                 "REFERENCES " + NOTIFICATIONS_TABLE_NAME + "(" + NOTIFICATIONS_COLUMN_ID + ")" + ")";
         db.execSQL(notes_sql);
 
-        String notebooks_sql = "create table " + NOTEBOOK_TABLE_NAME +
-                " (" + NOTEBOOK_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
-                NOTEBOOK_COLUMN_TITLE + " text" + ")";
+        String notebooks_sql = "create table " + NOTEBOOKS_TABLE_NAME +
+                " (" + NOTEBOOKS_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
+                NOTEBOOKS_COLUMN_TITLE + " text" + ")";
         db.execSQL(notebooks_sql);
 
     }
@@ -69,6 +70,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {      //SQLiteOpenHelper class-dependent method to refresh database tables
         db.execSQL("DROP TABLE IF EXISTS " + NOTES_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + NOTIFICATIONS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + NOTEBOOKS_TABLE_NAME);
         onCreate(db);
     }
 
@@ -318,20 +320,20 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(NOTEBOOK_COLUMN_TITLE, n.getTitle());
+        contentValues.put(NOTEBOOKS_COLUMN_TITLE, n.getTitle());
 
-        db.insert(NOTEBOOK_TABLE_NAME, null, contentValues);
+        db.insert(NOTEBOOKS_TABLE_NAME, null, contentValues);
     }
 
     public void updateNotebook(Notebook n, Notebook key){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(NOTEBOOK_COLUMN_TITLE, n.getTitle());
+        contentValues.put(NOTEBOOKS_COLUMN_TITLE, n.getTitle());
 
-        db.update(NOTEBOOK_TABLE_NAME,
+        db.update(NOTEBOOKS_TABLE_NAME,
                 contentValues,
-                NOTEBOOK_COLUMN_ID + "= ? ",
+                NOTEBOOKS_COLUMN_ID + "= ? ",
                 new String[] { Integer.toString(key.getId()) } );
     }
 
@@ -344,8 +346,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
             db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTEBOOK_ID + "= ?", new String[] { Integer.toString(n.getId()) });
 
-            db.delete(NOTEBOOK_TABLE_NAME,
-                    NOTEBOOK_COLUMN_ID + " = ? ",
+            db.delete(NOTEBOOKS_TABLE_NAME,
+                    NOTEBOOKS_COLUMN_ID + " = ? ",
                     new String[] { Integer.toString(n.getId()) });
 
         } catch (Exception e) {
@@ -360,9 +362,9 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         ArrayList<Integer> noteIds = new ArrayList<Integer>();
         String title = "";
 
-        Cursor notebook = db.rawQuery("select * from " + NOTEBOOK_TABLE_NAME + " where " + NOTEBOOK_COLUMN_ID + "= " + id,null);
+        Cursor notebook = db.rawQuery("select * from " + NOTEBOOKS_TABLE_NAME + " where " + NOTEBOOKS_COLUMN_ID + "= " + id,null);
         notebook.moveToFirst();
-        title = notebook.getString(notebook.getColumnIndex(NOTEBOOK_COLUMN_TITLE));
+        title = notebook.getString(notebook.getColumnIndex(NOTEBOOKS_COLUMN_TITLE));
 
         Cursor notes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + id,null);
         notes.moveToFirst();
@@ -378,12 +380,12 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Notebook> notebooks = new ArrayList<Notebook>();
 
-        Cursor resNotebook = db.rawQuery("select * from " + NOTEBOOK_TABLE_NAME, null);
+        Cursor resNotebook = db.rawQuery("select * from " + NOTEBOOKS_TABLE_NAME, null);
         resNotebook.moveToFirst();
 
         while(resNotebook.isAfterLast() == false){
             //adds notebook to the array to be returned
-            notebooks.add(getNotebookFromNotebookId(resNotebook.getInt(resNotebook.getColumnIndex(NOTEBOOK_COLUMN_ID))));
+            notebooks.add(getNotebookFromNotebookId(resNotebook.getInt(resNotebook.getColumnIndex(NOTEBOOKS_COLUMN_ID))));
             resNotebook.moveToNext();
         }
 
