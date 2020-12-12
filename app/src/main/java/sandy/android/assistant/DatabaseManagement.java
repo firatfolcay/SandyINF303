@@ -1,5 +1,6 @@
 package sandy.android.assistant;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import android.content.ContentValues;
@@ -30,7 +31,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public static final String NOTEBOOK_TABLE_NAME = "notebooks";
     public static final String NOTEBOOK_COLUMN_ID = "id";
     public static final String NOTEBOOK_COLUMN_TITLE = "title";
-    public static final String NOTEBOOK_COLUMN_NOTE_IDS = "note_ids";
+    //public static final String NOTEBOOK_COLUMN_NOTE_IDS = "note_ids";
 
     public DatabaseManagement(Context context) {        //DatabaseManagement constructor method
         super(context, DATABASE_NAME, null, 3);
@@ -59,8 +60,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         String notebooks_sql = "create table " + NOTEBOOK_TABLE_NAME +
                 " (" + NOTEBOOK_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
-                NOTEBOOK_COLUMN_TITLE + " text, " +
-                NOTEBOOK_COLUMN_NOTE_IDS + " text" + ")";
+                NOTEBOOK_COLUMN_TITLE + " text" + ")";
         db.execSQL(notebooks_sql);
 
     }
@@ -340,7 +340,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         try {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, (Integer) null);
+            contentValues.put(NOTES_COLUMN_NOTEBOOK_ID, (Integer) null);
 
             db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTEBOOK_ID + "= ?", new String[] { Integer.toString(n.getId()) });
 
@@ -374,8 +374,43 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return new Notebook(id, title, noteIds);
     }
 
-    public void getNotesFromNotebookId(int id){
+    public ArrayList<Notebook> getAllNotebooks(){   //returns the current notebook with their notes' ids
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Notebook> notebooks = new ArrayList<Notebook>();
 
+        Cursor resNotebook = db.rawQuery("select * from " + NOTEBOOK_TABLE_NAME, null);
+        resNotebook.moveToFirst();
+
+        while(resNotebook.isAfterLast() == false){
+            //adds notebook to the array to be returned
+            notebooks.add(getNotebookFromNotebookId(resNotebook.getInt(resNotebook.getColumnIndex(NOTEBOOK_COLUMN_ID))));
+            resNotebook.moveToNext();
+        }
+
+        return notebooks;
+    }
+
+    public ArrayList<Note> getNotesFromNotebook(Notebook n){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Note> notes = new ArrayList<Note>();
+
+        //if the notebook has the note ids it should be a bit faster to run this way
+        if(n.getNoteIds() != null){
+            if(n.getNoteIds().size() > 0){
+                for(Integer id: n.getNoteIds()){
+                    notes.add(getNoteFromNoteId(id));
+                }
+            }
+        }
+        else{
+            Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + n.getId(),null);
+            resNotes.moveToFirst();
+            while(!resNotes.isAfterLast()){
+                notes.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
+                resNotes.moveToNext();
+            }
+        }
+        return notes;
     }
 }
 
