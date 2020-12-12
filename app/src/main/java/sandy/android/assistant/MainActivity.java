@@ -24,14 +24,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     DatabaseManagement db;
     LinearLayoutManager linearLayoutManager;
+    LinearLayoutManager notebooksLinearLayoutManager;
     ConstraintLayout mainActivityConstraintLayout;
     RecyclerView listOfNotes;
+    RecyclerView listOfNotebooks;
     NavigationView notebookNavigationView;
     ImageView mainActivityNavigationViewImageView;
     FloatingActionButton fab_create_new_note;
     ImageView buttonShowNotification;
     ArrayList<Note> notes;
+    ArrayList<Notebook> notebooks;
     NoteAdapter noteAdapter;
+    MainActivityNavigationDrawerAdapter mainActivityNavigationDrawerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +53,24 @@ public class MainActivity extends AppCompatActivity {
         buttonShowNotification = findViewById(R.id.showNotification);
 
         listOfNotes = findViewById(R.id.listOfNotes);
+        listOfNotebooks = findViewById(R.id.mainActivityListOfNotebooks);
 
 
         notes = db.getAllNotes();
         noteAdapter = new NoteAdapter(this, notes, db, this);       //create new Adapter to fetch Notes from DB and to show them in Cardview inside Recycleview
         listOfNotes.setAdapter(noteAdapter);
 
-        linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
+        notebooks = db.getAllNotebooks();
+        mainActivityNavigationDrawerAdapter = new MainActivityNavigationDrawerAdapter(this, notebooks, db);
+        listOfNotebooks.setAdapter(mainActivityNavigationDrawerAdapter);
+
+        linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Notes Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotes.setLayoutManager(linearLayoutManager);
+
+        notebooksLinearLayoutManager = new LinearLayoutManager(this);
+        notebooksLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        listOfNotebooks.setLayoutManager(notebooksLinearLayoutManager);
 
         // Unused variables ??
         ConstraintLayout mainActivityConstraintLayout = findViewById(R.id.mainActivityConstraintLayout);
@@ -66,15 +79,10 @@ public class MainActivity extends AppCompatActivity {
         buttonShowNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*Intent intent = new Intent(getApplicationContext(),NotificationController.class);
-                startActivity(intent);*/
-
                 Intent intent = new Intent(getApplicationContext(), NotificationViewActivity.class);
                 startActivity(intent);
             }
         });
-
 
         fab_create_new_note.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +93,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mainActivityConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (notebookNavigationView.getVisibility() == View.VISIBLE) {
+                    notebookNavigationView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        listOfNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (notebookNavigationView.getVisibility() == View.VISIBLE) {
@@ -135,6 +152,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {       //overrides back button behavior
+        if (notebookNavigationView.getVisibility() == View.VISIBLE) {       //if navigation drawer is opened
+            notebookNavigationView.setVisibility(View.INVISIBLE);           //simply close it
+        } else {
+            super.onBackPressed();      //if navigation drawer is already closed, apply primary activity behavior
+        }
     }
 
     public void startNoteEditorActivity () {
