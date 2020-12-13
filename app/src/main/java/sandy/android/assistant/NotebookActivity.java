@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,6 +27,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class NotebookActivity extends AppCompatActivity {
+    private static final int REQUEST_NOTEBOOK = 0;
 
     DatabaseManagement db;
     LinearLayoutManager linearLayoutManager;
@@ -41,7 +43,6 @@ public class NotebookActivity extends AppCompatActivity {
     FloatingActionButton fabAddNewNoteToNotebook;
     Spinner spinnerSetNotebookViewType;
 
-    String selectedNotebookIdString;
     Notebook selectedNotebook;
 
     String notebookEditorViewHtmlString;
@@ -66,29 +67,39 @@ public class NotebookActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotesOfNotebook.setLayoutManager(linearLayoutManager);
 
-        selectedNotebookIdString = getIntent().getStringExtra("NOTEBOOK_ID");
-        Integer selectedNotebookId = Integer.parseInt(selectedNotebookIdString);
-
-        selectedNotebook = db.getNotebookFromNotebookId(selectedNotebookId);
-        this.setNotebookViewContent(selectedNotebook);
-
-
-
         spinnerSetNotebookViewType = findViewById(R.id.spinnerSetNotebookViewType);
         spinnerSetNotebookViewType.setVisibility(View.VISIBLE);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            if(b.get("NOTEBOOK_ID") != null){
+                selectedNotebook = db.getNotebookFromNotebookId(b.getInt("NOTEBOOK_ID"));
+                this.setNotebookViewContent(selectedNotebook);
+            }
+            else{
+                finish();
+                Toast.makeText(getApplicationContext(), "Failed to open selected Notebook", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        else{
+            finish();
+            Toast.makeText(getApplicationContext(), "Failed to open selected Notebook", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         spinnerSetNotebookViewType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals(R.string.spinner_item_1)) {         //if list view is selected,
+                if (selectedItem.equals(getResources().getString(R.string.spinner_item_1))) {         //if list view is selected,
                     if (notebookEditorViewConstraintLayout.getVisibility() == View.VISIBLE) {
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
                         fabAddNewNoteToNotebook.setVisibility(View.VISIBLE);
                         listOfNotesOfNotebook.setVisibility(View.VISIBLE);
                     }
                 }
-                else if (selectedItem.equals(R.string.spinner_item_2)) {        //if note editor view is selected
+                else if (selectedItem.equals(getResources().getString(R.string.spinner_item_2))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
                     ArrayList<String> notebookEditorViewFragments = new ArrayList<String>();
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
@@ -129,9 +140,10 @@ public class NotebookActivity extends AppCompatActivity {
         fabAddNewNoteToNotebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo here comes the initialization of note selection screen that will be added to notebook
+                //initialization of note selection screen for notebook
                 Intent intent = new Intent(getApplicationContext(), NotebookAttachNoteActivity.class);
-                startActivity(intent);
+                intent.putExtra("NOTEBOOK_ID", selectedNotebook.getId());
+                startActivityForResult(intent, REQUEST_NOTEBOOK);
 
             }
         });
@@ -149,12 +161,8 @@ public class NotebookActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        selectedNotebookIdString = getIntent().getStringExtra("NOTEBOOK_ID");
-        Integer selectedNotebookId = Integer.parseInt(selectedNotebookIdString);
-
-        selectedNotebook = db.getNotebookFromNotebookId(selectedNotebookId);
+        selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
         this.setNotebookViewContent(selectedNotebook);
-
     }
 
     public void setNotebookViewContent(Notebook n) {

@@ -439,19 +439,20 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 new String[]{"" + note.getId()});
     }
 
-    public ArrayList<Note> getAllNotesWithNoNotebooksAttached() {
+    public ArrayList<Note> getAllNotesExceptCurrentNotebook(Notebook n) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<Note> notesWithNoNotebooksAttached = new ArrayList<Note>();
+        ArrayList<Note> notes = new ArrayList<Note>();
 
-        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + null,null);
+        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where not exists " +
+                "(" + "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId() + ")",null);
 
         resNotes.moveToFirst();
         while(!resNotes.isAfterLast()){
-            notesWithNoNotebooksAttached.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
+            notes.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
             resNotes.moveToNext();
         }
-
-        return notesWithNoNotebooksAttached;
+        System.out.println("SIZE OF RETURNED ARRAY: " + notes.size());
+        return notes;
     }
 }
 

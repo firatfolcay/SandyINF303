@@ -72,8 +72,8 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            noteTitle = (TextView) itemView.findViewById(R.id.noteTitle);
-            noteDescription = (TextView) itemView.findViewById(R.id.noteDescription);
+            noteTitle = (TextView) itemView.findViewById(R.id.noteToAttachTitle);
+            noteDescription = (TextView) itemView.findViewById(R.id.noteToAttachDescription);
 
             noteToAttachLinearLayout = (LinearLayout) itemView.findViewById(R.id.noteToAttachLinearLayout);
             noteToAttachLinearLayout.setOnClickListener(this);
