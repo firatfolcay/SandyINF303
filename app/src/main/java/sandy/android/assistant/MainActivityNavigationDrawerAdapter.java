@@ -111,7 +111,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
             Notebook notebookToOpen = notebookArrayList.get(position);
             
             Intent intent = new Intent(activity.getApplicationContext(), NotebookActivity.class);
-            intent.putExtra("NOTEBOOK_ID", notebookToOpen.getId());
+            intent.putExtra("NOTEBOOK_ID", notebookToOpen.getId().toString());
             activity.startActivityForResult(intent, 0);
 
             refresh();

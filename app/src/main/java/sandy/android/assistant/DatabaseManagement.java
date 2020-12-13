@@ -438,5 +438,20 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 "id= ?",
                 new String[]{"" + note.getId()});
     }
+
+    public ArrayList<Note> getAllNotesWithNoNotebooksAttached() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<Note> notesWithNoNotebooksAttached = new ArrayList<Note>();
+
+        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + null,null);
+
+        resNotes.moveToFirst();
+        while(!resNotes.isAfterLast()){
+            notesWithNoNotebooksAttached.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
+            resNotes.moveToNext();
+        }
+
+        return notesWithNoNotebooksAttached;
+    }
 }
 

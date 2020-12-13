@@ -10,8 +10,42 @@
     tools:context=".NotebookActivity">
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/notebookEditorViewConstraintLayout"
+        android:layout_width="413dp"
+        android:layout_height="585dp"
+        android:layout_marginTop="74dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:id="@+id/notebookEditorScrollViewLayout"
+            android:layout_width="405dp"
+            android:layout_height="592dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-27dp"
+            android:scrollbars="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.github.irshulx.Editor
+                android:id="@+id/notebookEditorView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="150dp"
+                app:render_type="Editor">
+
+            </com.github.irshulx.Editor>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listOfNotebooks"
+        android:id="@+id/listOfNotesOfNotebook"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -41,15 +75,48 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/mainActivityNavigationViewImageView"
+        android:id="@+id/buttonBackFromNotebookRecyclerView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
-        app:layout_constraintBottom_toTopOf="@id/listOfNotebooks"
+        app:layout_constraintBottom_toTopOf="@id/listOfNotesOfNotebook"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_dialer" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arrow_blazing_sir_left" />
+
+    <Spinner
+        android:id="@+id/spinnerSetNotebookViewType"
+        android:layout_width="187dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="205dp"
+        android:layout_marginTop="15dp"
+        android:entries="@array/spinnerItems"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textviewNotebookViewNotebookTitle"
+        android:layout_width="116dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="13dp"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddNewNoteToNotebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="324dp"
+        android:layout_marginTop="552dp"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
