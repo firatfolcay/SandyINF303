@@ -31,6 +31,7 @@ public class NotebookActivity extends AppCompatActivity {
     private static final int REQUEST_NOTEBOOK = 0;
 
     DatabaseManagement db;
+    ConstraintLayout constraintLayout;
     LinearLayoutManager linearLayoutManager;
     RecyclerView listOfNotesOfNotebook;
     ArrayList<Notebook> notebookArrayList;
@@ -56,7 +57,7 @@ public class NotebookActivity extends AppCompatActivity {
         setContentView(R.layout.notebook_recycler_view);
 
         db = new DatabaseManagement(this);
-
+        constraintLayout = findViewById(R.id.notebookConstraintLayout);
         fabAddNewNoteToNotebook = findViewById(R.id.fabAddNewNoteToNotebook);
         notebookTitle = findViewById(R.id.textviewNotebookViewNotebookTitle);
         backButton = findViewById(R.id.buttonBackFromNotebookRecyclerView);
@@ -100,6 +101,7 @@ public class NotebookActivity extends AppCompatActivity {
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
                         fabAddNewNoteToNotebook.setVisibility(View.VISIBLE);
                         listOfNotesOfNotebook.setVisibility(View.VISIBLE);
+                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));
                     }
                 }
                 else if (selectedItem.equals(getResources().getString(R.string.spinner_item_2))) {        //if note editor view is selected
@@ -107,7 +109,7 @@ public class NotebookActivity extends AppCompatActivity {
                     ArrayList<String> notebookEditorViewFragments = new ArrayList<String>();
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
                     notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);
-
+                    constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));
                     if (notesFromNotebook.size() > 0) {     //if notebook has notes in it
                         for (int index = 0; index < notesFromNotebook.size(); index++) {
                             notebookEditorViewFragments.add(notesFromNotebook.get(index).getContent());
@@ -177,7 +179,7 @@ public class NotebookActivity extends AppCompatActivity {
                 if (!notebookEditTitleEditText.getText().toString().isEmpty()) {           //if notebook title input isn't empty
                     db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),
                             selectedNotebook);
-                    onResume();
+                    onResume();                             //to update the current screen
                     popupWindow.dismiss();                  //dispose popup
                 }
             });
