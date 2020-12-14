@@ -39,7 +39,7 @@
                 android:paddingTop="20dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="150dp"
-                app:render_type="Editor">
+                app:render_type="Renderer">
 
             </com.github.irshulx.Editor>
         </ScrollView>

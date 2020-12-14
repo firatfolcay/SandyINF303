@@ -106,6 +106,7 @@ public class NotebookActivity extends AppCompatActivity {
                 }
                 else if (selectedItem.equals(getResources().getString(R.string.spinner_item_2))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
+                    notebookEditorView.clearAllContents();
                     ArrayList<String> notebookEditorViewFragments = new ArrayList<String>();
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
                     notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);
