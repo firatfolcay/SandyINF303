@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -39,6 +40,7 @@ public class NotebookActivity extends AppCompatActivity {
     ConstraintLayout notebookEditorViewConstraintLayout;
     Editor notebookEditorView;
     ImageView backButton;
+    ImageView editTitleButton;
 
     FloatingActionButton fabAddNewNoteToNotebook;
     Spinner spinnerSetNotebookViewType;
@@ -58,6 +60,7 @@ public class NotebookActivity extends AppCompatActivity {
         fabAddNewNoteToNotebook = findViewById(R.id.fabAddNewNoteToNotebook);
         notebookTitle = findViewById(R.id.textviewNotebookViewNotebookTitle);
         backButton = findViewById(R.id.buttonBackFromNotebookRecyclerView);
+        editTitleButton = findViewById(R.id.imageViewTitleEditButton);
 
         notebookEditorViewConstraintLayout = findViewById(R.id.notebookEditorViewConstraintLayout);
 
@@ -121,6 +124,7 @@ public class NotebookActivity extends AppCompatActivity {
                         listOfNotesOfNotebook.setVisibility(View.INVISIBLE);
                         notebookEditorViewConstraintLayout.setVisibility(View.VISIBLE);
                         notebookEditorView.render(notebookEditorViewHtmlString);        //render all concatenated html strings as editor content.
+                        notebookEditorViewHtmlString = "";
                     }
                     else {
                         System.out.println("Notebook has no notes inside");
@@ -153,6 +157,34 @@ public class NotebookActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
+        });
+
+        editTitleButton.setOnClickListener(v -> {
+            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.notebook_edit_title_popup_view, null);
+
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+            EditText notebookEditTitleEditText = (EditText) popupView.findViewById(R.id.notebookEditTitleEditText);              //initialize popup windows views
+            Button notebookEditTitleSaveButton = (Button) popupView.findViewById(R.id.notebookEditTitleSaveButton);
+            Button notebookEditTitleCancelButton = (Button) popupView.findViewById(R.id.notebookEditTitleCancelButton);
+
+            notebookEditTitleSaveButton.setOnClickListener(v1 -> {
+                if (!notebookEditTitleEditText.getText().toString().isEmpty()) {           //if notebook title input isn't empty
+                    db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),
+                            selectedNotebook);
+                    onResume();
+                    popupWindow.dismiss();                  //dispose popup
+                }
+            });
+
+            notebookEditTitleCancelButton.setOnClickListener(v2 -> {
+                popupWindow.dismiss();          //dispose popup
+            });
         });
 
     }
