@@ -443,8 +443,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         SQLiteDatabase db = this.getWritableDatabase();
         ArrayList<Note> notes = new ArrayList<Note>();
 
-        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where not exists " +
-                "(" + "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId() + ")",null);
+        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " except " +
+                "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId(),null);
 
         resNotes.moveToFirst();
         while(!resNotes.isAfterLast()){

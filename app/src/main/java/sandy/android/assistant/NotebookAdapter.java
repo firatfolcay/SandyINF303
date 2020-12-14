@@ -44,7 +44,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
     @Override
     public void onBindViewHolder(NotebookAdapter.MyViewHolder holder, int position) {
         Note selectedNote = notebookNotes.get(position);
-
         holder.setData(selectedNote, position);
     }
 
@@ -61,8 +60,8 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            notebookTitle = (TextView) itemView.findViewById(R.id.noteOfNotebookTitle);
 
-            notebookTitle = (TextView) itemView.findViewById(R.id.notebookTitle);
             //notebookDescription = (TextView) itemView.findViewById(R.id.notificationDescription);
 
             notesOfNotebookLinearLayout = (LinearLayout) itemView.findViewById(R.id.notesOfNotebookLinearLayout);
