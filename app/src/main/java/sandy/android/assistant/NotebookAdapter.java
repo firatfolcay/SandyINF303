@@ -3,14 +3,20 @@ package sandy.android.assistant;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
@@ -26,10 +32,13 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
     LayoutInflater inflater;
     Editor editor;
     Activity activity;
+    View root;
 
-    public NotebookAdapter(Context context, ArrayList<Note> notebookNotes, DatabaseManagement db) {
+    public NotebookAdapter(Context context, ArrayList<Note> notebookNotes, Notebook notebook, View view, DatabaseManagement db) {
         inflater = LayoutInflater.from(context);
         this.notebookNotes = notebookNotes;
+        this.notebook = notebook;
+        this.root = view;
         this.db = db;
         this.activity = (Activity) context;
     }
@@ -55,7 +64,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView notebookTitle;
-
         LinearLayout notesOfNotebookLinearLayout;
 
         public MyViewHolder(View itemView) {
@@ -81,22 +89,33 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         @Override
         public void onClick(View v) {
             if (v == notesOfNotebookLinearLayout) {
-                openNoteOfNotebook(getLayoutPosition());
+                openNote(getLayoutPosition(), root);
             }
 
         }
 
-        private void openNoteOfNotebook(int position) {
-            Note noteToOpen = notebookNotes.get(position);
+        private void openNote(int position, View v) {
+            Note note = notebookNotes.get(position);
 
-            Intent intent = new Intent(activity.getApplicationContext(), NotebookActivity.class);
-            intent.putExtra("NOTE_ID", noteToOpen.getId());
-            activity.startActivityForResult(intent, 0);
+            View popupView = inflater.inflate(R.layout.notebook_note_popup_view, null);
+
+            Editor renderer = popupView.findViewById(R.id.notebookPopupRenderer);
+            renderer.render(note.getContent());
+
+            TextView title = popupView.findViewById(R.id.notebookPopupTitle);
+            title.setText(note.getTitle());
+            title.setEnabled(false);
+
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.MATCH_PARENT;
+            PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+
+            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
         }
 
-        private void refresh(Notebook n){
-            notebookNotes = db.getNotesFromNotebook(n);
+        private void refresh(){
+            notebookNotes = db.getNotesFromNotebook(notebook);
         }
 
         /*public void notifyRemoved(int position) {

@@ -101,16 +101,20 @@ public class NotebookActivity extends AppCompatActivity {
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
                         fabAddNewNoteToNotebook.setVisibility(View.VISIBLE);
                         listOfNotesOfNotebook.setVisibility(View.VISIBLE);
+
                         constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));
                     }
                 }
                 else if (selectedItem.equals(getResources().getString(R.string.spinner_item_2))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
                     notebookEditorView.clearAllContents();
+
                     ArrayList<String> notebookEditorViewFragments = new ArrayList<String>();
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
                     notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);
+
                     constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));
+
                     if (notesFromNotebook.size() > 0) {     //if notebook has notes in it
                         for (int index = 0; index < notesFromNotebook.size(); index++) {
                             notebookEditorViewFragments.add(notesFromNotebook.get(index).getContent());
@@ -172,7 +176,7 @@ public class NotebookActivity extends AppCompatActivity {
 
             popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-            EditText notebookEditTitleEditText = (EditText) popupView.findViewById(R.id.notebookEditTitleEditText);              //initialize popup windows views
+            EditText notebookEditTitleEditText = (EditText) popupView.findViewById(R.id.notebookEditTitleEditText);
             Button notebookEditTitleSaveButton = (Button) popupView.findViewById(R.id.notebookEditTitleSaveButton);
             Button notebookEditTitleCancelButton = (Button) popupView.findViewById(R.id.notebookEditTitleCancelButton);
 
@@ -202,7 +206,7 @@ public class NotebookActivity extends AppCompatActivity {
 
     public void setNotebookViewContent(Notebook n) {
         notebookNotes = db.getNotesFromNotebook(n);
-        notebookAdapter = new NotebookAdapter(this, notebookNotes, db);
+        notebookAdapter = new NotebookAdapter(this, notebookNotes, n, constraintLayout, db);
         listOfNotesOfNotebook.setAdapter(notebookAdapter);
         notebookTitle.setText(n.getTitle());
     }
