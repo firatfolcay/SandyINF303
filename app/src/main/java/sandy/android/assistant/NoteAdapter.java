@@ -114,8 +114,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 mNoteList.remove(position);
                 mNoteList = db.getAllNotes();
                 notifyRemoved(position);
-                //notifyItemRemoved(position);
-                //notifyItemRangeChanged(position, mNoteList.size());
             }
             else {
                 Toast.makeText(activity, "Note couldn't be deleted.", Toast.LENGTH_LONG);

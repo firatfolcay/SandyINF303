@@ -25,9 +25,10 @@
             android:background="@color/darkOrange"
             android:orientation="vertical">
 
+
             <TextView
                 android:id="@+id/noteOfNotebookTitle"
-                android:layout_width="399dp"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="0dp"
@@ -37,6 +38,30 @@
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/notesOfNotebookDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="3dp"
+                android:text=""
+                android:textSize="12dp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/notesOfNotebookDelete"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/icon_erase" />
 
         </LinearLayout>
 

@@ -30,9 +30,9 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
     Notebook notebook;
     ArrayList<Note> notebookNotes;
     LayoutInflater inflater;
-    Editor editor;
     Activity activity;
     View root;
+
 
     public NotebookAdapter(Context context, ArrayList<Note> notebookNotes, Notebook notebook, View view, DatabaseManagement db) {
         inflater = LayoutInflater.from(context);
@@ -65,6 +65,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         TextView notebookTitle;
         LinearLayout notesOfNotebookLinearLayout;
+        ImageView deleteButton;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -74,6 +75,9 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
             notesOfNotebookLinearLayout = (LinearLayout) itemView.findViewById(R.id.notesOfNotebookLinearLayout);
             notesOfNotebookLinearLayout.setOnClickListener(this);
+
+            deleteButton = itemView.findViewById(R.id.notesOfNotebookDelete);
+            deleteButton.setOnClickListener(this);
 
         }
 
@@ -88,6 +92,9 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         @Override
         public void onClick(View v) {
+            if(v == deleteButton){
+                deleteNote(getLayoutPosition());
+            }
             if (v == notesOfNotebookLinearLayout) {
                 openNote(getLayoutPosition(), root);
             }
@@ -114,6 +121,20 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         }
 
+        private void deleteNote(int position){
+            //if you spam the delete button it might throw out of bounds exception
+            try {
+                Note note = notebookNotes.get(position);
+                db.removeNoteFromNotebook(note);
+                notebookNotes.remove(position);
+                //refresh();
+                notifyRemoved(position);
+            }
+            catch (Exception e){
+
+            }
+        }
+
         private void refresh(){
             notebookNotes = db.getNotesFromNotebook(notebook);
         }
@@ -130,6 +151,11 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         public void notifyChanged() {
             notifyDataSetChanged();
+        }
+
+        public void notifyRemoved(int position) {
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, notebookNotes.size());
         }
 
 
