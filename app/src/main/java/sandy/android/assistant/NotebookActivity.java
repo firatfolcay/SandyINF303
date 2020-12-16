@@ -96,6 +96,7 @@ public class NotebookActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
+                selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
                 if (selectedItem.equals(getResources().getString(R.string.spinner_item_1))) {         //if list view is selected,
                     if (notebookEditorViewConstraintLayout.getVisibility() == View.VISIBLE) {
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
@@ -113,9 +114,8 @@ public class NotebookActivity extends AppCompatActivity {
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
                     notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);
 
-                    constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));
-
                     if (notesFromNotebook.size() > 0) {     //if notebook has notes in it
+                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));
                         for (int index = 0; index < notesFromNotebook.size(); index++) {
                             notebookEditorViewFragments.add(notesFromNotebook.get(index).getContent());
                             String lineDivider = "<hr data-tag=" + '"' + "hr" + '"' + "/>";     //insert line divider between adjacent notes.
@@ -199,7 +199,6 @@ public class NotebookActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
         this.setNotebookViewContent(selectedNotebook);
     }
