@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -351,7 +354,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
                     calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification().getDate(), editNote.getContent());      //instantiate new calendarSync object
-                    addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription());     //call method that sends Note info to Calendar API
+                    addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
                 }
                 else {          //if there's no notifications attached to note,
                     Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
@@ -464,13 +467,44 @@ public class NoteEditorActivity extends AppCompatActivity {
         editor.render(n.getContent());
     }
 
-    private void addCalendarEvent(String title, String description) {       //function to add note information as calendar event
+    private void addCalendarEvent(String title, String description, String date) {       //function to add note information as calendar event
+
+        long startMillis = 0;
+        long endMillis = 0;
+        String calendarDate = "";
+        String calendarTime = "";
+        String date_time = date;
+
+        calendarDate = date_time.substring(0,date_time.indexOf('T'));
+        calendarTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+
+        Integer calendarYear = Integer.parseInt(calendarDate.split("-")[0]);
+        Integer calendarMonth = Integer.parseInt(calendarDate.split("-")[1]);
+        Integer calendarDay = Integer.parseInt(calendarDate.split("-")[2]);
+
+        Integer calendarHour = Integer.parseInt(calendarTime.split(":")[0]);
+        Integer calendarMinute = Integer.parseInt(calendarTime.split(":")[1]);
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour, calendarMinute);
+        startMillis = beginTime.getTimeInMillis();
+        System.out.println("beginTime: " + beginTime);
+        System.out.println("startMillis: " + startMillis);
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour+1, calendarMinute);
+        endMillis = endTime.getTimeInMillis();
+        System.out.println("endTime: " + endTime);
+        System.out.println("endMillis: " + endMillis);
+
+        Spanned calendarDescription = Html.fromHtml(description);
+        System.out.println("calendarDescription spanned: " + calendarDescription);
+
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
                 .putExtra(CalendarContract.Events.TITLE, title)
-                .putExtra(CalendarContract.Events.DESCRIPTION, description);
-        //.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, begin)
-        //.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end);
+                .putExtra(CalendarContract.Events.DESCRIPTION, calendarDescription.toString());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
