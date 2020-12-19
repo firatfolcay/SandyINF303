@@ -9,7 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.sql.Time;
 import java.util.Calendar;
+import java.util.Date;
 
 public class TimePickerFragment extends DialogFragment {
 
@@ -35,7 +37,9 @@ public class TimePickerFragment extends DialogFragment {
             minute = calendar.get(Calendar.MINUTE);
         }
 
-        return new TimePickerDialog(getActivity(),(TimePickerDialog.OnTimeSetListener)getActivity(),hour,minute, DateFormat.is24HourFormat(getActivity()));
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),(TimePickerDialog.OnTimeSetListener)getActivity(),hour,minute, DateFormat.is24HourFormat(getActivity()));
+
+        return timePickerDialog;
     }
 
 }

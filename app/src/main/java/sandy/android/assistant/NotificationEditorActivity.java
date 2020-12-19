@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -47,6 +48,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     Notification editNotification;
 
     String year,month,day,hour,minute;
+    String selectedDateString = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,11 +153,12 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         month = month + 1;
 
-        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        selectedDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
         try {
-            datePickerTextView.setText("Date: " + formatter1.format(formatter.parse(currentDateString)));
+            datePickerTextView.setText("Date: " + formatter1.format(formatter.parse(selectedDateString)));
+            selectedDateString = formatter1.format(formatter.parse(selectedDateString));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -167,8 +170,52 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) { // choosing time
 
-        timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
-        time = hourOfDay + ":" + minute;
+        Calendar datetime = Calendar.getInstance();
+        Calendar current = Calendar.getInstance();
+        datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        datetime.set(Calendar.MINUTE, minute);
+
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat formatter1 = DateFormat.getDateInstance(DateFormat.FULL);
+        Date currentDate = Calendar.getInstance().getTime();
+
+        String currentDateString = formatter.format(currentDate);
+
+        System.out.println("current date:" + currentDateString);
+        System.out.println("day month year: " + day + "-" + month + "-" + year);
+        System.out.println("selected date:" + selectedDateString);
+
+        if (selectedDateString == null) {
+            if (currentDateString.equals(day + "-" + month + "-" + year)) {
+                if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {
+                    timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+                    time = hourOfDay + ":" + minute;
+                } else {
+                    //it's before current'
+                    Toast.makeText(getApplicationContext(), "You can't select a past time for notification.", Toast.LENGTH_LONG).show();
+                }
+            }
+            else {
+                timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+                time = hourOfDay + ":" + minute;
+            }
+        }
+        else {
+            if (currentDateString.equals(selectedDateString)) {
+                if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {
+                    timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+                    time = hourOfDay + ":" + minute;
+                } else {
+                    //it's before current'
+                    Toast.makeText(getApplicationContext(), "You can't select a past time for notification.", Toast.LENGTH_LONG).show();
+                }
+            }
+            else {
+                timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+                time = hourOfDay + ":" + minute;
+            }
+        }
+
 
     }
 
