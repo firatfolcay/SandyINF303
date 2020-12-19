@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
 
@@ -40,7 +41,9 @@ public class DatePickerFragment extends DialogFragment {
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
         }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener)getActivity(), year,month,day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);     //disables past date selections from date picker
 
-        return new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener)getActivity(), year,month,day);
+        return datePickerDialog;
     }
 }

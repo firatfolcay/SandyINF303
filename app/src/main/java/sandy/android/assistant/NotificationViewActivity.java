@@ -1,6 +1,7 @@
 package sandy.android.assistant;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +22,14 @@ public class NotificationViewActivity extends AppCompatActivity {
     ArrayList<Note> notesWithNotification;
     NotificationAdapter notificationAdapter;
 
+    ImageView buttonBackToMainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_recycler_view);
+
+        buttonBackToMainActivity = findViewById(R.id.buttonBackToMainActivity);
 
         db = new DatabaseManagement(this);
 
@@ -35,6 +40,13 @@ public class NotificationViewActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotifications.setLayoutManager(linearLayoutManager);
+
+        buttonBackToMainActivity.setOnClickListener(new View.OnClickListener() {        //if back button is clicked
+            @Override
+            public void onClick(View v) {
+                finish();           //finish activity and go back to main activity screen
+            }
+        });
 
     }
 

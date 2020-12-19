@@ -14,14 +14,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
 
         mainActivityConstraintLayout = (ConstraintLayout) findViewById(R.id.mainActivityConstraintLayout);
-        mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.mainActivityNavigationViewImageView);
+        mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.buttonBackToMainActivity);
         notebookNavigationView = (NavigationView) findViewById(R.id.mainActivityNavigationView);
 
         buttonShowNotification = findViewById(R.id.showNotification);

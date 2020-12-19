@@ -121,11 +121,11 @@
         android:layout_marginBottom="16dp"
         android:background="#00FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/listOfNotes"
-        app:layout_constraintStart_toEndOf="@id/mainActivityNavigationViewImageView"
+        app:layout_constraintStart_toEndOf="@id/buttonBackToMainActivity"
         app:srcCompat="@drawable/ic_baseline_access_alarm_24" />
 
     <ImageButton
-        android:id="@+id/mainActivityNavigationViewImageView"
+        android:id="@+id/buttonBackToMainActivity"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"

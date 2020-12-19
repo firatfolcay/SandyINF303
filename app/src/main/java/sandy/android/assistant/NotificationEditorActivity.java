@@ -78,15 +78,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                //String dates = date+"-"+time;
-                //String[] date = dates.split("-");
-                /*Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR,Integer.parseInt(date[0]));
-                calendar.set(Calendar.MONTH,Integer.parseInt(date[1]));
-                calendar.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date[2]));
-                calendar.set(Calendar.HOUR_OF_DAY,Integer.parseInt(date[3]));
-                calendar.set(Calendar.MINUTE,Integer.parseInt(date[4]));
-                calendar.set(Calendar.SECOND,0);*/
                 //FIXME date-time format is a mess rn ngl
                 if(date == null || time == null){
                     return;
@@ -112,8 +103,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 finish();
 
                 return;
-                //notification.setDate(""+a);
-                //notification.setDate(String.valueOf(calendar.getTime()));
 
             }
 
@@ -137,7 +126,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {
                 if(editNotification != null){
-                    datePicker = new DatePickerFragment(new Integer(year), new Integer(month), new Integer(day));
+                    datePicker = new DatePickerFragment(new Integer(year), new Integer(month)-1, new Integer(day));
                 }
                 else
                     datePicker = new DatePickerFragment();
@@ -163,7 +152,14 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         month = month + 1;
 
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-        datePickerTextView.setText(currentDateString);
+        DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL);
+        DateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            datePickerTextView.setText("Date: " + formatter1.format(formatter.parse(currentDateString)));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         date = year + "-" + month + "-" + dayOfMonth;
 
     }
@@ -180,7 +176,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
         parse();
         timePickerTextView.setText("Hour: " + hour + " Minute: " + minute);
-        datePickerTextView.setText("TO BE FIXED");
+        datePickerTextView.setText("Date: " + day + "-" + month + "-" + year);
 
     }
 

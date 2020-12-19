@@ -30,13 +30,13 @@
 
     <TextView
         android:id="@+id/datePickertextView"
-        android:layout_width="96dp"
-        android:layout_height="28dp"
+        android:layout_width="135dp"
+        android:layout_height="57dp"
         android:layout_marginBottom="24dp"
         android:text="Date"
         app:layout_constraintBottom_toTopOf="@+id/datePickerButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintHorizontal_bias="0.139"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -52,12 +52,13 @@
 
     <TextView
         android:id="@+id/timePickertextView"
-        android:layout_width="116dp"
-        android:layout_height="40dp"
+        android:layout_width="130dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="24dp"
         android:text="Time"
         app:layout_constraintBottom_toTopOf="@+id/timePickerButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.84"
+        app:layout_constraintHorizontal_bias="0.903"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button

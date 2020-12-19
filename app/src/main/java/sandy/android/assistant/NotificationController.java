@@ -24,7 +24,7 @@ public class NotificationController extends AppCompatActivity {
         setContentView(R.layout.notification);
         createNotificationChannel();
 
-        ImageView buttonMainActivity = findViewById(R.id.mainActivityNavigationViewImageView);
+        ImageView buttonMainActivity = findViewById(R.id.buttonBackToMainActivity);
         Button denemeNotification = findViewById(R.id.alarmbutton);
         Button buttonNotificationEditor = (Button) findViewById(R.id.notificationEditorButton);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channel1")
