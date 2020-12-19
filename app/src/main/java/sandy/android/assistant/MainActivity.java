@@ -2,12 +2,15 @@ package sandy.android.assistant;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -26,8 +29,12 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    final int callbackId = 22;
     DatabaseManagement db;
     LinearLayoutManager linearLayoutManager;
     LinearLayoutManager notebooksLinearLayoutManager;
@@ -56,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //calls function that grants permissions for device interactions.
+        checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);     //calendar and external storage permission check
 
         db = new DatabaseManagement(this);
 
@@ -234,5 +244,15 @@ public class MainActivity extends AppCompatActivity {
         mainActivityNavigationDrawerAdapter = new MainActivityNavigationDrawerAdapter(this, notebooks, db);
         listOfNotebooks.setAdapter(mainActivityNavigationDrawerAdapter);
 
+    }
+
+    private void checkPermission(int callbackId, String... permissionsId) {     //checks if selected permissions exist, requests if missed.
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
+        }
+
+        if (!permissions)
+            ActivityCompat.requestPermissions(this, permissionsId, callbackId);
     }
 }
