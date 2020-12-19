@@ -24,6 +24,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     LayoutInflater inflater;
     Editor editor;
     Activity activity;
+    CalendarSync calendarSync = new CalendarSync();
     MainActivity mainActivity = new MainActivity();
 
     public NotificationAdapter(Context context, ArrayList<Note> notesWithNotification, DatabaseManagement db, MainActivity ma) {
@@ -110,6 +111,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             if (returnVal) {
                 notifyRemoved(position);
+                int deletedRows = 0;
+                deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), notificationToDelete.getId());
+                if (deletedRows > 0) {
+                    Toast.makeText(activity, "Calendar event attached to deleted Notification is also successfully deleted.", Toast.LENGTH_LONG).show();
+                }
+                /*else {
+                    Toast.makeText(activity, "Calendar event attached to deleted Notification couldn't be deleted.", Toast.LENGTH_LONG).show();
+                }*/
             }
             else {
                 Toast.makeText(activity, "Notification couldn't be deleted.", Toast.LENGTH_LONG);

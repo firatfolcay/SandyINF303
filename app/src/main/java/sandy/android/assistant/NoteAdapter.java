@@ -29,6 +29,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     LayoutInflater inflater;
     Editor editor;
     Activity activity;
+    CalendarSync calendarSync = new CalendarSync();
     MainActivity mainActivity = new MainActivity();
 
     public NoteAdapter(Context context, ArrayList<Note> notes, DatabaseManagement db, MainActivity ma) {
@@ -112,6 +113,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             returnVal = db.deleteNote(noteToDelete);
             if (returnVal) {
                 mNoteList.remove(position);
+                if (noteToDelete.getNotification() != null) {
+                    int deletedRows = 0;
+                    deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), noteToDelete.getNotification().getId());
+                    if (deletedRows > 0) {
+                        Toast.makeText(activity, "Calendar event attached to notification of deleted note is also successfully deleted.", Toast.LENGTH_LONG).show();
+                    }
+                }
                 mNoteList = db.getAllNotes();
                 notifyRemoved(position);
             }

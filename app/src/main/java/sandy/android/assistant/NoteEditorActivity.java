@@ -1,9 +1,13 @@
 package sandy.android.assistant;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -56,6 +60,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     CalendarSync calendarSync;
 
+    Context context;
+
     Editor editor;
     EditText noteeditor_title_text;
 
@@ -80,6 +86,10 @@ public class NoteEditorActivity extends AppCompatActivity {
         //INITIALIZE VARIABLES BEFORE EVERYTHING ELSE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
+
+        calendarSync = new CalendarSync();
+
+        context = getApplicationContext();
 
         editor = (Editor) findViewById(R.id.editor);
 
@@ -176,6 +186,22 @@ public class NoteEditorActivity extends AppCompatActivity {
                                     date);
 
                             db.updateNote(newNote, editNote);
+                            if (notification != null) {
+                                int numberOfRowsAffected = 0;
+                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                                if (numberOfRowsAffected > 0) {
+                                    Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                if (editNote.getNotification() != null) {
+                                    int numberOfRowsAffected = 0;
+                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
+                                    if (numberOfRowsAffected > 0) {
+                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
                         }
 
                         notesFromDB = db.getAllNotes();
@@ -356,9 +382,9 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
-                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification().getDate(), editNote.getContent());      //instantiate new calendarSync object
+                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
                     //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
-                    addCalendarEventInBackground(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());
+                    calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
                     closeFABMenu();
                 }
                 else {          //if there's no notifications attached to note,
@@ -470,93 +496,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     public void updateEditor(Note n) {      //function that updates Editor context
         noteeditor_title_text.setText(n.getTitle());
         editor.render(n.getContent());
-    }
-
-    private void addCalendarEvent(String title, String description, String date) {       //function to add note information as calendar event
-
-        long startMillis = 0;
-        long endMillis = 0;
-        String calendarDate = "";
-        String calendarTime = "";
-        String date_time = date;
-
-        calendarDate = date_time.substring(0,date_time.indexOf('T'));
-        calendarTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
-
-        Integer calendarYear = Integer.parseInt(calendarDate.split("-")[0]);
-        Integer calendarMonth = Integer.parseInt(calendarDate.split("-")[1]);
-        Integer calendarDay = Integer.parseInt(calendarDate.split("-")[2]);
-
-        Integer calendarHour = Integer.parseInt(calendarTime.split(":")[0]);
-        Integer calendarMinute = Integer.parseInt(calendarTime.split(":")[1]);
-
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour, calendarMinute);
-        startMillis = beginTime.getTimeInMillis();
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour+1, calendarMinute);
-        endMillis = endTime.getTimeInMillis();
-
-        Spanned calendarDescription = Html.fromHtml(description);
-        System.out.println("calendarDescription spanned: " + calendarDescription);
-
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-                .putExtra(CalendarContract.Events.TITLE, title)
-                .putExtra(CalendarContract.Events.DESCRIPTION, calendarDescription.toString());
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-        else {
-            Toast.makeText(this, "There is no appropriate application installed in this phone to run calendar synchronization.", Toast.LENGTH_LONG);
-        }
-    }
-
-    private void addCalendarEventInBackground(String title, String description, String date) {
-        long startMillis = 0;
-        long endMillis = 0;
-        String calendarDate = "";
-        String calendarTime = "";
-        String date_time = date;
-
-        calendarDate = date_time.substring(0,date_time.indexOf('T'));
-        calendarTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
-
-        Integer calendarYear = Integer.parseInt(calendarDate.split("-")[0]);
-        Integer calendarMonth = Integer.parseInt(calendarDate.split("-")[1]);
-        Integer calendarDay = Integer.parseInt(calendarDate.split("-")[2]);
-
-        Integer calendarHour = Integer.parseInt(calendarTime.split(":")[0]);
-        Integer calendarMinute = Integer.parseInt(calendarTime.split(":")[1]);
-
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour, calendarMinute);
-        startMillis = beginTime.getTimeInMillis();
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour+1, calendarMinute);
-        endMillis = endTime.getTimeInMillis();
-
-        Spanned calendarDescription = Html.fromHtml(description);
-
-        ContentResolver cr = getContentResolver();
-        ContentValues values = new ContentValues();
-
-        TimeZone timeZone = TimeZone.getDefault();
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
-
-        values.put(CalendarContract.Events.CALENDAR_ID, 1);
-
-        values.put(CalendarContract.Events.DTSTART, startMillis);
-        values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, title);
-        values.put(CalendarContract.Events.DESCRIPTION, description);
-
-        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-        Toast.makeText(getApplicationContext(), "Event successfully inserted to calendar.", Toast.LENGTH_LONG).show();
     }
 
 
