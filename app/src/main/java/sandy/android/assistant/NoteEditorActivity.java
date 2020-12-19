@@ -1,6 +1,8 @@
 package sandy.android.assistant;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -354,7 +357,9 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
                     calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification().getDate(), editNote.getContent());      //instantiate new calendarSync object
-                    addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
+                    //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
+                    addCalendarEventInBackground(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());
+                    closeFABMenu();
                 }
                 else {          //if there's no notifications attached to note,
                     Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
@@ -488,13 +493,10 @@ public class NoteEditorActivity extends AppCompatActivity {
         Calendar beginTime = Calendar.getInstance();
         beginTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour, calendarMinute);
         startMillis = beginTime.getTimeInMillis();
-        System.out.println("beginTime: " + beginTime);
-        System.out.println("startMillis: " + startMillis);
+
         Calendar endTime = Calendar.getInstance();
         endTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour+1, calendarMinute);
         endMillis = endTime.getTimeInMillis();
-        System.out.println("endTime: " + endTime);
-        System.out.println("endMillis: " + endMillis);
 
         Spanned calendarDescription = Html.fromHtml(description);
         System.out.println("calendarDescription spanned: " + calendarDescription);
@@ -511,6 +513,50 @@ public class NoteEditorActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, "There is no appropriate application installed in this phone to run calendar synchronization.", Toast.LENGTH_LONG);
         }
+    }
+
+    private void addCalendarEventInBackground(String title, String description, String date) {
+        long startMillis = 0;
+        long endMillis = 0;
+        String calendarDate = "";
+        String calendarTime = "";
+        String date_time = date;
+
+        calendarDate = date_time.substring(0,date_time.indexOf('T'));
+        calendarTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+
+        Integer calendarYear = Integer.parseInt(calendarDate.split("-")[0]);
+        Integer calendarMonth = Integer.parseInt(calendarDate.split("-")[1]);
+        Integer calendarDay = Integer.parseInt(calendarDate.split("-")[2]);
+
+        Integer calendarHour = Integer.parseInt(calendarTime.split(":")[0]);
+        Integer calendarMinute = Integer.parseInt(calendarTime.split(":")[1]);
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour, calendarMinute);
+        startMillis = beginTime.getTimeInMillis();
+
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(calendarYear, calendarMonth-1, calendarDay, calendarHour+1, calendarMinute);
+        endMillis = endTime.getTimeInMillis();
+
+        Spanned calendarDescription = Html.fromHtml(description);
+
+        ContentResolver cr = getContentResolver();
+        ContentValues values = new ContentValues();
+
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+
+        values.put(CalendarContract.Events.CALENDAR_ID, 1);
+
+        values.put(CalendarContract.Events.DTSTART, startMillis);
+        values.put(CalendarContract.Events.DTEND, endMillis);
+        values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.DESCRIPTION, description);
+
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        Toast.makeText(getApplicationContext(), "Event successfully inserted to calendar.", Toast.LENGTH_LONG).show();
     }
 
 
