@@ -4,7 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/notesToAttachConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:alpha="1"
+    android:background="@color/darkBlue"
+    android:textAlignment="gravity"
+    android:visibility="visible">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listOfNotesToAttach"
@@ -21,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="254dp"
         android:layout_marginTop="544dp"
+        android:backgroundTint="@color/orange"
+
         android:text="Attach"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="69dp"
         android:layout_marginTop="544dp"
+        android:backgroundTint="@color/orange"
         android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

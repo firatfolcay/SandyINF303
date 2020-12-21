@@ -5,7 +5,7 @@
     android:id="@+id/notebookPopupConstraintLayout"
     android:layout_width="360dp"
     android:layout_height="200dp"
-    android:background="@color/orange">
+    android:background="@color/darkBlue">
 
     <EditText
         android:id="@+id/notebookEditTitleEditText"
@@ -23,6 +23,7 @@
         android:layout_width="120dp"
         android:layout_height="51dp"
         android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/orange"
         android:text="SAVE"
         app:layout_constraintBottom_toBottomOf="@+id/notebookEditTitleCancelButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +36,7 @@
         android:layout_height="51dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
+        android:backgroundTint="@color/orange"
         android:text="CANCEL"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notebookEditTitleEditText" />

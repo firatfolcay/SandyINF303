@@ -133,7 +133,7 @@
         android:background="#00FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/listOfNotes"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_dialer" />
+        app:srcCompat="@drawable/burger_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
