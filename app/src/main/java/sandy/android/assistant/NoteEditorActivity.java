@@ -1,13 +1,23 @@
 package sandy.android.assistant;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +29,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +43,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorTextStyle;
+import com.google.gson.Gson;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
@@ -41,6 +54,10 @@ public class NoteEditorActivity extends AppCompatActivity {
     DatabaseManagement db;
     boolean isFABOpen = false;
     ArrayList notesFromDB = new ArrayList();
+
+    CalendarSync calendarSync;
+
+    Context context;
 
     Editor editor;
     EditText noteeditor_title_text;
@@ -66,6 +83,10 @@ public class NoteEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
 
+        calendarSync = new CalendarSync();
+
+        context = getApplicationContext();
+
         editor = (Editor) findViewById(R.id.editor);
 
         //DatabaseTest dbt = new DatabaseTest(this);
@@ -73,6 +94,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
+        notification = null;
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
 
@@ -122,45 +144,68 @@ public class NoteEditorActivity extends AppCompatActivity {
                 for(Node item: editor.getContent().nodes){
                     if(item.content.get(0).toString().isEmpty()){
                         //System.out.println("STRING IS EMPTY\n");
-                        finish(); // note content input is empty. do not save and return back
-                        return;
+                        continue;   //if the current one is empty move to next item
                     }
-                    else{
+                    else{       //content is not empty therefore move on.
                         //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
-                        break; // content is not empty therefore move on.
+                        if(notification == null){
+                            System.out.println("NOTIFICATION IS NULL");
+                        }
+                        else{
+                            System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                        }
+                        if (editNote == null) {     //if new Note will be created
+                            String content = editor.getContentAsHTML();
+                            String title = noteeditor_title_text.getText().toString();
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String date = currentTime.toString();
+
+                            Note n = new Note(title,
+                                    content,
+                                    notification,
+                                    date);
+
+                            db.insertNote(n);
+                        }
+                        else{        //if selected Note will be edited
+                            String content = editor.getContentAsHTML();
+                            String title = noteeditor_title_text.getText().toString();
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String date = currentTime.toString();
+
+                            Note newNote = new Note(title,
+                                    content,
+                                    notification,
+                                    date);
+
+                            db.updateNote(newNote, editNote);
+                            if (notification != null) {
+                                int numberOfRowsAffected = 0;
+                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                                if (numberOfRowsAffected > 0) {
+                                    Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                if (editNote.getNotification() != null) {
+                                    int numberOfRowsAffected = 0;
+                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
+                                    if (numberOfRowsAffected > 0) {
+                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
+
+                        notesFromDB = db.getAllNotes();
+                        listOfNotes = findViewById(R.id.listOfNotes);
+                        break;
                     }
                 }
-
-                if (editNote == null) {     //if new Note will be created
-                    String content = editor.getContentAsHTML();
-                    String title = noteeditor_title_text.getText().toString();
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String date = currentTime.toString();
-                    //!!! notification null !!!
-                    Note n = new Note(title,
-                            content,
-                            null,
-                            date);
-                    db.insertNote(n);
-                }
-                else{        //if selected Note will be edited
-                    //notification will be implemented here instead of sending null.
-
-                    String content = editor.getContentAsHTML();
-                    String title = noteeditor_title_text.getText().toString();
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String date = currentTime.toString();
-
-                    Note newNote = new Note (title, content, null, date);
-                    db.updateNote(newNote, editNote);
-                }
-
-                notesFromDB = db.getAllNotes();
-                listOfNotes = findViewById(R.id.listOfNotes);
                 finish();
 
                 return;
-            }
+                }
         });
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options
@@ -312,30 +357,91 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
+        fab_noteeditor_options_timer.setOnClickListener(new View.OnClickListener() {        //onClick Listener for notification editor
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), NotificationEditorActivity.class);
+
+                if(editNote != null) {    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
+                    if (editNote.getNotification() != null) {
+                        //do not send the object, send the id. It is handled that way in NotificationEditorActivity.
+                        intent.putExtra("NOTIFICATION_ID", editNote.getNotification().getId());
+                    }
+                }
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        editNote = null;
-        System.out.println(this.getClass().getName() + " ON STOP FUNCTION");
-    }
+        fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
+            @Override
+            public void onClick(View v) {
+                if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
+                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
+                    //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
+                    calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                    closeFABMenu();
+                }
+                else {          //if there's no notifications attached to note,
+                    Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
+                }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //fetches selected image from media storage and insert into editor
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (Build.VERSION.SDK_INT < 19) {
-                targetUri = data.getData();
             }
-            else {
-                targetUri = data.getData();
-                final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                try {
-                    getContentResolver().takePersistableUriPermission(targetUri, takeFlags);
-                } catch (SecurityException se) {
-                    se.printStackTrace();
+
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //activity result handler.
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case REQUEST_IMAGE:     //if image from external storage is selected
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        if (Build.VERSION.SDK_INT < 19) {
+                            targetUri = data.getData();
+                        } else {
+                            targetUri = data.getData();
+                            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            try {
+                                getContentResolver().takePersistableUriPermission(targetUri, takeFlags);
+                            } catch (SecurityException se) {
+                                se.printStackTrace();
+                            }
+                        }
+                        try {       //fetches selected image from media storage and insert into editor
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
+                            // Log.d(TAG, String.valueOf(bitmap));
+                            editor.insertImage(bitmap);
+                            String html = editor.getContentAsHTML();
+                            System.out.println("html : " + html);
+                        } catch (IOException e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                break;
+
+            case REQUEST_NOTIFICATION:      //if a notification is added
+                switch(resultCode){
+                    case Activity.RESULT_OK:
+                        //gets back data from NotificationEditorActivity
+                        String date = data.getStringExtra("NOTIFICATION_DATE");
+
+                        if(date.contains("null"))
+                            break;
+
+                        notification = new Notification(date);
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
             try {
@@ -355,13 +461,29 @@ public class NoteEditorActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.closeFABMenu();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        notification = null;
+    }
+                    
     private void showFABMenu(){         //method that makes sub-FAB menus visible
         System.out.println("showFABMenu");
         isFABOpen=true;
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
         System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
-        fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
+        if (editNote != null) {
+            if (editNote.getNotification() != null) {
+                fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
+            }
+        }
         /*fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         fab_noteeditor_options_timer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));*/
@@ -378,11 +500,8 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
     }
 
-    public void updateEditor(Note n) {
-        //noteeditor_title_text = findViewById(R.id.noteeditor_title_text); // !! already defined !!
+    public void updateEditor(Note n) {      //function that updates Editor context
         noteeditor_title_text.setText(n.getTitle());
-
-        //editor = findViewById(R.id.editor); // !! already defined !!
         editor.render(n.getContent());
     }
 

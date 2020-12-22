@@ -10,10 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationController extends AppCompatActivity {
 
@@ -26,7 +24,7 @@ public class NotificationController extends AppCompatActivity {
         setContentView(R.layout.notification);
         createNotificationChannel();
 
-        ImageView buttonMainActivity = findViewById(R.id.mainActivity);
+        ImageView buttonMainActivity = findViewById(R.id.buttonBackToMainActivity);
         Button denemeNotification = findViewById(R.id.alarmbutton);
         Button buttonNotificationEditor = (Button) findViewById(R.id.notificationEditorButton);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"channel1")

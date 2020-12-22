@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/noteSelectionLinearLayout"
+            android:id="@+id/notificationSelectionLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -26,24 +26,24 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/noteTitle"
-                android:layout_width="400dp"
+                android:id="@+id/notificationTitle"
+                android:layout_width="399dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="0dp"
                 android:background="@color/orange"
                 android:fadingEdge="horizontal|vertical"
-                android:text="noteTitle"
+                android:text="notificationTitle"
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/noteDescription"
+                android:id="@+id/notificationDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="3dp"
-                android:text="noteDescription"
+                android:text="notificationDescription"
                 android:textSize="12dp"
                 android:textStyle="italic" />
 
@@ -57,7 +57,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/deleteNote"
+                android:id="@+id/deleteNotification"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginRight="10dp"
