@@ -152,10 +152,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 null );
         res.moveToFirst();
 
-        while (res.isAfterLast() == false) {
-            if (res.getString(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
-                notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
-            }
+        if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
+            notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
         }
         else{
             notification = null;
@@ -185,8 +183,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         while(resNotes.isAfterLast() == false){
             // gets the notification if the note has one
-
-            if (resNotes.getString(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)) != null) {
+            if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
                 foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
             }
             else
@@ -272,8 +269,6 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
             res.moveToNext();
         }
 
-
-
         return n;
     }
 
@@ -294,15 +289,10 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         Notification lastNotification = new Notification();
 
-        while (cursor.isAfterLast() == false) {
+        if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
             lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
             lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
         }
-
-        /*if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
-            lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
-            lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
-        }*/
         //else notification is null
 
         return lastNotification;
@@ -465,4 +455,3 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notes;
     }
 }
-
