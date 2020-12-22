@@ -134,7 +134,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             try {
                 db.getNoteFromNoteId(noteToOpen.getId());
                 Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
-                intent.putExtra("NOTE_ID", noteToOpen.getId());
+                intent.putExtra("NOTE_ID",noteToOpen.getId());
                 mainActivity.startActivity(intent);
             }
             catch(Exception e){

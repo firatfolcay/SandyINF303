@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +48,8 @@ import com.google.gson.Gson;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
+    private static final int REQUEST_IMAGE = 0;
+    private static final int REQUEST_NOTIFICATION = 1;
 
     Toolbar toolbar;
     RecyclerView recyclerView;
@@ -76,6 +79,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     Uri targetUri;
 
     Note editNote;
+    Notification notification; //will be null until a notification from notification screen is added
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +93,10 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         editor = (Editor) findViewById(R.id.editor);
 
+
         //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
+
 
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
@@ -154,6 +160,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                         else{
                             System.out.println("NOTIFICATION_DATE: " + notification.getDate());
                         }
+
                         if (editNote == null) {     //if new Note will be created
                             String content = editor.getContentAsHTML();
                             String title = noteeditor_title_text.getText().toString();
@@ -205,7 +212,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 finish();
 
                 return;
-                }
+            }
         });
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options
@@ -291,7 +298,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -300,7 +307,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -346,14 +353,12 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         });
 
-        editor.render();
-
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
             public void onClick(View v) {
                 //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
 
@@ -369,7 +374,9 @@ public class NoteEditorActivity extends AppCompatActivity {
                     }
                 }
 
-    }
+                startActivityForResult(intent, REQUEST_NOTIFICATION);
+            }
+        });
 
         fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
             @Override
@@ -443,21 +450,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
                         break;
                 }
-            }
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
-                // Log.d(TAG, String.valueOf(bitmap));
-                editor.insertImage(bitmap);
-                String html = editor.getContentAsHTML();
-                System.out.println("html : " + html);
-            } catch (IOException e) {
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            //Write your code if there's no result
-            Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
-            // editor.RestoreState();
+                break;
         }
     }
 
@@ -472,7 +465,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         super.onStop();
         notification = null;
     }
-                    
+
     private void showFABMenu(){         //method that makes sub-FAB menus visible
         System.out.println("showFABMenu");
         isFABOpen=true;
