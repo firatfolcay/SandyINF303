@@ -213,7 +213,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                 finish();
 
                 return;
-                }
+            }
         });
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options

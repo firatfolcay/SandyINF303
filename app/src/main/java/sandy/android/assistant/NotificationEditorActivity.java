@@ -98,7 +98,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 }
                 else if(getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ",""))){
                     db.updateNotification(new Notification(currentDateString)
-                                                            ,editNotification);
+                            ,editNotification);
                 }
 
 
