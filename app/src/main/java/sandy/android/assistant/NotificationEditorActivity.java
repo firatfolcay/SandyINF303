@@ -17,8 +17,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -35,6 +35,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     String date, time;
 
     Button cancelNotificationButton;
+
     Button datePickerButton;
     Button timePickerButton;
     Button saveNotificationButton;
@@ -56,6 +57,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         setContentView(R.layout.notification_editor);
 
         cancelNotificationButton = findViewById(R.id.cancelNotificationButton);
+
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
         timePickerButton = (Button) findViewById(R.id.timePickerButton);
         saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
@@ -141,6 +143,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {           //cancel button
                 finish();       //notification screen cancelled. go back to note editor.
+
             }
         });
     }
