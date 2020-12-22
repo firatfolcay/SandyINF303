@@ -75,6 +75,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     Uri targetUri;
 
+
     Note editNote;
 
     @Override
