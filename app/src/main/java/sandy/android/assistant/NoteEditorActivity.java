@@ -60,6 +60,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     CalendarSync calendarSync;
 
+
     Context context;
 
     Editor editor;
