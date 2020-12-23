@@ -153,17 +153,18 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for(Node item: editor.getContent().nodes){
-                    if(item.content.get(0).toString().isEmpty()){
-                        //System.out.println("STRING IS EMPTY\n");
-                        continue;   //if the current one is empty move to next item
+                    if(item.content.size() > 0){
+                        if(item.content.get(0).toString().isEmpty()){
+                            continue;   //if the current one is empty move to next item
+                        }
                     }
                     else{       //content is not empty therefore move on.
-                        //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
+
                         if(notification == null){
-                            System.out.println("NOTIFICATION IS NULL");
+                            //System.out.println("NOTIFICATION IS NULL");
                         }
                         else{
-                            System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                            //System.out.println("NOTIFICATION_DATE: " + notification.getDate());
                         }
 
                         if (editNote == null) {     //if new Note will be created
