@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -45,6 +47,8 @@ import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorTextStyle;
 import com.google.gson.Gson;
+
+import top.defaults.colorpicker.ColorPickerPopup;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
@@ -287,12 +291,36 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_hr).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.action_hr).setOnClickListener(new View.OnClickListener() {        //onClick listener for inserting line divider
             @Override
             public void onClick(View v) {
                 editor.insertDivider();
             }
         });
+
+        findViewById(R.id.action_color).setOnClickListener(new View.OnClickListener() {         //onClick listener for color picker
+            @Override
+            public void onClick(View view) {
+                new ColorPickerPopup.Builder(context)
+                        .initialColor(Color.RED) // Set initial color
+                        .enableAlpha(true) // Enable alpha slider or not
+                        .okTitle("Choose")
+                        .cancelTitle("Cancel")
+                        .showIndicator(true)
+                        .showValue(true)
+                        .build()
+                        .show(findViewById(android.R.id.content), new ColorPickerPopup.ColorPickerObserver() {
+                            @Override
+                            public void onColorPicked(int color) {
+                                Toast.makeText(context, "picked" + colorHex(color), Toast.LENGTH_LONG).show();
+                                editor.updateTextColor(colorHex(color));
+                            }
+                        });
+
+
+            }
+        });
+
 
         findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {      //onClick listener for add image from toolbox
             @Override
@@ -497,6 +525,13 @@ public class NoteEditorActivity extends AppCompatActivity {
     public void updateEditor(Note n) {      //function that updates Editor context
         noteeditor_title_text.setText(n.getTitle());
         editor.render(n.getContent());
+    }
+
+    private String colorHex(int color) {        //returns selected color with its Hex value
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return String.format(Locale.getDefault(), "#%02X%02X%02X", r, g, b);
     }
 
 
