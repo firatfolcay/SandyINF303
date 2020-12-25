@@ -17,8 +17,10 @@ import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -533,6 +535,12 @@ public class NoteEditorActivity extends AppCompatActivity {
         int g = Color.green(color);
         int b = Color.blue(color);
         return String.format(Locale.getDefault(), "#%02X%02X%02X", r, g, b);
+    }
+
+    public String htmlifyPlainText(String textIn) {
+        SpannableString spannable = SpannableString.valueOf(textIn);
+        Linkify.addLinks(spannable, Linkify.WEB_URLS);
+        return Html.toHtml(spannable);
     }
 
 
