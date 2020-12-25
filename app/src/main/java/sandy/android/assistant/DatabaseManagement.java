@@ -455,4 +455,3 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notes;
     }
 }
-

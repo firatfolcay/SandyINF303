@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -46,6 +48,8 @@ import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorTextStyle;
 import com.google.gson.Gson;
 
+import top.defaults.colorpicker.ColorPickerPopup;
+
 public class NoteEditorActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE = 0;
@@ -59,6 +63,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     ArrayList notesFromDB = new ArrayList();
 
     CalendarSync calendarSync;
+
 
     Context context;
 
@@ -148,71 +153,72 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for(Node item: editor.getContent().nodes){
-                    if(item.content.get(0).toString().isEmpty()){
-                        //System.out.println("STRING IS EMPTY\n");
-                        continue;   //if the current one is empty move to next item
+                    if(item.content.size() > 0){
+                        if(item.content.get(0).toString().isEmpty()){
+                            continue;   //if the current one is empty move to next item
+                        }
                     }
-                    else{       //content is not empty therefore move on.
-                        //System.out.println(item.content.get(0).toString() + "\n SIZE: " + item.content.size() + "\n");
-                        if(notification == null){
-                            System.out.println("NOTIFICATION IS NULL");
+
+                    //content is not empty therefore move on.
+                    if(notification == null){
+                        //System.out.println("NOTIFICATION IS NULL");
+                    }
+                    else{
+                        //System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                    }
+
+                    if (editNote == null) {     //if new Note will be created
+                        String content = editor.getContentAsHTML();
+                        String title = noteeditor_title_text.getText().toString();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        String date = currentTime.toString();
+
+                        Note n = new Note(title,
+                                content,
+                                notification,
+                                date);
+
+                        db.insertNote(n);
+                    }
+                    else{        //if selected Note will be edited
+                        String content = editor.getContentAsHTML();
+                        String title = noteeditor_title_text.getText().toString();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        String date = currentTime.toString();
+
+                        Note newNote = new Note(title,
+                                content,
+                                notification,
+                                date);
+
+                        db.updateNote(newNote, editNote);
+                        if (notification != null) {
+                            int numberOfRowsAffected = 0;
+                            numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                            if (numberOfRowsAffected > 0) {
+                                Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            System.out.println("NOTIFICATION_DATE: " + notification.getDate());
-                        }
-
-                        if (editNote == null) {     //if new Note will be created
-                            String content = editor.getContentAsHTML();
-                            String title = noteeditor_title_text.getText().toString();
-                            Date currentTime = Calendar.getInstance().getTime();
-                            String date = currentTime.toString();
-
-                            Note n = new Note(title,
-                                    content,
-                                    notification,
-                                    date);
-
-                            db.insertNote(n);
-                        }
-                        else{        //if selected Note will be edited
-                            String content = editor.getContentAsHTML();
-                            String title = noteeditor_title_text.getText().toString();
-                            Date currentTime = Calendar.getInstance().getTime();
-                            String date = currentTime.toString();
-
-                            Note newNote = new Note(title,
-                                    content,
-                                    notification,
-                                    date);
-
-                            db.updateNote(newNote, editNote);
-                            if (notification != null) {
+                        else {
+                            if (editNote.getNotification() != null) {
                                 int numberOfRowsAffected = 0;
-                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
                                 if (numberOfRowsAffected > 0) {
                                     Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            else {
-                                if (editNote.getNotification() != null) {
-                                    int numberOfRowsAffected = 0;
-                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
-                                    if (numberOfRowsAffected > 0) {
-                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
                         }
-
-                        notesFromDB = db.getAllNotes();
-                        listOfNotes = findViewById(R.id.listOfNotes);
-                        break;
                     }
+
+                    notesFromDB = db.getAllNotes();
+                    listOfNotes = findViewById(R.id.listOfNotes);
+                    break;
+
                 }
                 finish();
 
                 return;
-                }
+            }
         });
 
         findViewById(R.id.action_h1).setOnClickListener(new View.OnClickListener() {        //onClick listener for text size options
@@ -286,12 +292,36 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_hr).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.action_hr).setOnClickListener(new View.OnClickListener() {        //onClick listener for inserting line divider
             @Override
             public void onClick(View v) {
                 editor.insertDivider();
             }
         });
+
+        findViewById(R.id.action_color).setOnClickListener(new View.OnClickListener() {         //onClick listener for color picker
+            @Override
+            public void onClick(View view) {
+                new ColorPickerPopup.Builder(context)
+                        .initialColor(Color.RED) // Set initial color
+                        .enableAlpha(true) // Enable alpha slider or not
+                        .okTitle("Choose")
+                        .cancelTitle("Cancel")
+                        .showIndicator(true)
+                        .showValue(true)
+                        .build()
+                        .show(findViewById(android.R.id.content), new ColorPickerPopup.ColorPickerObserver() {
+                            @Override
+                            public void onColorPicked(int color) {
+                                Toast.makeText(context, "picked" + colorHex(color), Toast.LENGTH_LONG).show();
+                                editor.updateTextColor(colorHex(color));
+                            }
+                        });
+
+
+            }
+        });
+
 
         findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {      //onClick listener for add image from toolbox
             @Override
@@ -496,6 +526,13 @@ public class NoteEditorActivity extends AppCompatActivity {
     public void updateEditor(Note n) {      //function that updates Editor context
         noteeditor_title_text.setText(n.getTitle());
         editor.render(n.getContent());
+    }
+
+    private String colorHex(int color) {        //returns selected color with its Hex value
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        return String.format(Locale.getDefault(), "#%02X%02X%02X", r, g, b);
     }
 
 

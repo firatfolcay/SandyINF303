@@ -48,14 +48,13 @@
                 android:id="@+id/fab_noteeditor_options_calendar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignBottom="@+id/fab_noteeditor_options_addimage"
+                android:layout_alignBottom="@+id/fab_noteeditor_options"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options_addimage"
-                app:fabCustomSize="48dp"
                 android:clickable="true"
                 android:visibility="invisible"
-                app:srcCompat="@android:drawable/ic_menu_agenda" />
+                app:srcCompat="@drawable/calender_type_2" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_noteeditor_options_addimage"
@@ -65,10 +64,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options_timer"
-                app:fabCustomSize="48dp"
                 android:clickable="true"
-                android:src="@drawable/image_cadr"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                app:srcCompat="@drawable/image_cadr" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_noteeditor_options_timer"
@@ -78,7 +76,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options"
-                app:fabCustomSize="48dp"
                 android:clickable="true"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/circle_clock" />
