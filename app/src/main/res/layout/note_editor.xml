@@ -52,6 +52,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options_addimage"
+                app:fabCustomSize="48dp"
                 android:clickable="true"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/calender_type_2" />
@@ -64,6 +65,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options_timer"
+                app:fabCustomSize="48dp"
                 android:clickable="true"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/image_cadr" />
@@ -76,6 +78,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="0dp"
                 android:layout_toStartOf="@+id/fab_noteeditor_options"
+                app:fabCustomSize="48dp"
                 android:clickable="true"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/circle_clock" />
