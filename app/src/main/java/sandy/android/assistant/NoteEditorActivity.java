@@ -158,62 +158,62 @@ public class NoteEditorActivity extends AppCompatActivity {
                             continue;   //if the current one is empty move to next item
                         }
                     }
-                    else{       //content is not empty therefore move on.
 
-                        if(notification == null){
-                            //System.out.println("NOTIFICATION IS NULL");
+                    //content is not empty therefore move on.
+                    if(notification == null){
+                        //System.out.println("NOTIFICATION IS NULL");
+                    }
+                    else{
+                        //System.out.println("NOTIFICATION_DATE: " + notification.getDate());
+                    }
+
+                    if (editNote == null) {     //if new Note will be created
+                        String content = editor.getContentAsHTML();
+                        String title = noteeditor_title_text.getText().toString();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        String date = currentTime.toString();
+
+                        Note n = new Note(title,
+                                content,
+                                notification,
+                                date);
+
+                        db.insertNote(n);
+                    }
+                    else{        //if selected Note will be edited
+                        String content = editor.getContentAsHTML();
+                        String title = noteeditor_title_text.getText().toString();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        String date = currentTime.toString();
+
+                        Note newNote = new Note(title,
+                                content,
+                                notification,
+                                date);
+
+                        db.updateNote(newNote, editNote);
+                        if (notification != null) {
+                            int numberOfRowsAffected = 0;
+                            numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                            if (numberOfRowsAffected > 0) {
+                                Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            //System.out.println("NOTIFICATION_DATE: " + notification.getDate());
-                        }
-
-                        if (editNote == null) {     //if new Note will be created
-                            String content = editor.getContentAsHTML();
-                            String title = noteeditor_title_text.getText().toString();
-                            Date currentTime = Calendar.getInstance().getTime();
-                            String date = currentTime.toString();
-
-                            Note n = new Note(title,
-                                    content,
-                                    notification,
-                                    date);
-
-                            db.insertNote(n);
-                        }
-                        else{        //if selected Note will be edited
-                            String content = editor.getContentAsHTML();
-                            String title = noteeditor_title_text.getText().toString();
-                            Date currentTime = Calendar.getInstance().getTime();
-                            String date = currentTime.toString();
-
-                            Note newNote = new Note(title,
-                                    content,
-                                    notification,
-                                    date);
-
-                            db.updateNote(newNote, editNote);
-                            if (notification != null) {
+                        else {
+                            if (editNote.getNotification() != null) {
                                 int numberOfRowsAffected = 0;
-                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
                                 if (numberOfRowsAffected > 0) {
                                     Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            else {
-                                if (editNote.getNotification() != null) {
-                                    int numberOfRowsAffected = 0;
-                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
-                                    if (numberOfRowsAffected > 0) {
-                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
                         }
-
-                        notesFromDB = db.getAllNotes();
-                        listOfNotes = findViewById(R.id.listOfNotes);
-                        break;
                     }
+
+                    notesFromDB = db.getAllNotes();
+                    listOfNotes = findViewById(R.id.listOfNotes);
+                    break;
+
                 }
                 finish();
 
