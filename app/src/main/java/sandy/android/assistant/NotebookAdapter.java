@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView notebookTitle;
+        TextView notebookDescription;
         LinearLayout notesOfNotebookLinearLayout;
         ImageView deleteButton;
 
@@ -71,7 +73,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
             super(itemView);
             notebookTitle = (TextView) itemView.findViewById(R.id.noteOfNotebookTitle);
 
-            //notebookDescription = (TextView) itemView.findViewById(R.id.notificationDescription);
+            notebookDescription = (TextView) itemView.findViewById(R.id.notesOfNotebookDescription);
 
             notesOfNotebookLinearLayout = (LinearLayout) itemView.findViewById(R.id.notesOfNotebookLinearLayout);
             notesOfNotebookLinearLayout.setOnClickListener(this);
@@ -81,10 +83,22 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         }
 
-        public void setData(Note selectedNotebook, int position) {
+        public void setData(Note selectedNote, int position) {
 
-
-            this.notebookTitle.setText(selectedNotebook.getTitle());
+            this.notebookTitle.setText(selectedNote.getTitle());
+            String noteContent = String.valueOf(Html.fromHtml(selectedNote.getContent()));
+            String noteDescription = "";
+            if (noteContent.length() > 0) {
+                for (int i = 0; i < noteContent.length(); i++) {
+                    if (i == 20) {
+                        break;
+                    }
+                    else {
+                        noteDescription = noteDescription + noteContent.charAt(i);
+                    }
+                }
+                this.notebookDescription.setText(noteDescription);
+            }
             //this.notificationDescription.setText(selectedNote.getNotification().getDate());
 
         }
@@ -113,11 +127,20 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
             title.setText(note.getTitle());
             title.setEnabled(false);
 
+            ImageView buttonBackToNotebookView = popupView.findViewById(R.id.buttonBackToNotebookView);
+
             int width = LinearLayout.LayoutParams.MATCH_PARENT;
             int height = LinearLayout.LayoutParams.MATCH_PARENT;
             PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
 
             popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+            buttonBackToNotebookView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
 
         }
 

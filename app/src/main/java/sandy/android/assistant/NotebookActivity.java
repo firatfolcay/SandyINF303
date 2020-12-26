@@ -182,10 +182,16 @@ public class NotebookActivity extends AppCompatActivity {
 
             notebookEditTitleSaveButton.setOnClickListener(v1 -> {
                 if (!notebookEditTitleEditText.getText().toString().isEmpty()) {           //if notebook title input isn't empty
-                    db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),
-                            selectedNotebook);
-                    onResume();                             //to update the current screen
-                    popupWindow.dismiss();                  //dispose popup
+                    if (notebookEditTitleEditText.getText().toString().length() <= 10) {
+                        db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),
+                                selectedNotebook);
+                        onResume();                             //to update the current screen
+                        popupWindow.dismiss();                  //dispose popup
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Notebook title can contain a maximum of 10 characters.", Toast.LENGTH_LONG).show();
+                    }
+
                 }
             });
 

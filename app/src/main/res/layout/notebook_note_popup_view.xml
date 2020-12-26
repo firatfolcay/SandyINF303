@@ -32,10 +32,9 @@
 
                 <EditText
                     android:id="@+id/notebookPopupTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="311dp"
+                    android:layout_height="match_parent"
                     android:ems="10"
-                    android:hint="@string/noteeditor_title_text"
                     android:inputType="none"
                     android:singleLine="true"
                     android:textStyle="bold" />
@@ -76,6 +75,17 @@
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <ImageButton
+        android:id="@+id/buttonBackToNotebookView"
+        android:layout_width="63dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/darkBlue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/arrow_blazing_sir_left" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

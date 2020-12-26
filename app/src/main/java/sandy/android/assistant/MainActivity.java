@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -126,11 +127,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (!notebookPopupEditText.getText().toString().equals("")) {           //if notebook title input isn't empty
-                            Notebook newNotebook = new Notebook(notebookPopupEditText.getText().toString());
-                            db.insertNotebook(newNotebook);         //insert a new notebook into database with input title
-                            notebookNavigationView.setVisibility(View.INVISIBLE);       //close navigation view
-                            refreshNotebookNavigationView();        //refresh navigation view
-                            popupWindow.dismiss();                  //dispose popup
+                            if (notebookPopupEditText.getText().toString().length() <= 10) {
+                                Notebook newNotebook = new Notebook(notebookPopupEditText.getText().toString());
+                                db.insertNotebook(newNotebook);         //insert a new notebook into database with input title
+                                notebookNavigationView.setVisibility(View.INVISIBLE);       //close navigation view
+                                refreshNotebookNavigationView();        //refresh navigation view
+                                popupWindow.dismiss();                  //dispose popup
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Notebook title can contain a maximum of 10 characters.", Toast.LENGTH_LONG).show();
+                            }
 
                         }
                     }
