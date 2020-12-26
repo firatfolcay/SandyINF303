@@ -3,6 +3,7 @@ package sandy.android.assistant;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     Button timePickerButton;
     Button saveNotificationButton;
 
+    CalendarSync calendarSync;
+    Context context;
+
     DialogFragment timePicker;
     DialogFragment datePicker;
 
@@ -54,6 +58,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_editor);
+
+        calendarSync = new CalendarSync();
+        context = getApplicationContext();
 
         cancelNotificationButton = findViewById(R.id.cancelNotificationButton);
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
@@ -97,8 +104,13 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     setResult(Activity.RESULT_OK, data);
                 }
                 else if(getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ",""))){
-                    db.updateNotification(new Notification(currentDateString)
-                            ,editNotification);
+                    Notification newNotification = new Notification(currentDateString);
+                    db.updateNotification(newNotification, editNotification);
+                    int numberOfRowsAffected = 0;
+                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNotification.getId(), db.getNoteFromNotificationId(editNotification.getId()));
+                    if (numberOfRowsAffected > 0) {
+                        Toast.makeText(context, "calendar event of edited notification is also updated.", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
 

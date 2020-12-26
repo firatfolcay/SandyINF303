@@ -166,6 +166,20 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 res.getString(res.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
     }
 
+    public Note getNoteFromNotificationId(int notification_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor res = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTIFICATION_ID +"= " + notification_id, null);
+        res.moveToFirst();
+
+        return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
+                res.getString(res.getColumnIndex(NOTES_COLUMN_TITLE)),
+                res.getString(res.getColumnIndex(NOTES_COLUMN_CONTENT)),
+                getNotificationFromNotificationID(notification_id),
+                res.getString(res.getColumnIndex(NOTES_COLUMN_SAVEDATE)));
+
+    }
+
     public int getNoteCount(){      //method to fetch number of notes that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTES_TABLE_NAME);
