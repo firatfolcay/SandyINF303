@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -167,15 +168,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainActivityConstraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (notebookNavigationView.getVisibility() == View.VISIBLE) {
-                    notebookNavigationView.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
         listOfNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +177,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        listOfNotes.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            @Override
+            public void onSwipeRight() {
+                if (notebookNavigationView.getVisibility() == View.INVISIBLE) {
+                    notebookNavigationView.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onSwipeLeft() {
+                if (notebookNavigationView.getVisibility() == View.VISIBLE) {
+                    notebookNavigationView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        mainActivityConstraintLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+            @Override
+            public void onSwipeRight() {
+                if (notebookNavigationView.getVisibility() == View.INVISIBLE) {
+                    notebookNavigationView.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onSwipeLeft() {
+                if (notebookNavigationView.getVisibility() == View.VISIBLE) {
+                    notebookNavigationView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         mainActivityNavigationViewImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();      //if navigation drawer is already closed, apply primary activity behavior
         }
     }
+
+
 
     public void startNoteEditorActivity () {
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
