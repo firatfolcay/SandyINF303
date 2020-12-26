@@ -1,5 +1,6 @@
 package sandy.android.assistant;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -39,6 +40,7 @@ import java.util.TimeZone;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.models.Node;
@@ -51,6 +53,8 @@ import com.github.irshulx.models.EditorTextStyle;
 import com.google.gson.Gson;
 
 import top.defaults.colorpicker.ColorPickerPopup;
+
+import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class NoteEditorActivity extends AppCompatActivity {
 
@@ -194,21 +198,30 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 date);
 
                         db.updateNote(newNote, editNote);
-                        if (notification != null) {
-                            int numberOfRowsAffected = 0;
-                            numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
-                            if (numberOfRowsAffected > 0) {
-                                Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+
+                        int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
+                        int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+
+                        if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
+                            if (notification != null) {
+                                    int numberOfRowsAffected = 0;
+                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
+                                    if (numberOfRowsAffected > 0) {
+                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                    }
+                            }
+                            else {
+                                if (editNote.getNotification() != null) {
+                                        int numberOfRowsAffected = 0;
+                                        numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
+                                        if (numberOfRowsAffected > 0) {
+                                            Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
                             }
                         }
                         else {
-                            if (editNote.getNotification() != null) {
-                                int numberOfRowsAffected = 0;
-                                numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
-                                if (numberOfRowsAffected > 0) {
-                                    Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
+                            Toast.makeText(getApplicationContext(), "No permissions granted for calendar sync operation.", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -315,7 +328,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                         .show(findViewById(android.R.id.content), new ColorPickerPopup.ColorPickerObserver() {
                             @Override
                             public void onColorPicked(int color) {
-                                Toast.makeText(context, "picked" + colorHex(color), Toast.LENGTH_LONG).show();
                                 editor.updateTextColor(colorHex(color));
                             }
                         });
@@ -414,10 +426,18 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
-                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
-                    //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
-                    calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
-                    closeFABMenu();
+                    int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
+                    int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+
+                    if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
+                        calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
+                        //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
+                        calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                        closeFABMenu();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "No permissions granted for calendar sync operation.", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else {          //if there's no notifications attached to note,
                     Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
