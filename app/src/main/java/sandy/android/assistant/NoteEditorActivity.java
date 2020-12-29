@@ -3,6 +3,8 @@ package sandy.android.assistant;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,6 +16,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -40,6 +43,8 @@ import java.util.TimeZone;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,7 +71,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     View view;
     DatabaseManagement db;
     boolean isFABOpen = false;
-    ArrayList notesFromDB = new ArrayList();
+    ArrayList <Note> notesFromDB = new ArrayList();
 
     CalendarSync calendarSync;
 
@@ -85,6 +90,11 @@ public class NoteEditorActivity extends AppCompatActivity {
     ImageView imageView_back;
     ImageView imageView_save_note;
 
+    MainActivity mainActivity;
+
+    NotificationCompat.Builder notificationBuilder;
+    NotificationManagerCompat notificationManager;
+
     RecyclerView listOfNotes;
 
     Uri targetUri;
@@ -101,6 +111,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         calendarSync = new CalendarSync();
 
         context = getApplicationContext();
+        //notificationManager = NotificationManagerCompat.from(context);
 
         editor = (Editor) findViewById(R.id.editor);
 
@@ -185,6 +196,20 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 date);
 
                         db.insertNote(n);
+
+                        if (notification != null) {
+                            notesFromDB = db.getAllNotes();
+                            for (int i = 0; i < notesFromDB.size(); i++) {
+                                if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
+
+                                    Intent intent = new Intent(context, NoteEditorActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                                    scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
+                                }
+                            }
+
+                        }
                     }
                     else{        //if selected Note will be edited
                         String content = editor.getContentAsHTML();
@@ -198,6 +223,19 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 date);
 
                         db.updateNote(newNote, editNote);
+
+                        if (notification != null) {
+                            notesFromDB = db.getAllNotes();
+                            for (int i = 0; i < notesFromDB.size(); i++) {
+                                if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
+                                    Intent intent = new Intent(context, NoteEditorActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                                    scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
+                                }
+                            }
+
+                        }
 
                         int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
                         int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
@@ -561,6 +599,87 @@ public class NoteEditorActivity extends AppCompatActivity {
         SpannableString spannable = SpannableString.valueOf(textIn);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         return Html.toHtml(spannable);
+    }
+
+    private void scheduleNotification(android.app.Notification notification, Notification n) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, n.getId());
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        String date_time = n.getDate();
+
+        String eventDate = date_time.substring(0,date_time.indexOf('T'));
+        String eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+
+        Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
+        Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
+        Integer eventDay = Integer.parseInt(eventDate.split("-")[2]);
+
+        Integer eventHour = Integer.parseInt(eventTime.split(":")[0]);
+        Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
+
+        Calendar cal=Calendar.getInstance();
+        cal.set(Calendar.MONTH,eventMonth-1);
+        cal.set(Calendar.YEAR,eventYear);
+        cal.set(Calendar.DAY_OF_MONTH,eventDay);
+        cal.set(Calendar.HOUR_OF_DAY,eventHour);
+        cal.set(Calendar.MINUTE,eventMinute);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+        System.out.println("alarm will go off at : " + cal.getTimeInMillis());
+    }
+
+    public android.app.Notification getNotification(Note n, PendingIntent pendingIntent) {
+        NotificationCompat.BigTextStyle nc;
+        android.app.Notification.Builder builder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            builder = new android.app.Notification.Builder(this,
+                    getString(R.string.channel_name));
+        }
+        else {
+            builder = new android.app.Notification.Builder(this);
+        }
+        builder.setContentTitle(n.getTitle());
+        builder.setContentText(n.getTitle());
+        builder.setSmallIcon(R.drawable.circle_clock);
+        builder.setStyle(new android.app.Notification.BigTextStyle().bigText(Html.fromHtml(n.getContent())));
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+
+        return builder.build();
+    }
+
+    public int getTimeInMillis(Notification n) {
+        long startMillis = 0;
+        int delayIntValue = 0;
+        String eventDate = "";
+        String eventTime = "";
+        String date_time = n.getDate();
+
+        eventDate = date_time.substring(0,date_time.indexOf('T'));
+        eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+
+        Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
+        Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
+        Integer eventDay = Integer.parseInt(eventDate.split("-")[2]);
+
+        Integer eventHour = Integer.parseInt(eventTime.split(":")[0]);
+        Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(eventYear, eventMonth-1, eventDay, eventHour, eventMinute);
+        startMillis = beginTime.getTimeInMillis();
+        long delayLongValue = startMillis - System.currentTimeMillis();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            delayIntValue = Math.toIntExact(delayLongValue);
+        }
+        System.out.println("delay:" + delayIntValue);
+        return delayIntValue;
     }
 
 

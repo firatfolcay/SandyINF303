@@ -4,4 +4,6 @@
     <string name="editor_text_hint">Type here…</string>
     <string name="spinner_item_1">List View</string>
     <string name="spinner_item_2">Notebook View</string>
+    <string name="channel_name">san_default_channel_name</string>
+    <string name="channel_description">san_default_channel_description</string>
 </resources>

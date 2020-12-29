@@ -5,14 +5,18 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -66,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent screenOffBroadcastService = new Intent(this, BroadcastReceiverScreenOffService.class);
+        this.startService(screenOffBroadcastService);
+
+        Intent screenOnBroadcastService = new Intent(this, BroadcastReceiverScreenOnService.class);
+        this.startService(screenOnBroadcastService);
+
+        Intent timeTickBroadcastService = new Intent(this, BroadcastReceiverTimeTickService.class);
+        this.startService(timeTickBroadcastService);
+
+        createNotificationChannel();
         //calls function that grants permissions for device interactions.
         checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);     //calendar permission check
 
@@ -283,5 +297,23 @@ public class MainActivity extends AppCompatActivity {
 
         if (!permissions)
             ActivityCompat.requestPermissions(this, permissionsId, callbackId);
+    }
+
+    public void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(getString(R.string.channel_name), name, importance);
+            channel.setDescription(description);
+            channel.setLightColor(Color.BLUE);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

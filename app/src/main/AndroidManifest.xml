@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +26,6 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -73,6 +76,15 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
+        <receiver android:name="sandy.android.assistant.NotificationPublisher"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+                <action android:name="android.intent.action.TIME_TICK"/>
+            </intent-filter>
+        </receiver>
+        <service android:enabled="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOffService" />
 
     </application>
 
