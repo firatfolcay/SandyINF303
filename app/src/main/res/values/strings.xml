@@ -14,6 +14,8 @@
     <string name="open_editor_button">Open Editor</string>
     <string name="choose_date_button">Choose Date</string>
     <string name="choose_time_button">Choose Time</string>
+    <string name="channel_name" translatable="false">san_default_channel_name</string>
+    <string name="channel_description" translatable="false">san_default_channel_description</string>
 
     <!--Toast-->
     <string name="calendar_sync_no_app">There is no appropriate application installed in this phone to run calendar synchronization</string>
