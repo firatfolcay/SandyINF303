@@ -90,11 +90,11 @@
         android:id="@+id/textviewNotebookViewNotebookTitle"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="13dp"
         android:paddingLeft="4dp"
         android:paddingTop="16dp"
-        android:textSize="14sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@id/toolbar2"
         app:layout_constraintStart_toEndOf="@+id/buttonBackFromNotebookRecyclerView" />
 
@@ -102,26 +102,27 @@
         android:id="@+id/imageViewTitleEditButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@id/toolbar2"
-        app:layout_constraintStart_toEndOf="@+id/textviewNotebookViewNotebookTitle"
+        app:layout_constraintStart_toEndOf="@+id/buttonBackFromNotebookRecyclerView"
         app:layout_constraintTop_toTopOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="0.69"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/pen" />
 
     <Spinner
         android:id="@+id/spinnerSetNotebookViewType"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:entries="@array/spinnerItems"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/toolbar2"
         app:layout_constraintEnd_toEndOf="@+id/toolbar2"
-        app:layout_constraintStart_toEndOf="@+id/imageViewTitleEditButton" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textviewNotebookViewNotebookTitle" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddNewNoteToNotebook"

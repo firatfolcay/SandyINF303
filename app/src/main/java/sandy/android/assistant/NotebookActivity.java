@@ -97,7 +97,7 @@ public class NotebookActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
-                if (selectedItem.equals(getResources().getString(R.string.spinner_item_1))) {         //if list view is selected,
+                if (selectedItem.equals(getResources().getString(R.string.notebook_list_view_text))) {         //if list view is selected,
                     if (notebookEditorViewConstraintLayout.getVisibility() == View.VISIBLE) {
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
                         fabAddNewNoteToNotebook.setVisibility(View.VISIBLE);
@@ -106,7 +106,7 @@ public class NotebookActivity extends AppCompatActivity {
                         constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));
                     }
                 }
-                else if (selectedItem.equals(getResources().getString(R.string.spinner_item_2))) {        //if note editor view is selected
+                else if (selectedItem.equals(getResources().getString(R.string.notebook_notebook_view_text))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
                     notebookEditorView.clearAllContents();
 
