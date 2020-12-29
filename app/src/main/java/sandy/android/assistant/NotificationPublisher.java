@@ -15,6 +15,8 @@ public class NotificationPublisher extends BroadcastReceiver {
 
         android.app.Notification notification = intent.getParcelableExtra(NOTIFICATION);
         int id = intent.getIntExtra(NOTIFICATION_ID, 0);
+        /*notification.flags += android.app.Notification.FLAG_ONGOING_EVENT;
+        notification.flags += android.app.Notification.FLAG_NO_CLEAR;*/
         notificationManager.notify(id, notification);
 
     }

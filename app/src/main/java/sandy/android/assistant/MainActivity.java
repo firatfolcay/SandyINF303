@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -275,6 +274,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent screenOffBroadcastService = new Intent(this, BroadcastReceiverScreenOffService.class);
+        this.startService(screenOffBroadcastService);
+
+        Intent screenOnBroadcastService = new Intent(this, BroadcastReceiverScreenOnService.class);
+        this.startService(screenOnBroadcastService);
+
+        Intent timeTickBroadcastService = new Intent(this, BroadcastReceiverTimeTickService.class);
+        this.startService(timeTickBroadcastService);
+    }
+
 
 
     public void startNoteEditorActivity () {
@@ -305,15 +317,16 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(getString(R.string.channel_name), name, importance);
             channel.setDescription(description);
             channel.setLightColor(Color.BLUE);
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            //channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
         }
     }
 }
