@@ -13,10 +13,11 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/mainActivityNavigationView"
         android:layout_width="218dp"
-        android:layout_height="656dp"
+        android:layout_height="0dp"
         android:layout_marginTop="2dp"
-        android:background="@color/orange"
+        android:background="@color/darkOrange"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -26,37 +27,25 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="221dp"
+                android:layout_width="0dp"
                 android:layout_height="71dp"
+                android:layout_marginEnd="4dp"
+                android:background="@color/orange"
+                android:textSize="32dp"
+                android:gravity="center"
                 android:text="Notebooks"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="72dp"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/buttonAddNotebook"
                 android:layout_width="215dp"
                 android:layout_height="88dp"
                 android:layout_marginTop="72dp"
-                android:background="@color/darkOrange"
+                android:backgroundTint="@color/orange"
                 android:text="Add new Notebook"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="160dp"
-                android:background="?android:attr/listDivider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,9 +54,14 @@
                 android:layout_width="216dp"
                 android:layout_height="494dp"
                 android:layout_marginStart="2dp"
-                android:layout_marginTop="162dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@color/darkBlue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonAddNotebook" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.navigation.NavigationView>
