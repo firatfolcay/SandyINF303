@@ -1,7 +1,36 @@
 <resources>
     <string name="app_name">Sandy Personal Assistant</string>
-    <string name="noteeditor_title_text">Type title here…</string>
+    <string name="note_editor_title_hint_text">Type title here…</string>
     <string name="editor_text_hint">Type here…</string>
-    <string name="spinner_item_1">List View</string>
-    <string name="spinner_item_2">Notebook View</string>
+    <string name="notebook_list_view_text">List View</string>
+    <string name="notebook_notebook_view_text">Notebook View</string>
+    <string name="cancel_button">cancel</string>
+    <string name="attach_button">attach</string>
+    <string name="save_button">save</string>
+    <string name="create_button">create</string>
+    <string name="title_text">Title</string>
+    <string name="new_notebook_text">New Notebook</string>
+    <string name="new_title_text">New Title</string>
+    <string name="open_editor_button">Open Editor</string>
+    <string name="choose_date_button">Choose Date</string>
+    <string name="choose_time_button">Choose Time</string>
+
+    <!--Toast-->
+    <string name="calendar_sync_no_app">There is no appropriate application installed in this phone to run calendar synchronization</string>
+    <string name="calendar_event_deleted">Calendar event attached to notification of deleted note is also successfully deleted</string>
+    <string name="calendar_event_insert_success">Event successfully inserted to calendar</string>
+    <string name="calendar_event_updated">Calendar event of edited note is also updated</string>
+    <string name="calendar_no_permission_error">No permissions granted for calendar sync operation</string>
+    <string name="notebook_title_char_limit_error">Notebook title can contain a maximum of 10 characters</string>
+    <string name="notebook_delete_error">Notebook couldn\'t be deleted</string>
+    <string name="notebook_open_fail_error">Failed to open selected Notebook</string>
+    <string name="note_delete_error">Note couldn\'t be deleted</string>
+    <string name="note_not_found_error">Selected note couldn\'t be found</string>
+    <string name="note_no_notification">There are no notifications attached to Note</string>
+    <string name="operation_failed">Operation failed</string>
+    <string name="notification_delete_error">Notification couldn\'t be deleted</string>
+    <string name="notification_open_error">The notification couldn\'t be opened</string>
+    <string name="notification_past_time_error">You can\'t select a past time for notification</string>
+    <string name="cancel">Cancelled</string>
+
 </resources>
