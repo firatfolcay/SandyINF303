@@ -36,7 +36,8 @@
     <string name="notification_open_error">Bildirim açılamadı</string>
     <string name="notification_past_time_error">Bildirim için geçmiş bir zaman seçemezsiniz</string>
     <string name="cancel">İptal Edildi</string>
-
+    <string name="minute_text">Dakika</string>
+    <string name="hour_text">Saat</string>
 
 
 </resources>

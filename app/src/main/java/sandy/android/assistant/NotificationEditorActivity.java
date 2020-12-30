@@ -234,8 +234,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     public void updateNotificationActivity(Notification n){
 
         parse();
-        timePickerTextView.setText("Hour: " + hour + " Minute: " + minute);
-        datePickerTextView.setText("Date: " + day + "-" + month + "-" + year);
+        timePickerTextView.setText(getResources().getString(R.string.hour_text) + ": " + hour + " " + getResources().getString(R.string.minute_text) + ": " + minute);
+        datePickerTextView.setText(getResources().getString(R.string.date_text) + ": " + day + "-" + month + "-" + year);
 
     }
 

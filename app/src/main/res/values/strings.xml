@@ -38,5 +38,7 @@
     <string name="cancel">Cancelled</string>
     <string name="date_text">Date</string>
     <string name="time_text">Time</string>
+    <string name="minute_text">Minute</string>
+    <string name="hour_text">Hour</string>
 
 </resources>

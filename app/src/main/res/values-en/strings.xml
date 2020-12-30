@@ -36,6 +36,8 @@
     <string name="notification_open_error">The notification couldn\'t be opened</string>
     <string name="notification_past_time_error">You can\'t select a past time for notification</string>
     <string name="cancel">Cancelled</string>
+    <string name="minute_text">Minute</string>
+    <string name="hour_text">Hour</string>
 
 
 </resources>
