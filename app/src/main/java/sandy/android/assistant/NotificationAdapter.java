@@ -114,14 +114,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 int deletedRows = 0;
                 deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), notificationToDelete.getId());
                 if (deletedRows > 0) {
-                    Toast.makeText(activity, "Calendar event attached to deleted Notification is also successfully deleted.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
                 }
                 /*else {
                     Toast.makeText(activity, "Calendar event attached to deleted Notification couldn't be deleted.", Toast.LENGTH_LONG).show();
                 }*/
             }
             else {
-                Toast.makeText(activity, "Notification couldn't be deleted.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, activity.getResources().getString(R.string.notification_delete_error), Toast.LENGTH_LONG);
             }
 
             refresh();
@@ -137,7 +137,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 activity.startActivityForResult(intent,0);
             }
             catch(Exception e){
-                Toast.makeText(activity, "The notification couldn't be opened.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, activity.getResources().getString(R.string.notification_open_error), Toast.LENGTH_LONG);
             }
 
             refresh();

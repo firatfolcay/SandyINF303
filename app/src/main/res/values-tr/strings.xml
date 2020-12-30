@@ -4,16 +4,20 @@
     <string name="editor_text_hint">Buraya yazın…</string>
     <string name="notebook_list_view_text">Liste Görünümü</string>
     <string name="notebook_notebook_view_text">Defter Görünümü</string>
+    <string name="notebook_main_text">Defterler</string>
+    <string name="notebook_add_new_button">Yeni Defter</string>
     <string name="cancel_button">iptal</string>
     <string name="attach_button">ekle</string>
     <string name="save_button">kaydet</string>
     <string name="create_button">oluştur</string>
-    <string name="title_text">Başlık</string>
+    <string name="title_text">Başlık:</string>
     <string name="new_notebook_text">Yeni Defter</string>
-    <string name="new_title_text">Yeni Başlık</string>
+    <string name="new_title_text">Yeni Başlık:</string>
     <string name="open_editor_button">Editörü Aç</string>
     <string name="choose_date_button">Tarih Seç</string>
     <string name="choose_time_button">Saat Seç</string>
+    <string name="date_text">Tarih</string>
+    <string name="time_text">Saat</string>
 
     <!--Toast-->
     <string name="calendar_sync_no_app">Bu telefonda takvim senkronizasyonunu çalıştırmak için uygun bir uygulama yüklü değil</string>
@@ -32,5 +36,7 @@
     <string name="notification_open_error">Bildirim açılamadı</string>
     <string name="notification_past_time_error">Bildirim için geçmiş bir zaman seçemezsiniz</string>
     <string name="cancel">İptal Edildi</string>
+
+
 
 </resources>

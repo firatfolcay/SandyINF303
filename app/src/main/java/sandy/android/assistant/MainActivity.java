@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                 popupWindow.dismiss();                  //dispose popup
                             }
                             else {
-                                Toast.makeText(getApplicationContext(), "Notebook title can contain a maximum of 10 characters.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();
                             }
 
                         }

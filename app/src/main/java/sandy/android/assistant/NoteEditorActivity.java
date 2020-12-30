@@ -254,7 +254,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                                     int numberOfRowsAffected = 0;
                                     numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
                                     if (numberOfRowsAffected > 0) {
-                                        Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
                                     }
                             }
                             else {
@@ -262,13 +262,13 @@ public class NoteEditorActivity extends AppCompatActivity {
                                         int numberOfRowsAffected = 0;
                                         numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
                                         if (numberOfRowsAffected > 0) {
-                                            Toast.makeText(context, "calendar event of edited note is also updated.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
                                         }
                                     }
                             }
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "No permissions granted for calendar sync operation.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -483,11 +483,11 @@ public class NoteEditorActivity extends AppCompatActivity {
                         closeFABMenu();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "No permissions granted for calendar sync operation.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                     }
                 }
                 else {          //if there's no notifications attached to note,
-                    Toast.makeText(getApplicationContext(), "There are no notifications attached to Note.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -528,7 +528,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                         break;
 
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel), Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;
@@ -546,7 +546,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                         break;
 
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.cancel), Toast.LENGTH_SHORT).show();
                         break;
                 }
                 break;

@@ -109,7 +109,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     int numberOfRowsAffected = 0;
                     numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNotification.getId(), db.getNoteFromNotificationId(editNotification.getId()));
                     if (numberOfRowsAffected > 0) {
-                        Toast.makeText(context, "calendar event of edited notification is also updated.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -204,7 +204,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     time = hourOfDay + ":" + minute;
                 } else {
                     //it's before current'
-                    Toast.makeText(getApplicationContext(), "You can't select a past time for notification.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
                 }
             }
             else {
@@ -219,7 +219,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     time = hourOfDay + ":" + minute;
                 } else {
                     //it's before current'
-                    Toast.makeText(getApplicationContext(), "You can't select a past time for notification.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
                 }
             }
             else {

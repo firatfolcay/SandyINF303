@@ -44,7 +44,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="32dp"
             android:backgroundTint="@color/darkBlue"
-            android:text="SAVE"
+            android:text="@string/save_button"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/notebookEditTitleCancelButton"
@@ -57,7 +57,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/darkBlue"
-            android:text="CANCEL"
+            android:text="@string/cancel_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notebookEditTitleEditText" />
 
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="68dp"
-            android:text="New Title:"
+            android:text="@string/new_title_text"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

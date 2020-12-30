@@ -14,7 +14,7 @@
         android:layout_marginStart="80dp"
         android:layout_marginBottom="112dp"
         android:backgroundTint="@color/orange"
-        android:text="CANCEL"
+        android:text="@string/cancel_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="452dp"
         android:backgroundTint="@color/orange"
-        android:text="CHOOSE DATE"
+        android:text="@string/choose_date_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.131"
@@ -35,7 +35,7 @@
         android:layout_width="135dp"
         android:layout_height="57dp"
         android:layout_marginBottom="24dp"
-        android:text="Date"
+        android:text="@string/date_text"
         app:layout_constraintBottom_toTopOf="@+id/datePickerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.139"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="452dp"
         android:backgroundTint="@color/orange"
-        android:text="CHOOSE TIME"
+        android:text="@string/choose_time_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.901"
@@ -58,7 +58,7 @@
         android:layout_width="130dp"
         android:layout_height="57dp"
         android:layout_marginBottom="24dp"
-        android:text="Time"
+        android:text="@string/time_text"
         app:layout_constraintBottom_toTopOf="@+id/timePickerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.903"
@@ -71,7 +71,7 @@
         android:layout_marginEnd="68dp"
         android:layout_marginBottom="112dp"
         android:backgroundTint="@color/orange"
-        android:text="SAVE"
+        android:text="@string/save_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -92,7 +92,7 @@ public class CalendarSync {
             context.startActivity(intent);
         }
         else {
-            Toast.makeText(context, "There is no appropriate application installed in this phone to run calendar synchronization.", Toast.LENGTH_LONG);
+            Toast.makeText(context, context.getResources().getString(R.string.calendar_sync_no_app), Toast.LENGTH_LONG);
         }
     }
 
@@ -139,7 +139,7 @@ public class CalendarSync {
         values.put(CalendarContract.Events.DESCRIPTION, eventDescription.toString());
 
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-        Toast.makeText(context.getApplicationContext(), "Event successfully inserted to calendar.", Toast.LENGTH_LONG).show();
+        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_LONG).show();
     }
 
 

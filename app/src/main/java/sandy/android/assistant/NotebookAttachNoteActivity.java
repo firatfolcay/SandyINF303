@@ -57,13 +57,13 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
             }
             else{
                 finish();
-                Toast.makeText(getApplicationContext(), "Operation failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show();
                 return;
             }
         }
         else{
             finish();
-            Toast.makeText(getApplicationContext(), "Operation failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show();
             return;
         }
 

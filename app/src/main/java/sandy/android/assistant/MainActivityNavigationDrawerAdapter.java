@@ -101,7 +101,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
                 notifyRemoved(position);
             }
             else {
-                Toast.makeText(activity, "Notebook couldn't be deleted.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, activity.getResources().getString(R.string.notebook_delete_error), Toast.LENGTH_LONG);
             }
 
             refresh();

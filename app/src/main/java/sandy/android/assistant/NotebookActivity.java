@@ -82,13 +82,13 @@ public class NotebookActivity extends AppCompatActivity {
             }
             else{
                 finish();
-                Toast.makeText(getApplicationContext(), "Failed to open selected Notebook", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();
                 return;
             }
         }
         else{
             finish();
-            Toast.makeText(getApplicationContext(), "Failed to open selected Notebook", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -189,7 +189,7 @@ public class NotebookActivity extends AppCompatActivity {
                         popupWindow.dismiss();                  //dispose popup
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Notebook title can contain a maximum of 10 characters.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();
                     }
 
                 }

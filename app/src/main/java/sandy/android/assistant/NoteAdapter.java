@@ -120,14 +120,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                     int deletedRows = 0;
                     deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), noteToDelete.getNotification().getId());
                     if (deletedRows > 0) {
-                        Toast.makeText(activity, "Calendar event attached to notification of deleted note is also successfully deleted.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
                     }
                 }
                 mNoteList = db.getAllNotes();
                 notifyRemoved(position);
             }
             else {
-                Toast.makeText(activity, "Note couldn't be deleted.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, activity.getResources().getString(R.string.note_delete_error), Toast.LENGTH_LONG);
             }
         }
 
@@ -141,7 +141,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 mainActivity.startActivity(intent);
             }
             catch(Exception e){
-                Toast.makeText(activity, "Selected note couldn't be found.", Toast.LENGTH_LONG);
+                Toast.makeText(activity, activity.getResources().getString(R.string.note_not_found_error), Toast.LENGTH_LONG);
             }
         }
 

@@ -8,12 +8,16 @@
     <string name="attach_button">attach</string>
     <string name="save_button">save</string>
     <string name="create_button">create</string>
-    <string name="title_text">Title</string>
+    <string name="title_text">Title:</string>
     <string name="new_notebook_text">New Notebook</string>
-    <string name="new_title_text">New Title</string>
+    <string name="new_title_text">New Title:</string>
     <string name="open_editor_button">Open Editor</string>
     <string name="choose_date_button">Choose Date</string>
     <string name="choose_time_button">Choose Time</string>
+    <string name="notebook_main_text">Notebooks</string>
+    <string name="notebook_add_new_button">New Notebook</string>
+    <string name="date_text">Date</string>
+    <string name="time_text">Time</string>
 
     <!--Toast-->
     <string name="calendar_sync_no_app">There is no appropriate application installed in this phone to run calendar synchronization</string>
@@ -32,5 +36,6 @@
     <string name="notification_open_error">The notification couldn\'t be opened</string>
     <string name="notification_past_time_error">You can\'t select a past time for notification</string>
     <string name="cancel">Cancelled</string>
+
 
 </resources>

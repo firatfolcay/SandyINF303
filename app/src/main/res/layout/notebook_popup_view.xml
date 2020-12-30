@@ -29,7 +29,7 @@
             android:layout_marginStart="36dp"
 
             android:layout_marginTop="61dp"
-            android:text="Title:"
+            android:text="@string/title_text"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +41,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/darkBlue"
-            android:text="CREATE"
+            android:text="@string/create_button"
             app:layout_constraintStart_toEndOf="@+id/notebookPopupCancelButton"
             app:layout_constraintTop_toBottomOf="@+id/notebookPopupEditText" />
 
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="102dp"
             android:layout_marginTop="16dp"
-            android:text="New Notebook"
+            android:text="@string/new_notebook_text"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -63,7 +63,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/darkBlue"
-            android:text="CANCEL"
+            android:text="@string/cancel_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
