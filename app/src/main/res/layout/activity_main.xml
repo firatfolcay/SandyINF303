@@ -12,11 +12,11 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/mainActivityNavigationView"
-        android:layout_width="218dp"
+        android:layout_width="220dp"
         android:layout_height="0dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:background="@color/darkOrange"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -39,29 +39,44 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
             <Button
                 android:id="@+id/buttonAddNotebook"
                 android:layout_width="215dp"
                 android:layout_height="88dp"
-                android:layout_marginTop="72dp"
+                android:layout_marginTop="1dp"
                 android:backgroundTint="@color/orange"
                 android:text="@string/notebook_add_new_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonAddNotebook" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mainActivityListOfNotebooks"
                 android:layout_width="216dp"
-                android:layout_height="494dp"
+                android:layout_height="480dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
                 android:background="@color/darkBlue"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonAddNotebook" />
+                app:layout_constraintTop_toBottomOf="@+id/divider2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.navigation.NavigationView>
