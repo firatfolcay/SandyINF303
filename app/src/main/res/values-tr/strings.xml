@@ -6,10 +6,10 @@
     <string name="notebook_notebook_view_text">Defter Görünümü</string>
     <string name="notebook_main_text">Defterler</string>
     <string name="notebook_add_new_button">Yeni Defter</string>
-    <string name="cancel_button">iptal</string>
-    <string name="attach_button">ekle</string>
-    <string name="save_button">kaydet</string>
-    <string name="create_button">oluştur</string>
+    <string name="cancel_button">İptal</string>
+    <string name="attach_button">Ekle</string>
+    <string name="save_button">Kaydet</string>
+    <string name="create_button">Oluştur</string>
     <string name="title_text">Başlık:</string>
     <string name="new_notebook_text">Yeni Defter</string>
     <string name="new_title_text">Yeni Başlık:</string>
@@ -38,6 +38,9 @@
     <string name="cancel">İptal Edildi</string>
     <string name="minute_text">Dakika</string>
     <string name="hour_text">Saat</string>
+    <string name="language_text">Bir Dil Seçin</string>
+    <string name="language_en">English</string>
+    <string name="language_tr">Türkçe</string>
 
 
 </resources>

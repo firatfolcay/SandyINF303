@@ -1,5 +1,6 @@
 package sandy.android.assistant;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView mainActivityNavigationViewImageView;
     FloatingActionButton fab_create_new_note;
     ImageView buttonShowNotification;
+    ImageButton buttonChangeLanguage;
 
     View popupView;     //notebook popup attributes
     EditText notebookPopupEditText;
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonShowNotification = findViewById(R.id.showNotification);
         buttonAddNotebook = findViewById(R.id.buttonAddNotebook);
+        buttonChangeLanguage = findViewById(R.id.button_change_language);
 
         listOfNotes = findViewById(R.id.listOfNotes);
         listOfNotebooks = findViewById(R.id.mainActivityListOfNotebooks);
@@ -186,6 +190,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), NotificationViewActivity.class);
                 startActivity(intent);
             }
+        });
+
+        buttonChangeLanguage.setOnClickListener(l->{
+            Intent intent = new Intent(getApplicationContext(), ChangeLanguageActivity.class);
+            startActivityForResult(intent,0);
         });
 
         fab_create_new_note.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +305,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 0:
+                switch (resultCode){
+                    case RESULT_OK:
+                        Intent intent = getIntent();
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        finish();
+                        startActivity(intent);
+                }
+                break;
+        }
+    }
 
     public void startNoteEditorActivity () {
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java

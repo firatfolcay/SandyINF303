@@ -6,10 +6,10 @@
     <string name="notebook_notebook_view_text">Notebook View</string>
     <string name="notebook_main_text">Notebooks</string>
     <string name="notebook_add_new_button">New Notebook</string>
-    <string name="cancel_button">cancel</string>
-    <string name="attach_button">attach</string>
-    <string name="save_button">save</string>
-    <string name="create_button">create</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="attach_button">Attach</string>
+    <string name="save_button">Save</string>
+    <string name="create_button">Create</string>
     <string name="title_text">Title:</string>
     <string name="new_notebook_text">New Notebook</string>
     <string name="new_title_text">New Title:</string>
@@ -40,5 +40,8 @@
     <string name="time_text">Time</string>
     <string name="minute_text">Minute</string>
     <string name="hour_text">Hour</string>
+    <string name="language_text">Choose a Language</string>
+    <string name="language_en">English</string>
+    <string name="language_tr">Türkçe</string>
 
 </resources>

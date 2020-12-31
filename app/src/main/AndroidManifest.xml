@@ -30,6 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ChangeLanguageActivity"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN"></action>
+                <category android:name="android.intent.category.OPENABLE"></category>
+            </intent-filter>
+        </activity>
         <activity android:name=".NoteEditorActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
