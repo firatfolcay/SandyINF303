@@ -200,6 +200,31 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                         db.insertNote(n);
 
+                        if (notification != null) {       //if created note has a notification attached
+                            int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
+                            int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+
+                            if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
+                                notesFromDB = db.getAllNotes();
+                                for (int i = 0; i < notesFromDB.size(); i++) {
+                                    if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
+                                        calendarSync = new CalendarSync(notesFromDB.get(i).getTitle(), notesFromDB.get(i).getNotification(), notesFromDB.get(i).getContent());      //instantiate new calendarSync object
+                                        //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
+                                        calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                                    }
+                                    else {
+                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else {          //if there's no notifications attached to note,
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
+                        }
+
                         if (notification != null) {
                             notesFromDB = db.getAllNotes();
                             for (int i = 0; i < notesFromDB.size(); i++) {
@@ -250,21 +275,38 @@ public class NoteEditorActivity extends AppCompatActivity {
                         int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
                         if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
-                            if (notification != null) {
+                            if (notification != null) {         //if a new notification time is selected
                                     int numberOfRowsAffected = 0;
-                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);
-                                    if (numberOfRowsAffected > 0) {
-                                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
-                                    }
-                            }
-                            else {
-                                if (editNote.getNotification() != null) {
-                                        int numberOfRowsAffected = 0;
-                                        numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);
+                                    if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
+                                        numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);       //update this calendar entry.
                                         if (numberOfRowsAffected > 0) {
                                             Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
                                         }
                                     }
+                                    else {      //if edited Note has no notification attached before,
+                                        notesFromDB = db.getAllNotes();
+                                        for (int i = 0; i < notesFromDB.size(); i++) {
+                                            if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
+                                                calendarSync = new CalendarSync(notesFromDB.get(i).getTitle(), notesFromDB.get(i).getNotification(), notesFromDB.get(i).getContent());      //instantiate new calendarSync object
+                                                calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                                                Toast.makeText(context, context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_SHORT).show();
+                                            }
+                                            else {
+                                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                    }
+
+                            }
+                            else {      //if no new notification time selected
+                                if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
+                                    int numberOfRowsAffected = 0;
+                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);  //update calendar event values
+                                    if (numberOfRowsAffected > 0) {
+                                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             }
                         }
                         else {
@@ -469,30 +511,25 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
-        fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
+        /*fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
             @Override
             public void onClick(View v) {
-                if (editNote.getNotification() != null) {       //if note that is edited has a notification attached
                     int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
                     int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
                     if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
                         calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
-                        //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
-                        calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
-                        closeFABMenu();
+                        calendarSync.addCalendarEvent(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());     //call method that sends Note info to Calendar API
+                        //calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                        //closeFABMenu();
                     }
                     else {
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                     }
-                }
-                else {          //if there's no notifications attached to note,
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
-                }
 
             }
 
-        });
+        });*/
 
     }
 
@@ -571,11 +608,11 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
         System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
-        if (editNote != null) {
+        /*if (editNote != null) {
             if (editNote.getNotification() != null) {
                 fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
             }
-        }
+        }*/
         /*fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         fab_noteeditor_options_timer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));*/

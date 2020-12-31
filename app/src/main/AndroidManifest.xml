@@ -77,6 +77,7 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
+
         <receiver android:name="sandy.android.assistant.NotificationPublisher"
             android:enabled="true"
             android:exported="false">
@@ -86,7 +87,33 @@
                 <action android:name="android.intent.action.TIME_TICK"/>
             </intent-filter>
         </receiver>
-        <service android:enabled="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOffService" />
+
+        <receiver
+            android:name="sandy.android.assistant.BootDeviceReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="sandy.android.assistant.CalendarNotificationListenerService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="sandy.android.assistant.RunAfterBootService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOffService" />
+        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOnService" />
+        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverTimeTickService" />
 
     </application>
 

@@ -13,10 +13,15 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -69,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
+        this.startService(calendarNotificationListenerService);*/
+
+        //checkNotificationListenerPermission();
+        checkNotificationListenerServicePermissions();
+
         Intent screenOffBroadcastService = new Intent(this, BroadcastReceiverScreenOffService.class);
         this.startService(screenOffBroadcastService);
 
@@ -77,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent timeTickBroadcastService = new Intent(this, BroadcastReceiverTimeTickService.class);
         this.startService(timeTickBroadcastService);
+
+        Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
+        this.startService(calendarNotificationListenerService);
 
         createNotificationChannel();
         //calls function that grants permissions for device interactions.
@@ -87,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
 
         mainActivityConstraintLayout = (ConstraintLayout) findViewById(R.id.mainActivityConstraintLayout);
-        mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.buttonBackToMainActivity);
+        mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.buttonMainActivityNavigationDrawer);
         notebookNavigationView = (NavigationView) findViewById(R.id.mainActivityNavigationView);
 
         buttonShowNotification = findViewById(R.id.showNotification);
@@ -277,14 +292,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent screenOffBroadcastService = new Intent(this, BroadcastReceiverScreenOffService.class);
-        this.startService(screenOffBroadcastService);
+        System.out.println("application closed.");
 
-        Intent screenOnBroadcastService = new Intent(this, BroadcastReceiverScreenOnService.class);
-        this.startService(screenOnBroadcastService);
-
-        Intent timeTickBroadcastService = new Intent(this, BroadcastReceiverTimeTickService.class);
-        this.startService(timeTickBroadcastService);
     }
 
 
@@ -327,6 +336,37 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
             System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
+        }
+    }
+
+    private void checkNotificationListenerServicePermissions() {
+        if(isPermissionRequired()){
+            requestNotificationPermission();
+        }
+    }
+
+    public boolean isPermissionRequired() {
+        ComponentName cn = new ComponentName(this, CalendarNotificationListenerService.class);
+        String flat = Settings.Secure.getString(this.getContentResolver(), "enabled_notification_listeners");
+        final boolean enabled = flat != null && flat.contains(cn.flattenToString());
+        return !enabled;
+    }
+
+    private void requestNotificationPermission() {
+        Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+        startActivityForResult(intent, 101);
+    }
+
+    public void checkNotificationListenerPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            System.out.println("permission denied");
+            startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        }
+        else {
+            System.out.println("permission granted");
         }
     }
 }

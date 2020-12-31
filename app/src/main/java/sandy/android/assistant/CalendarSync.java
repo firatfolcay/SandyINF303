@@ -136,10 +136,20 @@ public class CalendarSync {
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
         values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.HAS_ALARM, true);
         values.put(CalendarContract.Events.DESCRIPTION, eventDescription.toString());
 
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
         Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_LONG).show();
+
+        //long eventID = Long.parseLong(uri.getLastPathSegment());
+
+        ContentValues reminders = new ContentValues();
+        reminders.put(CalendarContract.Reminders.EVENT_ID, notification.getId());
+        reminders.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        reminders.put(CalendarContract.Reminders.MINUTES, 0);
+
+        Uri uri2 = cr.insert(CalendarContract.Reminders.CONTENT_URI, reminders);
     }
 
 
