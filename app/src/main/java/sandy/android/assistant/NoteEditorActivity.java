@@ -511,7 +511,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             }
         });
 
-        /*fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
+        fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
             @Override
             public void onClick(View v) {
                     int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
@@ -521,7 +521,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                         calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
                         calendarSync.addCalendarEvent(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());     //call method that sends Note info to Calendar API
                         //calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
-                        //closeFABMenu();
+                        closeFABMenu();
                     }
                     else {
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
@@ -529,7 +529,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
             }
 
-        });*/
+        });
 
     }
 
@@ -608,22 +608,16 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
         System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
-        /*if (editNote != null) {
+        if (editNote != null) {
             if (editNote.getNotification() != null) {
                 fab_noteeditor_options_calendar.setVisibility(View.VISIBLE);
             }
-        }*/
-        /*fab_noteeditor_options_addimage.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        fab_noteeditor_options_timer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
-        fab_noteeditor_options_calendar.animate().translationY(-getResources().getDimension(R.dimen.standard_155));*/
+        }
     }
 
     private void closeFABMenu(){        //method that makes sub-FAB menus invisible
         System.out.println("closeFABMenu");
         isFABOpen=false;
-        /*fab_noteeditor_options_addimage.animate().translationY(0);
-        fab_noteeditor_options_timer.animate().translationY(0);
-        fab_noteeditor_options_calendar.animate().translationY(0);*/
         fab_noteeditor_options_addimage.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_timer.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);

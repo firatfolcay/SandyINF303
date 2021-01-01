@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +44,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -76,22 +80,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BootDeviceReceiver.BOOT_HAPPENED == true) {
+            BootDeviceReceiver.BOOT_HAPPENED = false;
+            finish();
+        }
         setContentView(R.layout.activity_main);
-
-        /*Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
-        this.startService(calendarNotificationListenerService);*/
 
         //checkNotificationListenerPermission();
         checkNotificationListenerServicePermissions();
-
-        Intent screenOffBroadcastService = new Intent(this, BroadcastReceiverScreenOffService.class);
-        this.startService(screenOffBroadcastService);
-
-        Intent screenOnBroadcastService = new Intent(this, BroadcastReceiverScreenOnService.class);
-        this.startService(screenOnBroadcastService);
-
-        Intent timeTickBroadcastService = new Intent(this, BroadcastReceiverTimeTickService.class);
-        this.startService(timeTickBroadcastService);
 
         Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
         this.startService(calendarNotificationListenerService);

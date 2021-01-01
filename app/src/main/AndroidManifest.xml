@@ -84,6 +84,13 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
+        <activity android:name=".NotePreviewActivity"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
 
         <receiver android:name="sandy.android.assistant.NotificationPublisher"
             android:enabled="true"
@@ -111,16 +118,6 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="sandy.android.assistant.RunAfterBootService"
-            android:enabled="true"
-            android:exported="true">
-        </service>
-
-        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOffService" />
-        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverScreenOnService" />
-        <service android:enabled="true" android:exported="true" android:name="sandy.android.assistant.BroadcastReceiverTimeTickService" />
 
     </application>
 

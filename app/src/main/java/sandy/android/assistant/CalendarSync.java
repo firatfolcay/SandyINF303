@@ -13,8 +13,11 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public class CalendarSync {
@@ -89,6 +92,7 @@ public class CalendarSync {
                 .putExtra(CalendarContract.Events.TITLE, title)
                 .putExtra(CalendarContract.Events.DESCRIPTION, eventDescription.toString());
         if (intent.resolveActivity(context.getPackageManager()) != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
         else {
@@ -131,7 +135,13 @@ public class CalendarSync {
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
         values.put(CalendarContract.Events._ID, notification.getId());
 
-        values.put(CalendarContract.Events.CALENDAR_ID, 1);
+        //values.put(CalendarContract.Events.CALENDAR_ID, 1);
+        String calIdValue = getCalendarId(context);
+        if (calIdValue == null) {
+            Toast.makeText(context.getApplicationContext(), "telefonda takvim bulunamadı.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        values.put(CalendarContract.Events.CALENDAR_ID, calIdValue);
 
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
@@ -266,5 +276,59 @@ public class CalendarSync {
         }
 
         return eventUri;
+    }
+
+    public String getCalendarId(Context context){
+        String returnval = null;
+        List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
+        String[] projectionString = projection.toArray(new String[2]);
+
+        /*Cursor cursor = context.getContentResolver().query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projectionString,
+                CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.IS_PRIMARY + "=1",
+                null,
+                CalendarContract.Calendars._ID + " ASC"
+        );*/
+
+        Cursor cursor = context.getContentResolver().query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projectionString,
+                CalendarContract.Calendars.VISIBLE + " = 1",
+                null,
+                CalendarContract.Calendars._ID + " ASC"
+        );
+
+        /*if (cursor != null && cursor.getColumnCount() <= 0) {
+            cursor = context.getContentResolver().query(
+                    CalendarContract.Calendars.CONTENT_URI,
+                    projectionString,
+                    CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.IS_PRIMARY + "=1",
+                    null,
+                    CalendarContract.Calendars._ID + " ASC"
+            );
+        }*/
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (cursor.isAfterLast() == false) {
+                String calName;
+                String calId;
+                Integer nameCol = cursor.getColumnIndex(projectionString[1]);
+                Integer idCol = cursor.getColumnIndex(projectionString[0]);
+
+                calName = cursor.getString(nameCol);
+                calId = cursor.getString(idCol);
+
+                System.out.println("calendar name = " + calName + "calendar id = " + calId);
+                returnval = calId;
+                return returnval;
+            }
+            cursor.close();
+        }
+        else {
+            returnval = null;
+        }
+        return returnval;
     }
 }

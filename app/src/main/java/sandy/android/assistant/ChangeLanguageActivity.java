@@ -1,5 +1,6 @@
 package sandy.android.assistant;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -7,6 +8,8 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+
+import com.akexorcist.localizationactivity.core.LanguageSetting;
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 
 public class ChangeLanguageActivity extends LocalizationActivity {
@@ -59,7 +62,6 @@ public class ChangeLanguageActivity extends LocalizationActivity {
             else if(selectedLang.equals(button_tr)){
                 setLanguage("tr");
             }
-
             setResult(RESULT_OK);
             finish();
         });
