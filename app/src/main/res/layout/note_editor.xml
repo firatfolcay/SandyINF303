@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/noteEditorActivityConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkBlue">
@@ -112,7 +113,8 @@
                     android:paddingLeft="20dp"
                     android:paddingTop="20dp"
                     android:paddingRight="20dp"
-                    android:paddingBottom="150dp"
+                    android:paddingBottom="140dp"
+                    android:clickable="true"
                     app:placeholder="Type here..."
                     app:render_type="Editor">
 
