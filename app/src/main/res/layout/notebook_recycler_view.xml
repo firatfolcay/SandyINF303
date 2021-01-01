@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/darkBlue"
     android:scaleX="1"
-    tools:context=".NotebookActivity">
+    tools:context=".Controller.NotebookActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

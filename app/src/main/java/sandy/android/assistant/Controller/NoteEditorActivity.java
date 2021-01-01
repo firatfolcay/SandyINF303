@@ -1,31 +1,22 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.SpannedString;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.Button;
@@ -34,16 +25,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -58,8 +45,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
 import com.github.irshulx.models.EditorTextStyle;
-import com.google.gson.Gson;
 
+import sandy.android.assistant.Adapter.NoteAdapter;
+import sandy.android.assistant.Model.CalendarSync;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Model.Notification;
+import sandy.android.assistant.R;
+import sandy.android.assistant.Receiver.NotificationPublisher;
 import top.defaults.colorpicker.ColorPickerPopup;
 
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
@@ -102,7 +95,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     Uri targetUri;
 
-    Note editNote;
+    public Note editNote;
     Notification notification; //will be null until a notification from notification screen is added
 
     @Override
@@ -715,6 +708,14 @@ public class NoteEditorActivity extends AppCompatActivity {
         cal.set(Calendar.MILLISECOND,0);
 
         return cal;
+    }
+
+    public Note getEditedNote() {
+        return editNote;
+    }
+
+    public void setEditedNote(Note note) {
+        editNote = note;
     }
 
 

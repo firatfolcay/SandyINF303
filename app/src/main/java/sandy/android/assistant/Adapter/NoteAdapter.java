@@ -1,10 +1,8 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +11,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
 
-import java.text.ParseException;
-import java.time.Duration;
 import java.util.ArrayList;
+
+import sandy.android.assistant.Controller.MainActivity;
+import sandy.android.assistant.Model.CalendarSync;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Controller.NoteEditorActivity;
+import sandy.android.assistant.Receiver.NotificationPublisher;
+import sandy.android.assistant.R;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
 

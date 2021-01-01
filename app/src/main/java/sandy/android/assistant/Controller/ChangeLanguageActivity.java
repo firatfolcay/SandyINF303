@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,8 @@ import android.app.Activity;
 
 import com.akexorcist.localizationactivity.core.LanguageSetting;
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
+
+import sandy.android.assistant.R;
 
 public class ChangeLanguageActivity extends LocalizationActivity {
     Button button_en;

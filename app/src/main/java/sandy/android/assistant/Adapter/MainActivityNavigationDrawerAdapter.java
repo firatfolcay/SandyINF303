@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,12 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
 
 import java.util.ArrayList;
+
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Notebook;
+import sandy.android.assistant.Controller.NotebookActivity;
+import sandy.android.assistant.R;
 
 public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<MainActivityNavigationDrawerAdapter.MyViewHolder> {
 

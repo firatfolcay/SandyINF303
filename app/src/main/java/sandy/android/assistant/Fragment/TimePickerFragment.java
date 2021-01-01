@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Fragment;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;

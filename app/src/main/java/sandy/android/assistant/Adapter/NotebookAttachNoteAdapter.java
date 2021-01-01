@@ -1,8 +1,7 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import sandy.android.assistant.Controller.MainActivity;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.R;
 
 public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAttachNoteAdapter.MyViewHolder> {
 
@@ -27,7 +30,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
     Activity activity;
     MainActivity mainActivity = new MainActivity();
     MyViewHolder holder;
-    ArrayList<ArrayList> checkedItemsList = new ArrayList<ArrayList>();
+    public ArrayList<ArrayList> checkedItemsList = new ArrayList<ArrayList>();
 
     public NotebookAttachNoteAdapter(Context context, ArrayList<Note> notes, DatabaseManagement db, MainActivity ma) {
         inflater = LayoutInflater.from(context);

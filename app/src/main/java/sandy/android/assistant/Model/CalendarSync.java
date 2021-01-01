@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Model;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -13,12 +13,12 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import sandy.android.assistant.R;
 
 public class CalendarSync {
     private String eventTitle = "";

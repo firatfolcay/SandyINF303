@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.irshulx.Editor;
+
+import sandy.android.assistant.R;
 
 public class NotePreviewActivity extends AppCompatActivity {
     EditText notePreviewTitle;

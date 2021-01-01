@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Listener;
 
 import android.content.Context;
 import android.view.GestureDetector;

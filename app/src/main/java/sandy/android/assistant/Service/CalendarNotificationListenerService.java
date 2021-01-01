@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -18,6 +18,11 @@ import android.text.TextUtils;
 import androidx.core.app.NotificationCompat;
 
 import java.util.ArrayList;
+
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Controller.NotePreviewActivity;
+import sandy.android.assistant.R;
 
 public class CalendarNotificationListenerService extends NotificationListenerService {
     NotificationChannel channel;

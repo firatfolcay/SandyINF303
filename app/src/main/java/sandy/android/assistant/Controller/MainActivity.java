@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,20 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,8 +38,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+
+import sandy.android.assistant.Adapter.MainActivityNavigationDrawerAdapter;
+import sandy.android.assistant.Adapter.NoteAdapter;
+import sandy.android.assistant.Listener.OnSwipeTouchListener;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Model.Notebook;
+import sandy.android.assistant.R;
+import sandy.android.assistant.Receiver.BootDeviceReceiver;
+import sandy.android.assistant.Service.CalendarNotificationListenerService;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 

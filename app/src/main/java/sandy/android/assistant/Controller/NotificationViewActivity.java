@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Adapter.NotificationAdapter;
+import sandy.android.assistant.R;
 
 public class NotificationViewActivity extends AppCompatActivity {
 

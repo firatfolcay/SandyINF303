@@ -1,7 +1,5 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Model;
 
-import java.lang.reflect.Array;
-import java.text.ParseException;
 import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.irshulx.Editor;
 
 import java.util.ArrayList;
+
+import sandy.android.assistant.Controller.NotificationEditorActivity;
+import sandy.android.assistant.Controller.MainActivity;
+import sandy.android.assistant.Model.CalendarSync;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Model.Notification;
+import sandy.android.assistant.R;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.MyViewHolder> {
 

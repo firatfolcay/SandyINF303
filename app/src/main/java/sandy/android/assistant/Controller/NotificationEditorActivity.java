@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -17,7 +17,6 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,6 +24,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
+import sandy.android.assistant.Fragment.DatePickerFragment;
+import sandy.android.assistant.Fragment.TimePickerFragment;
+import sandy.android.assistant.Model.CalendarSync;
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Notification;
+import sandy.android.assistant.Adapter.NotificationAdapter;
+import sandy.android.assistant.R;
 
 public class NotificationEditorActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     public static String CLASS_NOTE_EDITOR_ACTIVITY_NAME = NoteEditorActivity.class.toString();

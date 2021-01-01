@@ -23,21 +23,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.San">
-        <activity android:name=".MainActivity"
+        <activity android:name=".Controller.MainActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChangeLanguageActivity"
+        <activity android:name=".Controller.ChangeLanguageActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN"></action>
                 <category android:name="android.intent.category.OPENABLE"></category>
             </intent-filter>
         </activity>
-        <activity android:name=".NoteEditorActivity"
+        <activity android:name=".Controller.NoteEditorActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
@@ -49,42 +49,35 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotificationEditorActivity"
+        <activity android:name=".Controller.NotificationEditorActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotificationController"
+        <activity android:name=".Controller.NotificationViewActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotificationViewActivity"
+        <activity android:name=".Controller.NotebookActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotebookActivity"
+        <activity android:name=".Controller.NotebookAttachNoteActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotebookAttachNoteActivity"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.RUN" />
-                <category android:name="android.intent.category.OPENABLE" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".NotePreviewActivity"
+        <activity android:name=".Controller.NotePreviewActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
@@ -92,7 +85,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="sandy.android.assistant.NotificationPublisher"
+        <receiver android:name="sandy.android.assistant.Receiver.NotificationPublisher"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -103,7 +96,7 @@
         </receiver>
 
         <receiver
-            android:name="sandy.android.assistant.BootDeviceReceiver"
+            android:name="sandy.android.assistant.Receiver.BootDeviceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -111,7 +104,7 @@
             </intent-filter>
         </receiver>
         <service
-            android:name="sandy.android.assistant.CalendarNotificationListenerService"
+            android:name="sandy.android.assistant.Service.CalendarNotificationListenerService"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>

@@ -1,4 +1,4 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Model;
 
 import java.util.ArrayList;
 

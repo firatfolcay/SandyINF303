@@ -1,9 +1,6 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Controller;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.irshulx.Editor;
 
 import java.util.ArrayList;
+
+import sandy.android.assistant.Model.DatabaseManagement;
+import sandy.android.assistant.Model.Note;
+import sandy.android.assistant.Model.Notebook;
+import sandy.android.assistant.Adapter.NotebookAttachNoteAdapter;
+import sandy.android.assistant.R;
 
 public class NotebookAttachNoteActivity extends AppCompatActivity {
 

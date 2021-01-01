@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/darkBlue"
     android:scaleX="1"
-    tools:context=".MainActivity">
+    tools:context=".Controller.MainActivity">
 
 
     <com.google.android.material.navigation.NavigationView

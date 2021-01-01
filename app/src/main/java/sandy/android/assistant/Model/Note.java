@@ -1,10 +1,5 @@
-package sandy.android.assistant;
+package sandy.android.assistant.Model;
 
-import android.annotation.SuppressLint;
-
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.io.File;
 import java.util.ArrayList;
 
 public class Note {
