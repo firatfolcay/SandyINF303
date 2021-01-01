@@ -316,6 +316,9 @@ public class MainActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         finish();
                         startActivity(intent);
+                        break;
+                    case RESULT_CANCELED:
+                        break;
                 }
                 break;
         }

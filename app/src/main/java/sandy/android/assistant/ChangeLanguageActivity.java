@@ -15,7 +15,7 @@ public class ChangeLanguageActivity extends LocalizationActivity {
     Button button_save;
     Button button_cancel;
 
-    String selectedLang = "";
+    Button selectedLang;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class ChangeLanguageActivity extends LocalizationActivity {
             button_tr.setBackgroundColor(getResources().getColor(R.color.white));
             button_tr.setTextColor(getResources().getColor(R.color.black));
 
-            selectedLang = button_en.getText().toString();
+            selectedLang = button_en;
         });
 
         button_tr.setOnClickListener(l->{
@@ -44,17 +44,19 @@ public class ChangeLanguageActivity extends LocalizationActivity {
             button_en.setBackgroundColor(getResources().getColor(R.color.white));
             button_en.setTextColor(getResources().getColor(R.color.black));
 
-            selectedLang = button_tr.getText().toString();
+            selectedLang = button_tr;
         });
 
         button_save.setOnClickListener(l->{
-            if(selectedLang.contentEquals("")){
-                //
+            if(selectedLang == null){
+                setResult(RESULT_CANCELED);
+                finish();
+                return;
             }
-            else if(selectedLang.contentEquals(getResources().getString(R.string.language_en))){
+            else if(selectedLang.equals(button_en)){
                 setLanguage("en");
             }
-            else if(selectedLang.contentEquals(getResources().getString(R.string.language_tr))){
+            else if(selectedLang.equals(button_tr)){
                 setLanguage("tr");
             }
 
