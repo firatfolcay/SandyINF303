@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        CreateNotebookTest.class
+        CreateNotebookTest.class,
+        EditNotebookTest.class
 })
 public class NotebookTestSuite {
 }

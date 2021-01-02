@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        NoteTestSuite.class
+        NoteTestSuite.class,
+        NotebookTestSuite.class
 })
 public class CompleteTestSuite {
 }
