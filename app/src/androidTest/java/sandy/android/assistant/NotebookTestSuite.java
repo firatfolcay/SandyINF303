@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         CreateNotebookTest.class,
-        EditNotebookTest.class
+        EditNotebookTest.class,
+        DeleteNotebookTest.class
 })
 public class NotebookTestSuite {
 }
