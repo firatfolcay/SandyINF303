@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import sandy.android.assistant.Adapter.MainActivityNavigationDrawerAdapter;
 import sandy.android.assistant.Adapter.NoteAdapter;
 import sandy.android.assistant.Listener.OnSwipeTouchListener;
+import sandy.android.assistant.Model.CalendarSync;
 import sandy.android.assistant.Model.DatabaseManagement;
 import sandy.android.assistant.Model.Note;
 import sandy.android.assistant.Model.Notebook;
@@ -301,7 +304,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         System.out.println("application closed.");
-
+        Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
+        this.startService(calendarNotificationListenerService);
     }
 
     @Override
@@ -346,8 +350,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
@@ -355,9 +357,6 @@ public class MainActivity extends AppCompatActivity {
             NotificationChannel channel = new NotificationChannel(getString(R.string.channel_name), name, importance);
             channel.setDescription(description);
             channel.setLightColor(Color.BLUE);
-            //channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
             System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
@@ -380,18 +379,5 @@ public class MainActivity extends AppCompatActivity {
     private void requestNotificationPermission() {
         Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
         startActivityForResult(intent, 101);
-    }
-
-    public void checkNotificationListenerPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            System.out.println("permission denied");
-            startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-        }
-        else {
-            System.out.println("permission granted");
-        }
     }
 }

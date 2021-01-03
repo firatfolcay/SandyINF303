@@ -137,8 +137,9 @@ public class CalendarSync {
 
         //values.put(CalendarContract.Events.CALENDAR_ID, 1);
         String calIdValue = getCalendarId(context);
+        System.out.println("selected calendar: " + calIdValue);
         if (calIdValue == null) {
-            Toast.makeText(context.getApplicationContext(), "telefonda takvim bulunamadı.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.no_calendar_alert), Toast.LENGTH_LONG).show();
             return;
         }
         values.put(CalendarContract.Events.CALENDAR_ID, calIdValue);
@@ -262,12 +263,13 @@ public class CalendarSync {
         int iNumRowsDeleted = 0;
 
         Uri eventUri = ContentUris.withAppendedId(getCalendarUriBase(), entryID);
+        System.out.println("deleted event URI : " + eventUri);
         iNumRowsDeleted = context.getContentResolver().delete(eventUri, null, null);
 
         return iNumRowsDeleted;
     }
 
-    public Uri getCalendarUriBase() {
+    public Uri getCalendarUriBase() {       //method that returns calendar uri base
         Uri eventUri;
         if (android.os.Build.VERSION.SDK_INT <= 7) {
             eventUri = Uri.parse("content://calendar/events");
@@ -278,51 +280,40 @@ public class CalendarSync {
         return eventUri;
     }
 
-    public String getCalendarId(Context context){
+    public String getCalendarId(Context context){       //method that returns a specific calendar id
         String returnval = null;
-        List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
-        String[] projectionString = projection.toArray(new String[2]);
-
-        /*Cursor cursor = context.getContentResolver().query(
-                CalendarContract.Calendars.CONTENT_URI,
-                projectionString,
-                CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.IS_PRIMARY + "=1",
-                null,
-                CalendarContract.Calendars._ID + " ASC"
-        );*/
+        List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL);
+        String[] projectionString = projection.toArray(new String[3]);
 
         Cursor cursor = context.getContentResolver().query(
                 CalendarContract.Calendars.CONTENT_URI,
                 projectionString,
-                CalendarContract.Calendars.VISIBLE + " = 1",
+                CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " = 700",
                 null,
                 CalendarContract.Calendars._ID + " ASC"
         );
-
-        /*if (cursor != null && cursor.getColumnCount() <= 0) {
-            cursor = context.getContentResolver().query(
-                    CalendarContract.Calendars.CONTENT_URI,
-                    projectionString,
-                    CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.IS_PRIMARY + "=1",
-                    null,
-                    CalendarContract.Calendars._ID + " ASC"
-            );
-        }*/
 
         if (cursor != null) {
             cursor.moveToFirst();
             while (cursor.isAfterLast() == false) {
                 String calName;
                 String calId;
+                String calAccessLevel;
+                Integer accessLevel = cursor.getColumnIndex(projectionString[2]);
                 Integer nameCol = cursor.getColumnIndex(projectionString[1]);
                 Integer idCol = cursor.getColumnIndex(projectionString[0]);
 
                 calName = cursor.getString(nameCol);
                 calId = cursor.getString(idCol);
+                calAccessLevel = cursor.getString(accessLevel);
 
-                System.out.println("calendar name = " + calName + "calendar id = " + calId);
-                returnval = calId;
-                return returnval;
+                System.out.println("calendar name = " + calName + " calendar id = " + calId + " access level = " + calAccessLevel);
+                if (calName.equals("sandy personal assistant calendar")){
+                    returnval = calId;
+                    cursor.close();
+                    break;
+                }
+                cursor.moveToNext();
             }
             cursor.close();
         }
@@ -330,5 +321,80 @@ public class CalendarSync {
             returnval = null;
         }
         return returnval;
+    }
+
+    public static String getCalendarName(Context context){      //method that returns specific calendar Name
+        String returnval = null;
+        List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL);
+        String[] projectionString = projection.toArray(new String[3]);
+
+        Cursor cursor = context.getContentResolver().query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projectionString,
+                CalendarContract.Calendars.VISIBLE + " = 1 AND " + CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " = 700",
+                null,
+                CalendarContract.Calendars._ID + " ASC"
+        );
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (cursor.isAfterLast() == false) {
+                String calName;
+                String calId;
+                String calAccessLevel;
+                Integer accessLevel = cursor.getColumnIndex(projectionString[2]);
+                Integer nameCol = cursor.getColumnIndex(projectionString[1]);
+                Integer idCol = cursor.getColumnIndex(projectionString[0]);
+
+                calName = cursor.getString(nameCol);
+                calId = cursor.getString(idCol);
+                calAccessLevel = cursor.getString(accessLevel);
+
+                System.out.println("calendar name = " + calName + " calendar id = " + calId + " access level = " + calAccessLevel);
+                if (calName.equals("sandy personal assistant calendar")){
+                    returnval = calName;
+                    cursor.close();
+                    break;
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        else {
+            returnval = null;
+        }
+        return returnval;
+    }
+
+    public static String createNewCalendar(Context context) {       //method that creates a new "sandy personal assistant" calendar
+        Uri calUri = CalendarContract.Calendars.CONTENT_URI
+                .buildUpon()
+                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, "sandy")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL)
+                .build();
+
+        String dispName = "sandy personal assistant calendar";
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, Integer.toString(CalendarContract.Calendars.CAL_ACCESS_OWNER));
+        contentValues.put(CalendarContract.Calendars.NAME, "sandy");
+        contentValues.put(CalendarContract.Calendars.ACCOUNT_NAME, "sandy");
+        contentValues.put(CalendarContract.Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
+        contentValues.put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, dispName);
+        contentValues.put(CalendarContract.Calendars.VISIBLE, 1);
+        contentValues.put(CalendarContract.Calendars.OWNER_ACCOUNT, "sandy");
+        contentValues.put(CalendarContract.Calendars.CALENDAR_COLOR, R.color.orange);
+        contentValues.put(CalendarContract.Calendars.SYNC_EVENTS, 1);
+
+        ContentResolver cr = context.getContentResolver();
+        Uri returnUri;
+        returnUri = cr.insert(calUri, contentValues);
+        long eventID = Long.parseLong(returnUri.getLastPathSegment());
+        String createdCalendarID = String.valueOf(eventID);
+        System.out.println("created calendar id : " + createdCalendarID + " inserted URI : " + returnUri);
+        return createdCalendarID;
+
+
     }
 }

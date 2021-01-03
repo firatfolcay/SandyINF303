@@ -36,6 +36,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.models.Node;
@@ -165,6 +166,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         imageView_save_note.setOnClickListener(new View.OnClickListener() {     //onClick listener for save note button in noteeditor.
             @Override
             public void onClick(View v) {
+
                 for(Node item: editor.getContent().nodes){
                     if(item.content.size() > 0){
                         if(item.content.get(0).toString().isEmpty()){
@@ -197,6 +199,24 @@ public class NoteEditorActivity extends AppCompatActivity {
                             int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
                             int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
+                            if (calendarReadPermission == PermissionChecker.PERMISSION_GRANTED && calendarWritePermission == PermissionChecker.PERMISSION_GRANTED) {
+
+                                try {       //creates a new "sandy personal assistant" calendar if device doesn't have one.
+                                    String calendarName = CalendarSync.getCalendarName(context);
+                                    System.out.println("calendar name: " +calendarName);
+                                    if (calendarName == null) {
+                                        CalendarSync.createNewCalendar(context);
+                                    }
+                                } catch(Exception e) {
+                                    System.out.println("calendar exception.");
+                                }
+                            }
+                            else {
+                                Toast.makeText(context, getApplicationContext().getText(R.string.calendar_no_permission_error), Toast.LENGTH_SHORT);
+                            }
+                            calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
+                            calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+
                             if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
                                 notesFromDB = db.getAllNotes();
                                 for (int i = 0; i < notesFromDB.size(); i++) {
@@ -206,7 +226,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                                         calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
                                     }
                                     else {
-                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -215,14 +235,14 @@ public class NoteEditorActivity extends AppCompatActivity {
                             }
                         }
                         else {          //if there's no notifications attached to note,
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
                         }
 
                         if (notification != null) {
                             notesFromDB = db.getAllNotes();
                             for (int i = 0; i < notesFromDB.size(); i++) {
                                 if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    createNotificationChannel(notesFromDB.get(i).getNotification());
+                                    //createNotificationChannel(notesFromDB.get(i).getNotification());
                                     Intent intent = new Intent(context, NoteEditorActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -252,7 +272,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                             notesFromDB = db.getAllNotes();
                             for (int i = 0; i < notesFromDB.size(); i++) {
                                 if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    createNotificationChannel(notesFromDB.get(i).getNotification());
+                                    //createNotificationChannel(notesFromDB.get(i).getNotification());
                                     Intent intent = new Intent(context, NoteEditorActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     //intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
@@ -669,7 +689,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         return builder.build();
     }
 
-    public void createNotificationChannel(Notification n) {
+    /*public void createNotificationChannel(Notification n) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -683,7 +703,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
             System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
         }
-    }
+    }*/
 
     public Calendar parseFormattedDateString(Notification notification) {       //function to format date and time string to clean one and return it as calendar object
         String date_time = notification.getDate();

@@ -60,7 +60,7 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
                         NotificationCompat.BigTextStyle nc;
                         android.app.Notification.Builder builder = null;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            builder = new android.app.Notification.Builder(this, "notification_channel_" + Integer.toString(dbNotes.get(i).getId()));
+                            builder = new android.app.Notification.Builder(this, channel.getId());
                         }
                         else {
                             builder = new android.app.Notification.Builder(this);
@@ -72,7 +72,9 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
                         builder.setContentIntent(pendingIntent);
                         builder.setAutoCancel(true);
 
-                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(dbNotes.get(i).getNotification().getId(), builder.build());
+                        NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+                        notificationManager.notify(dbNotes.get(i).getNotification().getId(), builder.build());
                     }
                 }
             }
@@ -91,11 +93,11 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
             channel = new NotificationChannel(getString(R.string.channel_name), name, importance);
             channel.setDescription(description);
             channel.setLightColor(Color.BLUE);
-            //channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
+            channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager = getSystemService(NotificationManager.class);

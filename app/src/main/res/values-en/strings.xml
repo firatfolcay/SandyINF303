@@ -31,6 +31,7 @@
     <string name="note_delete_error">Note couldn\'t be deleted</string>
     <string name="note_not_found_error">Selected note couldn\'t be found</string>
     <string name="note_no_notification">There are no notifications attached to Note</string>
+    <string name="no_calendar_alert">No calendar found in the device</string>
     <string name="operation_failed">Operation failed</string>
     <string name="notification_delete_error">Notification couldn\'t be deleted</string>
     <string name="notification_open_error">The notification couldn\'t be opened</string>
