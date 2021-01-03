@@ -70,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView buttonShowNotification;
     ImageButton buttonChangeLanguage;
 
-    View popupView;     //notebook popup attributes
-    EditText notebookPopupEditText;
-    Button notebookPopupCreateButton;
-    Button notebookPopupCancelButton;
+    public View popupView;     //notebook popup attributes
+    public EditText notebookPopupEditText;
+    public Button notebookPopupCreateButton;
+    public Button notebookPopupCancelButton;
     LayoutInflater inflater;
     PopupWindow popupWindow;
 
