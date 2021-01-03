@@ -288,6 +288,17 @@ public class NoteEditorActivity extends AppCompatActivity {
                         int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
                         if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
+
+                            try {       //creates a new "sandy personal assistant" calendar if device doesn't have one.
+                                String calendarName = CalendarSync.getCalendarName(context);
+                                System.out.println("calendar name: " +calendarName);
+                                if (calendarName == null) {
+                                    CalendarSync.createNewCalendar(context);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("calendar exception.");
+                            }
+
                             if (notification != null) {         //if a new notification time is selected
                                     int numberOfRowsAffected = 0;
                                     if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
