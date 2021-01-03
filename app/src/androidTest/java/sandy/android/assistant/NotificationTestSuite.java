@@ -5,9 +5,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        NoteTestSuite.class,
-        NotebookTestSuite.class,
-        NotificationTestSuite.class
+        CreateNotificationTest.class,
+        EditNotificationTest.class,
+        DeleteNotificationTest.class
 })
-public class CompleteTestSuite {
+public class NotificationTestSuite {
 }
