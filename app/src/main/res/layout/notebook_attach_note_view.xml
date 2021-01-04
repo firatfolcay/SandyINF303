@@ -14,8 +14,8 @@
         android:id="@+id/listOfNotesToAttach"
         android:layout_width="364dp"
         android:layout_height="461dp"
-        android:layout_marginStart="21dp"
         android:layout_marginTop="53dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,22 +23,29 @@
         android:id="@+id/buttonAttachSelectedNotes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="254dp"
         android:layout_marginTop="544dp"
-        android:backgroundTint="@color/orange"
 
+        android:layout_marginEnd="69dp"
+        android:layout_marginBottom="67dp"
+        android:backgroundTint="@color/orange"
         android:text="@string/attach_button"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonCancelAttach"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonCancelAttach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="69dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="544dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginBottom="67dp"
         android:backgroundTint="@color/orange"
         android:text="@string/cancel_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonAttachSelectedNotes"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
