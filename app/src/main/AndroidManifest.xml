@@ -24,21 +24,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.San">
         <activity android:name=".Controller.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Controller.ChangeLanguageActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN"></action>
                 <category android:name="android.intent.category.OPENABLE"></category>
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NoteEditorActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
@@ -50,35 +56,45 @@
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NotificationEditorActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NotificationViewActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NotebookActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NotebookAttachNoteActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
         <activity android:name=".Controller.NotePreviewActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.RUN" />
                 <category android:name="android.intent.category.OPENABLE" />
