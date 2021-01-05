@@ -82,7 +82,6 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
 
                 for (int index = 0; index < notesWithCheckBoxesSelected.size(); index++) {
                     for (int index2 = 0; index2 < notesWithCheckBoxesSelected.get(index).size(); index2++) {
-                        System.out.println("Notes with check boxes selected" + notesWithCheckBoxesSelected.get(index).get(index2));
                         db.addNoteToNotebook(notebookAttachNoteAdapter.getNotesToAttachList().get((Integer) notesWithCheckBoxesSelected.get(index).get(index2)), selectedNotebook);
                         finish();
                     }

@@ -4,29 +4,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,12 +36,10 @@ import java.util.ArrayList;
 import sandy.android.assistant.Adapter.MainActivityNavigationDrawerAdapter;
 import sandy.android.assistant.Adapter.NoteAdapter;
 import sandy.android.assistant.Listener.OnSwipeTouchListener;
-import sandy.android.assistant.Model.CalendarSync;
 import sandy.android.assistant.Model.DatabaseManagement;
 import sandy.android.assistant.Model.Note;
 import sandy.android.assistant.Model.Notebook;
 import sandy.android.assistant.R;
-import sandy.android.assistant.Receiver.BootDeviceReceiver;
 import sandy.android.assistant.Service.CalendarNotificationListenerService;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -86,10 +76,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BootDeviceReceiver.BOOT_HAPPENED == true) {     //boot happened check //might delete at the future.
-            BootDeviceReceiver.BOOT_HAPPENED = false;
-            finish();
-        }
+
         setContentView(R.layout.activity_main);
 
         checkNotificationListenerServicePermissions();      //checks notification permission
@@ -274,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {        //on application close
         super.onDestroy();
-        System.out.println("application closed.");
         Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);       //create notification listener service
         this.startService(calendarNotificationListenerService);     //start notification listener service
     }
@@ -330,7 +316,6 @@ public class MainActivity extends AppCompatActivity {
             channel.setLightColor(Color.BLUE);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
         }
     }
 

@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.irshulx.Editor;
-
 import java.util.ArrayList;
 
 import sandy.android.assistant.Controller.MainActivity;
@@ -22,7 +20,6 @@ import sandy.android.assistant.Model.CalendarSync;
 import sandy.android.assistant.Model.DatabaseManagement;
 import sandy.android.assistant.Model.Note;
 import sandy.android.assistant.Controller.NoteEditorActivity;
-import sandy.android.assistant.Receiver.NotificationPublisher;
 import sandy.android.assistant.R;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
@@ -33,7 +30,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     Activity activity;
     CalendarSync calendarSync = new CalendarSync();
     MainActivity mainActivity = new MainActivity();
-    NotificationPublisher notificationPublisher = new NotificationPublisher();
 
     public NoteAdapter(Context context, ArrayList<Note> notes, DatabaseManagement db, MainActivity ma) {
         inflater = LayoutInflater.from(context);
@@ -117,7 +113,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             if (returnVal) {
                 mNoteList.remove(position);
                 if (noteToDelete.getNotification() != null) {
-                    notificationPublisher.deleteNotification(activity.getApplicationContext(), noteToDelete.getNotification());
 
                     int deletedRows = 0;
                     deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), noteToDelete.getNotification().getId());

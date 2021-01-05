@@ -139,7 +139,6 @@ public class NotebookActivity extends AppCompatActivity {
                         notebookEditorViewHtmlString = "";
                     }
                     else {
-                        System.out.println("Notebook has no notes inside");
                         //notebook has no notes in it.
                     }
 

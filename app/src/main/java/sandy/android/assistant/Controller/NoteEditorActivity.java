@@ -2,10 +2,6 @@ package sandy.android.assistant.Controller;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,7 +15,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.util.Linkify;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,9 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,7 +45,6 @@ import sandy.android.assistant.Model.DatabaseManagement;
 import sandy.android.assistant.Model.Note;
 import sandy.android.assistant.Model.Notification;
 import sandy.android.assistant.R;
-import sandy.android.assistant.Receiver.NotificationPublisher;
 import top.defaults.colorpicker.ColorPickerPopup;
 
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
@@ -92,7 +83,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //INITIALIZE VARIABLES BEFORE EVERYTHING ELSE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_editor);
 
@@ -103,8 +93,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         db = new DatabaseManagement(this);       //database access object initialization
 
-        notesFromDB = db.getAllNotes();
-        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
+        notesFromDB = db.getAllNotes();         //get all stored notes from database
+        NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);       //initialize new noteAdapter object
         notification = null;
 
         isFABOpen = false;      //initialization of attributes that will be used during run of onCreate method
@@ -182,7 +172,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                                 try {       //creates a new "sandy personal assistant" calendar if device doesn't have one.
                                     String calendarName = CalendarSync.getCalendarName(context);
-                                    System.out.println("calendar name: " +calendarName);
                                     if (calendarName == null) {
                                         CalendarSync.createNewCalendar(context);
                                     }
@@ -210,20 +199,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                             }
                         }
 
-                        if (notification != null) {
-                            notesFromDB = db.getAllNotes();
-                            for (int i = 0; i < notesFromDB.size(); i++) {
-                                if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    Intent intent = new Intent(context, NoteEditorActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, notesFromDB.get(i).getNotification().getId(), intent, 0);
-                                    scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
-
-                                }
-                            }
-
-                        }
                     }
                     else{        //if selected Note will be edited
                         String content = editor.getContentAsHTML();
@@ -238,20 +213,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                         db.updateNote(newNote, editNote);
 
-                        if (notification != null) {
-                            notesFromDB = db.getAllNotes();
-                            for (int i = 0; i < notesFromDB.size(); i++) {
-                                if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    Intent intent = new Intent(context, NoteEditorActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(context, notesFromDB.get(i).getNotification().getId(), intent, 0);
-                                    scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
-                                }
-                            }
-
-                        }
-
                         int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
                         int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
@@ -259,7 +220,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
                             try {       //creates a new "sandy personal assistant" calendar if device doesn't have one.
                                 String calendarName = CalendarSync.getCalendarName(context);
-                                System.out.println("calendar name: " +calendarName);
                                 if (calendarName == null) {
                                     CalendarSync.createNewCalendar(context);
                                 }
@@ -374,7 +334,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.action_color).setOnClickListener(new View.OnClickListener() {         //onClick listener for color selection
-            //FIXME this function makes the font red and you can't change it back to black
+
             @Override
             public void onClick(View v) {
                 editor.updateTextColor("#FF3333");
@@ -544,7 +504,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
                             editor.insertImage(bitmap);
                             String html = editor.getContentAsHTML();
-                            System.out.println("html : " + html);
                         } catch (IOException e) {
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -590,10 +549,8 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     private void showFABMenu(){         //method that makes sub-FAB menus visible
-        System.out.println("showFABMenu");
         isFABOpen=true;
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
-        System.out.println("fab visibility:" + fab_noteeditor_options_addimage.getVisibility());
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
         if (editNote != null) {
             if (editNote.getNotification() != null) {
@@ -603,7 +560,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     }
 
     private void closeFABMenu(){        //method that makes sub-FAB menus invisible
-        System.out.println("closeFABMenu");
         isFABOpen=false;
         fab_noteeditor_options_addimage.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_timer.setVisibility(View.INVISIBLE);
@@ -626,71 +582,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         SpannableString spannable = SpannableString.valueOf(textIn);
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         return Html.toHtml(spannable);
-    }
-
-    private void scheduleNotification(android.app.Notification notification, Notification n) {
-
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, n.getId());
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        notificationIntent.setData(Uri.parse("custom://"+System.currentTimeMillis()));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, n.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Calendar cal = parseFormattedDateString(n);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
-        System.out.println("alarm will go off at : " + cal.getTimeInMillis());
-    }
-
-    public android.app.Notification getNotification(Note n, PendingIntent pendingIntent) {
-        NotificationCompat.BigTextStyle nc;
-        android.app.Notification.Builder builder = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            builder = new android.app.Notification.Builder(this, "notification_channel_" + Integer.toString(n.getId()));
-        }
-        else {
-            builder = new android.app.Notification.Builder(this);
-        }
-        builder.setContentTitle(n.getTitle());
-        builder.setContentText(n.getTitle());
-        builder.setSmallIcon(R.drawable.circle_clock);
-        builder.setStyle(new android.app.Notification.BigTextStyle().bigText(Html.fromHtml(n.getContent())));
-        builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
-
-        return builder.build();
-    }
-
-    public Calendar parseFormattedDateString(Notification notification) {       //function to format date and time string to clean one and return it as calendar object
-        String date_time = notification.getDate();
-
-        String eventDate = date_time.substring(0,date_time.indexOf('T'));
-        String eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
-
-        Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
-        Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
-        Integer eventDay = Integer.parseInt(eventDate.split("-")[2]);
-
-        Integer eventHour = Integer.parseInt(eventTime.split(":")[0]);
-        Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
-
-        Calendar cal=Calendar.getInstance();
-        cal.set(Calendar.MONTH,eventMonth-1);
-        cal.set(Calendar.YEAR,eventYear);
-        cal.set(Calendar.DAY_OF_MONTH,eventDay);
-        cal.set(Calendar.HOUR_OF_DAY,eventHour);
-        cal.set(Calendar.MINUTE,eventMinute);
-        cal.set(Calendar.SECOND,0);
-        cal.set(Calendar.MILLISECOND,0);
-
-        return cal;
-    }
-
-    public Note getEditedNote() {
-        return editNote;
-    }
-
-    public void setEditedNote(Note note) {
-        editNote = note;
     }
 
 
