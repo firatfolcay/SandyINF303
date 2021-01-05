@@ -8,7 +8,6 @@ public class Note {
     private String content = "";
     private Notification notification;
     private String saveDate = null;
-    private ArrayList<Note> notesArrayList = new ArrayList<Note>();
 
     public Note(){
     }
@@ -26,14 +25,6 @@ public class Note {
         this.content = content;
         this.notification = notification;
         this.saveDate = date;
-    }
-
-    public ArrayList<Note> getNotesArrayList() {
-        return notesArrayList;
-    }
-
-    public void setNotesArrayList(ArrayList<Note> notesArrayList) {
-        this.notesArrayList = notesArrayList;
     }
 
     public String getTitle() {

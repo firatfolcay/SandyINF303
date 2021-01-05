@@ -31,20 +31,10 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
     ArrayList<Note> notesWithNoNotebookAttached;
     NotebookAttachNoteAdapter notebookAttachNoteAdapter;
 
-    ConstraintLayout notebookEditorViewConstraintLayout;
-    Editor notebookEditorView;
     Button attachSelectedNotesButton;
     Button cancelAttachButton;
-    CardView itemNotebookAttachNoteCardview;
-
-    View notesToAttachView;
-
-    LayoutInflater layoutInflater;
 
     Notebook selectedNotebook;
-
-    String notebookEditorViewHtmlString;
-    TextView notebookTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

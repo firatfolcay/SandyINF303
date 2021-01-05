@@ -26,7 +26,6 @@ import sandy.android.assistant.R;
 public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyViewHolder> {
 
     DatabaseManagement db;
-    //ArrayList<Notebook> notebookArrayList;
     Notebook notebook;
     ArrayList<Note> notebookNotes;
     LayoutInflater inflater;
@@ -98,8 +97,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
                 }
                 this.notebookDescription.setText(noteDescription);
             }
-            //this.notificationDescription.setText(selectedNote.getNotification().getDate());
-
         }
 
 
@@ -149,7 +146,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
                 Note note = notebookNotes.get(position);
                 db.removeNoteFromNotebook(note);
                 notebookNotes.remove(position);
-                //refresh();
                 notifyRemoved(position);
             }
             catch (Exception e){
@@ -160,11 +156,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         private void refresh(){
             notebookNotes = db.getNotesFromNotebook(notebook);
         }
-
-        /*public void notifyRemoved(int position) {
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, notebookArrayList.size());
-        }*/
 
         public void notifyInserted(int position) {
             notifyItemInserted(position);

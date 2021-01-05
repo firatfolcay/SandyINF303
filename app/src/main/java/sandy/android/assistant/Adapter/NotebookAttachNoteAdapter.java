@@ -26,7 +26,6 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
     DatabaseManagement db;
     ArrayList<Note> notesToAttachList;
     LayoutInflater inflater;
-    Editor editor;
     Activity activity;
     MainActivity mainActivity = new MainActivity();
     MyViewHolder holder;
@@ -132,10 +131,6 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         public void notifyChanged() {
             notifyDataSetChanged();
         }
-
-
-
-
 
     }
 }

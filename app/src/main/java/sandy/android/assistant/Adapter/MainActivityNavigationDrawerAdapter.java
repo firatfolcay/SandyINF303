@@ -27,7 +27,6 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
     DatabaseManagement db;
     ArrayList<Notebook> notebookArrayList;
     LayoutInflater inflater;
-    Editor editor;
     Activity activity;
 
     public MainActivityNavigationDrawerAdapter(Context context, ArrayList<Notebook> notebookArrayList, DatabaseManagement db) {
@@ -66,7 +65,6 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
             super(itemView);
 
             notebookTitle = (TextView) itemView.findViewById(R.id.notebookTitle);
-            //notebookDescription = (TextView) itemView.findViewById(R.id.notificationDescription);
 
             notebookSelectionLinearLayout = (LinearLayout) itemView.findViewById(R.id.notebookSelectionLinearLayout);
             notebookSelectionLinearLayout.setOnClickListener(this);
@@ -80,7 +78,6 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
 
             this.notebookTitle.setText(selectedNotebook.getTitle());
-            //this.notificationDescription.setText(selectedNote.getNotification().getDate());
 
         }
 

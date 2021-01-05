@@ -135,7 +135,6 @@ public class CalendarSync {
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
         values.put(CalendarContract.Events._ID, notification.getId());
 
-        //values.put(CalendarContract.Events.CALENDAR_ID, 1);
         String calIdValue = getCalendarId(context);
         System.out.println("selected calendar: " + calIdValue);
         if (calIdValue == null) {
@@ -152,8 +151,6 @@ public class CalendarSync {
 
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
         Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_LONG).show();
-
-        //long eventID = Long.parseLong(uri.getLastPathSegment());
 
         ContentValues reminders = new ContentValues();
         reminders.put(CalendarContract.Reminders.EVENT_ID, notification.getId());

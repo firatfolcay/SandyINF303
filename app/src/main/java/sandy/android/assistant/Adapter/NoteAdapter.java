@@ -30,7 +30,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     DatabaseManagement db;
     ArrayList<Note> mNoteList;
     LayoutInflater inflater;
-    Editor editor;
     Activity activity;
     CalendarSync calendarSync = new CalendarSync();
     MainActivity mainActivity = new MainActivity();
@@ -161,10 +160,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         public void notifyChanged() {
             notifyDataSetChanged();
         }
-
-
-
-
 
     }
 }

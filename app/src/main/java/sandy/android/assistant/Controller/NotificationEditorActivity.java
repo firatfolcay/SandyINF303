@@ -37,7 +37,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
     public static String CLASS_NOTE_EDITOR_ACTIVITY_NAME = NoteEditorActivity.class.toString();
     public static String CLASS_NOTIFICATION_ADAPTER_NAME = NotificationAdapter.class.toString();
 
-    Notification notification = new Notification();
     DatabaseManagement db;
 
     String date, time;
@@ -86,7 +85,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             if(b.get("NOTIFICATION_ID") != null){
                 editNotification = db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID"));
                 updateNotificationActivity(editNotification);
-                //System.out.println(b.getInt("NOTIFICATION_ID"));
             }
         }
 
@@ -100,8 +98,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 }
 
                 String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
-
-                //System.out.println(notification.getDate()); //debug code
 
                 //this currently passes back only the date not the object, makes the code a bit spaghetti.
 
@@ -120,11 +116,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     }
                 }
 
-
                 finish();
-
                 return;
-
             }
 
         });
@@ -132,23 +125,20 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         timePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editNotification != null){
+                if(editNotification != null)
                     timePicker = new TimePickerFragment(new Integer(hour), new Integer(minute));
-                }
                 else
                     timePicker = new TimePickerFragment();
 
                 timePicker.show(getSupportFragmentManager(), "time picker");
-
             }
         });
 
         datePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editNotification != null){
+                if(editNotification != null)
                     datePicker = new DatePickerFragment(new Integer(year), new Integer(month)-1, new Integer(day));
-                }
                 else
                     datePicker = new DatePickerFragment();
 

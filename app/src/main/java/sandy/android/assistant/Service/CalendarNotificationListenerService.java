@@ -43,7 +43,6 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
             Bundle extras = sbn.getNotification().extras;
             String noteTitle = extras.get(Notification.EXTRA_TITLE).toString();
             System.out.println("note title:" + noteTitle);
-            //String noteContent = extras.get(Notification.EXTRA_BIG_TEXT).toString();
             DatabaseManagement db;
             db = new DatabaseManagement(this);
             ArrayList<Note> dbNotes = db.getAllNotes();
@@ -57,7 +56,6 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
                         intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), dbNotes.get(i).getNotification().getId(), intent, 0);
 
-                        NotificationCompat.BigTextStyle nc;
                         android.app.Notification.Builder builder = null;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             builder = new android.app.Notification.Builder(this, channel.getId());

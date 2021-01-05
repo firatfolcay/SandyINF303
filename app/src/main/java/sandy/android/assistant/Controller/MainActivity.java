@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-        //checkNotificationListenerPermission();
         checkNotificationListenerServicePermissions();
 
         Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
@@ -134,9 +133,7 @@ public class MainActivity extends AppCompatActivity {
         notebooksLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotebooks.setLayoutManager(notebooksLinearLayoutManager);
 
-        // Unused variables ??
         ConstraintLayout mainActivityConstraintLayout = findViewById(R.id.mainActivityConstraintLayout);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         buttonAddNotebook.setOnClickListener(new View.OnClickListener() {           //if add notebook button is clicked
             @Override

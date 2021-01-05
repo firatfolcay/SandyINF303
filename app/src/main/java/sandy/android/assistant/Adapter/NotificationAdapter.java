@@ -30,7 +30,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     DatabaseManagement db;
     ArrayList<Note> mNoteWithNotificationList;
     LayoutInflater inflater;
-    Editor editor;
     Activity activity;
     CalendarSync calendarSync = new CalendarSync();
     MainActivity mainActivity = new MainActivity();
@@ -124,9 +123,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 if (deletedRows > 0) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
                 }
-                /*else {
-                    Toast.makeText(activity, "Calendar event attached to deleted Notification couldn't be deleted.", Toast.LENGTH_LONG).show();
-                }*/
             }
             else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.notification_delete_error), Toast.LENGTH_LONG);

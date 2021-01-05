@@ -63,9 +63,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE = 0;
     private static final int REQUEST_NOTIFICATION = 1;
 
-    Toolbar toolbar;
-    RecyclerView recyclerView;
-    View view;
     DatabaseManagement db;
     boolean isFABOpen = false;
     ArrayList <Note> notesFromDB = new ArrayList();
@@ -78,7 +75,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     Editor editor;
     EditText noteeditor_title_text;
 
-    Button button_db;
     FloatingActionButton fab_noteeditor_options;
     FloatingActionButton fab_noteeditor_options_addimage;
     FloatingActionButton fab_noteeditor_options_timer;
@@ -86,11 +82,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     ImageView imageView_back;
     ImageView imageView_save_note;
-
-    MainActivity mainActivity;
-
-    NotificationCompat.Builder notificationBuilder;
-    NotificationManagerCompat notificationManager;
 
     RecyclerView listOfNotes;
 
@@ -108,14 +99,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         calendarSync = new CalendarSync();
 
         context = getApplicationContext();
-        //notificationManager = NotificationManagerCompat.from(context);
-
         editor = (Editor) findViewById(R.id.editor);
 
-
-        //DatabaseTest dbt = new DatabaseTest(this);
         db = new DatabaseManagement(this);
-
 
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);
@@ -138,7 +124,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         if(b != null){
             if(b.get("NOTE_ID") != null){
                 editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
-                //System.out.println("NOTE ID: " + editNote.getId() + "\n");
                 updateEditor(editNote);
             }
         }
@@ -175,12 +160,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                     }
 
                     //content is not empty therefore move on.
-                    if(notification == null){
-                        //System.out.println("NOTIFICATION IS NULL");
-                    }
-                    else{
-                        //System.out.println("NOTIFICATION_DATE: " + notification.getDate());
-                    }
 
                     if (editNote == null) {     //if new Note will be created
                         String content = editor.getContentAsHTML();
@@ -222,11 +201,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 for (int i = 0; i < notesFromDB.size(); i++) {
                                     if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
                                         calendarSync = new CalendarSync(notesFromDB.get(i).getTitle(), notesFromDB.get(i).getNotification(), notesFromDB.get(i).getContent());      //instantiate new calendarSync object
-                                        //addCalendarEvent(calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventDate());     //call method that sends Note info to Calendar API
                                         calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
-                                    }
-                                    else {
-                                        //Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -234,18 +209,13 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                             }
                         }
-                        else {          //if there's no notifications attached to note,
-                            //Toast.makeText(getApplicationContext(), getResources().getString(R.string.note_no_notification), Toast.LENGTH_LONG).show();
-                        }
 
                         if (notification != null) {
                             notesFromDB = db.getAllNotes();
                             for (int i = 0; i < notesFromDB.size(); i++) {
                                 if (notesFromDB.get(i).getSaveDate().equals(n.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    //createNotificationChannel(notesFromDB.get(i).getNotification());
                                     Intent intent = new Intent(context, NoteEditorActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
                                     PendingIntent pendingIntent = PendingIntent.getActivity(context, notesFromDB.get(i).getNotification().getId(), intent, 0);
                                     scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
@@ -272,10 +242,8 @@ public class NoteEditorActivity extends AppCompatActivity {
                             notesFromDB = db.getAllNotes();
                             for (int i = 0; i < notesFromDB.size(); i++) {
                                 if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                    //createNotificationChannel(notesFromDB.get(i).getNotification());
                                     Intent intent = new Intent(context, NoteEditorActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    //intent.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                                     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
                                     PendingIntent pendingIntent = PendingIntent.getActivity(context, notesFromDB.get(i).getNotification().getId(), intent, 0);
                                     scheduleNotification(getNotification(notesFromDB.get(i), pendingIntent), notesFromDB.get(i).getNotification());
@@ -453,7 +421,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {      //onClick listener for add image from toolbox
             @Override
             public void onClick(View v) {
-                //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
@@ -462,7 +429,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         findViewById(R.id.fab_noteeditor_options_addimage).setOnClickListener(new View.OnClickListener() {      //onClick listener for add image from action button
             @Override
             public void onClick(View v) {
-                //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
@@ -513,7 +479,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_addimage.setOnClickListener(new View.OnClickListener() {     //onClick listener for add image function
             @Override
             public void onClick(View v) {
-                //editor.openImagePicker();
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);       //initialization of new intent that launches External Storage browser
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
@@ -544,7 +509,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                     if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
                         calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
                         calendarSync.addCalendarEvent(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());     //call method that sends Note info to Calendar API
-                        //calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
                         closeFABMenu();
                     }
                     else {
@@ -578,7 +542,6 @@ public class NoteEditorActivity extends AppCompatActivity {
                         }
                         try {       //fetches selected image from media storage and insert into editor
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), targetUri);
-                            // Log.d(TAG, String.valueOf(bitmap));
                             editor.insertImage(bitmap);
                             String html = editor.getContentAsHTML();
                             System.out.println("html : " + html);
@@ -672,9 +635,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         notificationIntent.setData(Uri.parse("custom://"+System.currentTimeMillis()));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, n.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //long futureInMillis = SystemClock.elapsedRealtime() + delay;
         Calendar cal = parseFormattedDateString(n);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
@@ -699,22 +659,6 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         return builder.build();
     }
-
-    /*public void createNotificationChannel(Notification n) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("notification_channel_" + Integer.toString(n.getId()), name, importance);
-            channel.setDescription(description);
-            channel.setLightColor(Color.RED);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-            System.out.println("notification channel name: " + notificationManager.getNotificationChannel(channel.getId()).getId());
-        }
-    }*/
 
     public Calendar parseFormattedDateString(Notification notification) {       //function to format date and time string to clean one and return it as calendar object
         String date_time = notification.getDate();

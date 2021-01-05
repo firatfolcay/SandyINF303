@@ -9,7 +9,6 @@ import sandy.android.assistant.Controller.MainActivity;
 
 public class BootDeviceReceiver extends BroadcastReceiver {
 
-    private static final String TAG_BOOT_BROADCAST_RECEIVER = "BOOT_BROADCAST_RECEIVER";
     public static boolean BOOT_HAPPENED = false;
 
     @Override
@@ -19,10 +18,6 @@ public class BootDeviceReceiver extends BroadcastReceiver {
 
         if(Intent.ACTION_BOOT_COMPLETED.equals(action))
         {
-            //startServiceDirectly(context);
-
-            //startServiceByAlarm(context);
-            //BOOT_HAPPENED = false;
             System.out.println("boot happened: " + BOOT_HAPPENED);
             startServices(context);
             Intent i = new Intent(context, MainActivity.class);
