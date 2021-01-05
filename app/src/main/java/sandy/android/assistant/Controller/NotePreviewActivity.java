@@ -21,35 +21,36 @@ public class NotePreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note_preview_view);
 
-        buttonBackToMainFromPreview = findViewById(R.id.buttonBackToMainActivityFromPreview);
+        buttonBackToMainFromPreview = findViewById(R.id.buttonBackToMainActivityFromPreview);       //initialization of view components.
         notePreviewTitle = findViewById(R.id.notePreviewTitle);
         notePreviewRenderer = findViewById(R.id.notePreviewRenderer);
-        Bundle b = getIntent().getExtras();
+
+        Bundle b = getIntent().getExtras();         //get bundle extras from other activities
         if(b != null){
-            if(b.get("calendar_notification_note_title") != null){
-                notePreviewTitle.setText(b.getString("calendar_notification_note_title"));
+            if(b.get("calendar_notification_note_title") != null){              //if notification note title is returned
+                notePreviewTitle.setText(b.getString("calendar_notification_note_title"));      //fill note popup view with this data
                 notePreviewRenderer.render(b.getString("calendar_notification_note_content"));
             }
         }
 
-        buttonBackToMainFromPreview.setOnClickListener(new View.OnClickListener() {
+        buttonBackToMainFromPreview.setOnClickListener(new View.OnClickListener() {         //if back button is pressed
             @Override
             public void onClick(View v) {
                 finish();
-            }
+            }           //finish activity
         });
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {       //if device back button is pressed
         super.onBackPressed();
-        finish();
+        finish();                   //finish activity
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy() {           //on activity close
         super.onDestroy();
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);           //start main activity
         startActivity(intent);
     }
 }

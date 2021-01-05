@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider;
 
 import com.github.irshulx.Editor;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,28 +38,34 @@ public class TC2_ManageNotebooks_UnitTest {
     }
 
     @Test
-    public void clickingCreateButton_shouldSaveCreatedNotebookIntoDB() throws Exception {
-        /*MainActivity mainActivity = Robolectric.setupActivity(MainActivity.class);
-        mainActivity.findViewById(R.id.buttonMainActivityNavigationDrawer).performClick();
-        mainActivity.findViewById(R.id.buttonAddNotebook).performClick();
-        Thread.sleep(1000);
-        mainActivity.notebookPopupEditText.setText("notebook");*/
+    public void dbSaveCreatedNotebookTest() throws Exception {
 
         Notebook notebook = new Notebook("test");
         db.insertNotebook(notebook);
+
+        db.close();
 
         ArrayList<Notebook> notebooksFromDB = new ArrayList<Notebook>();
 
         notebooksFromDB = db.getAllNotebooks();
 
+        db.close();
+
         Assert.assertEquals("test", notebooksFromDB.get(0).getTitle());
 
         db.deleteNotebook(notebooksFromDB.get(0));
+
+        db.close();
 
         notebooksFromDB = db.getAllNotebooks();
 
         Assert.assertTrue(notebooksFromDB.size() == 0);
 
+    }
+
+    @After
+    public void closeDatabase() throws Exception {
+        db.close();
     }
 
 }

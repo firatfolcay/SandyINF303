@@ -31,11 +31,10 @@ public class NotificationViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_recycler_view);
 
-        buttonBackToMainActivity = findViewById(R.id.buttonBackToMainActivity);
-
-        db = new DatabaseManagement(this);
-
+        buttonBackToMainActivity = findViewById(R.id.buttonBackToMainActivity);     //initialization of view components
         listOfNotifications = findViewById(R.id.listOfNotifications);
+
+        db = new DatabaseManagement(this);       //database access object initialization
 
 
 
@@ -53,10 +52,10 @@ public class NotificationViewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() {     //onActivityresume
         super.onResume();
 
-        notes = db.getAllNotes();
+        notes = db.getAllNotes();       //retrieve db data from database access object
         notesWithNotification = new ArrayList<Note>();
 
         for (int index = 0; index < notes.size(); index++) {
@@ -66,6 +65,6 @@ public class NotificationViewActivity extends AppCompatActivity {
         }
 
         notificationAdapter = new NotificationAdapter(this, notesWithNotification, db);
-        listOfNotifications.setAdapter(notificationAdapter);
+        listOfNotifications.setAdapter(notificationAdapter);            //refresh notification view
     }
 }

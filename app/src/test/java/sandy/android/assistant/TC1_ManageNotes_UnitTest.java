@@ -56,12 +56,18 @@ public class TC1_ManageNotes_UnitTest {
 
         notesFromDB = db.getAllNotes();
 
+        db.close();
+
         Assert.assertEquals("testNoteTitle", notesFromDB.get(0).getTitle());
         //Assert.assertEquals(testHtmlContent, notesFromDB.get(0).getContent());
 
         db.deleteNote(notesFromDB.get(0));
 
+        db.close();
+
         notesFromDB = db.getAllNotes();
+
+        db.close();
 
         Assert.assertTrue(notesFromDB.size() == 0);
 
@@ -77,9 +83,13 @@ public class TC1_ManageNotes_UnitTest {
 
         db.insertNote(n);
 
+        db.close();
+
         ArrayList<Note> notesFromDB = new ArrayList<Note>();
 
         notesFromDB = db.getAllNotes();
+
+        db.close();
 
         Note testNewNote = new Note("new_title", "new_content", null, "new_date");
 
@@ -99,11 +109,17 @@ public class TC1_ManageNotes_UnitTest {
 
         notesFromDB = db.getAllNotes();
 
+        db.close();
+
         Assert.assertEquals(testNewNote.getTitle(), notesFromDB.get(0).getTitle());
 
         db.deleteNote(notesFromDB.get(0));
 
+        db.close();
+
         notesFromDB = db.getAllNotes();
+
+        db.close();
 
         Assert.assertTrue(notesFromDB.size() == 0);
 

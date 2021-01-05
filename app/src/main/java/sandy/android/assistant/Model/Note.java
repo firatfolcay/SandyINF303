@@ -3,7 +3,7 @@ package sandy.android.assistant.Model;
 import java.util.ArrayList;
 
 public class Note {
-    private int id = 0;
+    private int id = 0;                 //variables of note
     private String title = "";
     private String content = "";
     private Notification notification;
@@ -12,14 +12,14 @@ public class Note {
     public Note(){
     }
 
-    public Note(String title, String content, Notification notification, String date){
+    public Note(String title, String content, Notification notification, String date){      //note constructor
         setTitle(title);
         this.content = content;
         this.notification = notification;
         this.saveDate = date;
     }
 
-    public Note(int id, String title, String content, Notification notification, String date){
+    public Note(int id, String title, String content, Notification notification, String date){      //note constructor
         this.id = id;
         setTitle(title);
         this.content = content;
@@ -27,7 +27,7 @@ public class Note {
         this.saveDate = date;
     }
 
-    public String getTitle() {
+    public String getTitle() {                   //getter setter methods to access private variables of note
         return title;
     }
 

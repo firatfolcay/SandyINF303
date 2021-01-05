@@ -287,7 +287,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public Notification getLastAddedNotification (){
+    public Notification getLastAddedNotification (){        //method that returns last added notification
         String selectQuery= "SELECT * FROM " + NOTIFICATIONS_TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -296,7 +296,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
         Notification lastNotification = new Notification();
 
-        if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
+        if (!cursor.isNull(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {       //if notification id isn't null
             lastNotification.setId(cursor.getInt(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
             lastNotification.setDate(cursor.getString(cursor.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
         }
@@ -309,7 +309,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
     /*methods below are for manipulating notebook data in database*/
 
-    public void insertNotebook(Notebook n){
+    public void insertNotebook(Notebook n){     //method to insert Notebook inside SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -318,7 +318,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.insert(NOTEBOOKS_TABLE_NAME, null, contentValues);
     }
 
-    public void updateNotebook(Notebook n, Notebook key){
+    public void updateNotebook(Notebook n, Notebook key){       //method to update an existing Notebook in SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -330,7 +330,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 new String[] { Integer.toString(key.getId()) } );
     }
 
-    public boolean deleteNotebook(Notebook n){
+    public boolean deleteNotebook(Notebook n){          //method to delete a Notebook from SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
@@ -350,7 +350,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Notebook getNotebookFromNotebookId(int id){
+    public Notebook getNotebookFromNotebookId(int id){      //method that returns Notebook object with given ID parameter
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Integer> noteIds = new ArrayList<Integer>();
         String title = "";
@@ -370,7 +370,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return new Notebook(id, title, noteIds);
     }
 
-    public ArrayList<Notebook> getAllNotebooks(){   //returns all notebooks with their notes' ids
+    public ArrayList<Notebook> getAllNotebooks(){           //method that returns all notebooks with their notes' ids
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Notebook> notebooks = new ArrayList<Notebook>();
 
@@ -386,7 +386,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notebooks;
     }
 
-    public ArrayList<Note> getNotesFromNotebook(Notebook n){    //Use this function to display the notes inside of a notebook
+    public ArrayList<Note> getNotesFromNotebook(Notebook n){    //this function is called to display the notes inside of a notebook
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Note> notes = new ArrayList<Note>();
 
@@ -409,7 +409,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notes;
     }
 
-    public void addNoteToNotebook(Note note, Notebook notebook){
+    public void addNoteToNotebook(Note note, Notebook notebook){        //method that adds note to edited Notebook
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -421,7 +421,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 new String[]{"" + note.getId()});
     }
 
-    public void removeNoteFromNotebook(Note note){
+    public void removeNoteFromNotebook(Note note){          //method that removes note from edited Notebook.
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -433,7 +433,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 new String[]{"" + note.getId()});
     }
 
-    public ArrayList<Note> getAllNotesExceptCurrentNotebook(Notebook n) {
+    public ArrayList<Note> getAllNotesExceptCurrentNotebook(Notebook n) {       //this method returns an ArrayList with notes except the ones that are inside given Notebook
         SQLiteDatabase db = this.getWritableDatabase();
         ArrayList<Note> notes = new ArrayList<Note>();
 

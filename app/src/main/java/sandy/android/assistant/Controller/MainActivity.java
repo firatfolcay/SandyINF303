@@ -86,24 +86,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BootDeviceReceiver.BOOT_HAPPENED == true) {
+        if (BootDeviceReceiver.BOOT_HAPPENED == true) {     //boot happened check //might delete at the future.
             BootDeviceReceiver.BOOT_HAPPENED = false;
             finish();
         }
         setContentView(R.layout.activity_main);
 
-        checkNotificationListenerServicePermissions();
+        checkNotificationListenerServicePermissions();      //checks notification permission
 
         Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
-        this.startService(calendarNotificationListenerService);
+        this.startService(calendarNotificationListenerService);     //starts notification listener service at startup
 
         createNotificationChannel();
         //calls function that grants permissions for device interactions.
         checkPermission(callbackId, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);     //calendar permission check
 
-        db = new DatabaseManagement(this);
+        db = new DatabaseManagement(this);      //database access object instance
 
-        fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);
+        fab_create_new_note = (FloatingActionButton) findViewById(R.id.fab_create_new_note);        //initializations for activity_main.xml views
 
         mainActivityConstraintLayout = (ConstraintLayout) findViewById(R.id.mainActivityConstraintLayout);
         mainActivityNavigationViewImageView = (ImageView) findViewById(R.id.buttonMainActivityNavigationDrawer);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 // inflate the layout of the popup window
                 inflater = (LayoutInflater)
                         getSystemService(LAYOUT_INFLATER_SERVICE);
-                popupView = inflater.inflate(R.layout.notebook_popup_view, null);
+                popupView = inflater.inflate(R.layout.notebook_popup_view, null);       //inflates notebook popup to create notebooks
 
                 // create the popup window
                 int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                 popupWindow.dismiss();                  //dispose popup
                             }
                             else {
-                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();      //don't proceed if notebook title is longer than 10 characters.
                             }
 
                         }
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonShowNotification.setOnClickListener(new View.OnClickListener() {
+        buttonShowNotification.setOnClickListener(new View.OnClickListener() {      //button listener to open notifications menu
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NotificationViewActivity.class);
@@ -191,12 +191,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonChangeLanguage.setOnClickListener(l->{
+        buttonChangeLanguage.setOnClickListener(l->{            //button listener that pops up change language screen
             Intent intent = new Intent(getApplicationContext(), ChangeLanguageActivity.class);
             startActivityForResult(intent,0);
         });
 
-        fab_create_new_note.setOnClickListener(new View.OnClickListener() {
+        fab_create_new_note.setOnClickListener(new View.OnClickListener() {     //floating action button listener that creates a blank note editor screen.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listOfNotes.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+        listOfNotes.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {            //creates a set on swipe touch listener for main menu
             @Override
             public void onSwipeRight() {
                 if (notebookNavigationView.getVisibility() == View.INVISIBLE) {
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainActivityConstraintLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
+        mainActivityConstraintLayout.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {          //creates a set on swipe touch listener for main menu
             @Override
             public void onSwipeRight() {
                 if (notebookNavigationView.getVisibility() == View.INVISIBLE) {
@@ -252,40 +252,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() {     //on activity resume
         super.onResume();
 
         notes = db.getAllNotes();
-        noteAdapter = new NoteAdapter(this, notes, db, this);
+        noteAdapter = new NoteAdapter(this, notes, db, this);       //create a new Note Adapter
         listOfNotes.setAdapter(noteAdapter);
 
-        refreshNotebookNavigationView();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_layout_options, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-
-            case R.id.linearViewVertical:
-                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                listOfNotes.setLayoutManager(linearLayoutManager);
-                break;
-
-            case R.id.gridView:
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-                listOfNotes.setLayoutManager(gridLayoutManager);
-                StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-                listOfNotes.setLayoutManager(staggeredGridLayoutManager);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+        refreshNotebookNavigationView();        //refresh Navigation View with new Notebook data
     }
 
     @Override
@@ -298,45 +272,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() {        //on application close
         super.onDestroy();
         System.out.println("application closed.");
-        Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);
-        this.startService(calendarNotificationListenerService);
+        Intent calendarNotificationListenerService = new Intent(this, CalendarNotificationListenerService.class);       //create notification listener service
+        this.startService(calendarNotificationListenerService);     //start notification listener service
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {       //on change language activity result
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case 0:
                 switch (resultCode){
-                    case RESULT_OK:
+                    case RESULT_OK:         //if language change operation is saved,
                         Intent intent = getIntent();
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);         //refresh the application screen
                         finish();
                         startActivity(intent);
                         break;
-                    case RESULT_CANCELED:
-                        break;
+                    case RESULT_CANCELED:       //if language change operation is canceled
+                        break;                  //simply do nothing
                 }
                 break;
         }
     }
 
-    public void startNoteEditorActivity () {
+    public void startNoteEditorActivity () {        //function that starts note editor activity
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
         startActivity(intent);
     }
 
-    public void refreshNotebookNavigationView () {
+    public void refreshNotebookNavigationView () {      //function to refresh notebook navigation view. Useful to refresh list data
         notebooks = db.getAllNotebooks();
         mainActivityNavigationDrawerAdapter = new MainActivityNavigationDrawerAdapter(this, notebooks, db);
         listOfNotebooks.setAdapter(mainActivityNavigationDrawerAdapter);
 
     }
 
-    private void checkPermission(int callbackId, String... permissionsId) {     //checks if selected permissions exist, requests if missed.
+    private void checkPermission(int callbackId, String... permissionsId) {     //checks if selected application permissions exist, requests if missed.
         boolean permissions = true;
         for (String p : permissionsId) {
             permissions = permissions && ContextCompat.checkSelfPermission(this, p) == PERMISSION_GRANTED;
@@ -346,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, permissionsId, callbackId);
     }
 
-    public void createNotificationChannel() {
+    public void createNotificationChannel() {       //function to create a notification channel for notification events
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
@@ -360,20 +334,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void checkNotificationListenerServicePermissions() {
+    private void checkNotificationListenerServicePermissions() {        //function that checks notification listener permissions requests if required
         if(isPermissionRequired()){
             requestNotificationPermission();
         }
     }
 
-    public boolean isPermissionRequired() {
+    public boolean isPermissionRequired() {         //function that enables notification listener service permissions.
         ComponentName cn = new ComponentName(this, CalendarNotificationListenerService.class);
         String flat = Settings.Secure.getString(this.getContentResolver(), "enabled_notification_listeners");
         final boolean enabled = flat != null && flat.contains(cn.flattenToString());
         return !enabled;
     }
 
-    private void requestNotificationPermission() {
+    private void requestNotificationPermission() {          //function that requests notification listener permission
         Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
         startActivityForResult(intent, 101);
     }

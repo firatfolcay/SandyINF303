@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Notification {
-    private int id; //this one better not have any default value; if it must, define it -1 or something negative
+    private int id;         //notification variables. this one better not have any default value; if it must, define it -1 or something negative
     private String date = "";
 
     public Notification(){
@@ -18,9 +18,9 @@ public class Notification {
 
     public Notification(String date){
         this.setDate(date);
-    }
+    }       //notification constructor
 
-    public Integer getId(){
+    public Integer getId(){                     //getter setter methods to access private variables
         return id;
     }
 

@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
 
-    private Integer year;
+    private Integer year;       //datepicker fragment variables
     private Integer month;
     private Integer day;
 
@@ -24,7 +24,7 @@ public class DatePickerFragment extends DialogFragment {
 
     }
 
-    public DatePickerFragment(Integer year, Integer month, Integer day){
+    public DatePickerFragment(Integer year, Integer month, Integer day){        //datepicker fragment constructor
         this.year = year;
         this.month = month;
         this.day = day;
@@ -33,11 +33,11 @@ public class DatePickerFragment extends DialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {         //onCreateDialog action
 
         if(year == null || month == null || day == null) {
             Calendar calendar = Calendar.getInstance();
-            year = calendar.get(Calendar.YEAR);
+            year = calendar.get(Calendar.YEAR);         //set year month day values to selected date
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
         }

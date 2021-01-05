@@ -101,7 +101,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         context = getApplicationContext();
         editor = (Editor) findViewById(R.id.editor);
 
-        db = new DatabaseManagement(this);
+        db = new DatabaseManagement(this);       //database access object initialization
 
         notesFromDB = db.getAllNotes();
         NoteAdapter noteAdapter = new NoteAdapter(this, notesFromDB, db);

@@ -68,7 +68,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         calendarSync = new CalendarSync();
         context = getApplicationContext();
 
-        cancelNotificationButton = findViewById(R.id.cancelNotificationButton);
+        cancelNotificationButton = findViewById(R.id.cancelNotificationButton);     //initialization of view components
         datePickerButton = (Button) findViewById(R.id.datePickerButton);
         timePickerButton = (Button) findViewById(R.id.timePickerButton);
         saveNotificationButton = (Button) findViewById(R.id.saveNotificationButton);
@@ -76,77 +76,85 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         datePickerTextView = (TextView) findViewById(R.id.datePickertextView);
         timePickerTextView = (TextView) findViewById(R.id.timePickertextView);
 
-        db = new DatabaseManagement(this);
+        db = new DatabaseManagement(this);      //database access object initialization
 
 
         //getting notification of the note if it has one and updates the screen
         Bundle b = getIntent().getExtras();
         if(b != null){
-            if(b.get("NOTIFICATION_ID") != null){
+            if(b.get("NOTIFICATION_ID") != null){       //if a notification id is returned from bundle extra,
+                //set editedNotification value to this value by sending returned notification id to database access object.
                 editNotification = db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID"));
-                updateNotificationActivity(editNotification);
+                updateNotificationActivity(editNotification);       //refresh notification view
             }
         }
 
-        saveNotificationButton.setOnClickListener(new View.OnClickListener() {  //save button
+        saveNotificationButton.setOnClickListener(new View.OnClickListener() {  //if save notification button is clicked
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                //FIXME date-time format is a mess rn ngl
+                //if no date or time is selected, do not complete the action and return
                 if(date == null || time == null){
                     return;
                 }
+                //if both of date and time values are set,
+                String currentDateString = date + "T" + time + ":00" + "Z";     //default date time save format
 
-                String currentDateString = date + "T" + time + ":00" + "Z";     //I use this format because others did not work
+                //code stack below examines if only notification is edited or note is edited.
 
-                //this currently passes back only the date not the object, makes the code a bit spaghetti.
-
+                //if this activity is started from noteEditorActivity, note is being edited.
                 if(getCallingActivity().getClassName().equals(NoteEditorActivity.class.toString().replace("class ",""))){
                     Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
                     data.putExtra("NOTIFICATION_DATE", currentDateString);
                     setResult(Activity.RESULT_OK, data);
                 }
+                //if this activity is started from notificationViewActivity, only notification is being edited.
                 else if(getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ",""))){
                     Notification newNotification = new Notification(currentDateString);
+                    //update Notification at database
                     db.updateNotification(newNotification, editNotification);
                     int numberOfRowsAffected = 0;
+                    //update calendar event that is attached to edited Notification
                     numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNotification.getId(), db.getNoteFromNotificationId(editNotification.getId()));
+                    //if at least 1 row is affected, that means event is updated. Send toast message.
                     if (numberOfRowsAffected > 0) {
                         Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
                     }
                 }
 
-                finish();
+                finish();       //finish activity
                 return;
             }
 
         });
 
-        timePickerButton.setOnClickListener(new View.OnClickListener() {
+        timePickerButton.setOnClickListener(new View.OnClickListener() {        //if set time button is clicked
             @Override
             public void onClick(View v) {
-                if(editNotification != null)
+                if(editNotification != null)        //if notification is being edited
+                    //inflate timePicker with returned time information from bundle extra
                     timePicker = new TimePickerFragment(new Integer(hour), new Integer(minute));
                 else
-                    timePicker = new TimePickerFragment();
+                    timePicker = new TimePickerFragment();      //else just inflate a timePicker with blank selection
 
                 timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
 
-        datePickerButton.setOnClickListener(new View.OnClickListener() {
+        datePickerButton.setOnClickListener(new View.OnClickListener() {        //if set date button is clicked
             @Override
             public void onClick(View v) {
-                if(editNotification != null)
+                if(editNotification != null)        //if notification is being edited
+                    //inflate datePicker with returned date information from bundle extra
                     datePicker = new DatePickerFragment(new Integer(year), new Integer(month)-1, new Integer(day));
                 else
-                    datePicker = new DatePickerFragment();
+                    datePicker = new DatePickerFragment();      //else just inflate a datePicker with blank selection
 
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
 
-        cancelNotificationButton.setOnClickListener(new View.OnClickListener() {
+        cancelNotificationButton.setOnClickListener(new View.OnClickListener() {        //if cancel button is clicked
             @Override
             public void onClick(View v) {           //cancel button
                 finish();       //notification screen cancelled. go back to note editor.
@@ -154,51 +162,49 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         });
     }
 
+    //onDateSet method that handles time selection logic and  updates view when date on dateFragment is set by the user.
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) { //choosing date
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.YEAR, year);              //set year, month and day values to the date information that set on dateFragment
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        month = month + 1;
+        month = month + 1;      //just a fix for bugged android month selection
 
-        selectedDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        selectedDateString = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());        //get current date
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL);
         DateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
         try {
             datePickerTextView.setText("Date: " + formatter1.format(formatter.parse(selectedDateString)));
-            selectedDateString = formatter1.format(formatter.parse(selectedDateString));
+            selectedDateString = formatter1.format(formatter.parse(selectedDateString));        //format selected date string to simpleDateFormat selected above
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        date = year + "-" + month + "-" + dayOfMonth;
+        date = year + "-" + month + "-" + dayOfMonth;       //set date variable with selected date information
 
     }
 
+    //onTimeSet method that handles time selection logic and  updates view when time on timeFragment is set by the user.
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) { // choosing time
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
         Calendar datetime = Calendar.getInstance();
         Calendar current = Calendar.getInstance();
-        datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);      //set hour and minute values to the time information that set on timeFragment
         datetime.set(Calendar.MINUTE, minute);
 
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         DateFormat formatter1 = DateFormat.getDateInstance(DateFormat.FULL);
-        Date currentDate = Calendar.getInstance().getTime();
+        Date currentDate = Calendar.getInstance().getTime();        //get current time
 
-        String currentDateString = formatter.format(currentDate);
+        String currentDateString = formatter.format(currentDate);       //format current time to simple date format
 
-        System.out.println("current date:" + currentDateString);
-        System.out.println("day month year: " + day + "-" + month + "-" + year);
-        System.out.println("selected date:" + selectedDateString);
-
-        if (selectedDateString == null) {
+        if (selectedDateString == null) {           //if no new date is selected
             if (currentDateString.equals(day + "-" + month + "-" + year)) {
-                if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {
-                    timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
-                    time = hourOfDay + ":" + minute;
+                if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {          //if selected date and time is future date than now,
+                    timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);        //set timepicker text view to selected time
+                    time = hourOfDay + ":" + minute;        //update time information with selected time value
                 } else {
                     //it's before current'
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
@@ -206,14 +212,14 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             }
             else {
                 timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
-                time = hourOfDay + ":" + minute;
+                time = hourOfDay + ":" + minute;        //set time variable with selected hour and minute information
             }
         }
-        else {
+        else {      //if date is changed
             if (currentDateString.equals(selectedDateString)) {
                 if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {
                     timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
-                    time = hourOfDay + ":" + minute;
+                    time = hourOfDay + ":" + minute;        //set time variable with selected hour and minute information
                 } else {
                     //it's before current'
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
@@ -221,14 +227,14 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             }
             else {
                 timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
-                time = hourOfDay + ":" + minute;
+                time = hourOfDay + ":" + minute;        //set time variable with selected hour and minute information
             }
         }
 
 
     }
 
-    public void updateNotificationActivity(Notification n){
+    public void updateNotificationActivity(Notification n){     //method that refreshes timePicker and datePicker date/time informations
 
         parse();
         timePickerTextView.setText(getResources().getString(R.string.hour_text) + ": " + hour + " " + getResources().getString(R.string.minute_text) + ": " + minute);
@@ -236,22 +242,23 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     }
 
-    public void parse(){
+    public void parse(){        //method that parses notification date/time to a cleaner format
         String date = "";
         String time = "";
         String date_time = editNotification.getDate();
 
 
-        date = date_time.substring(0,date_time.indexOf('T'));
+        date = date_time.substring(0,date_time.indexOf('T'));       //create substrings
         time = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
 
-        year = date.split("-")[0];
+        year = date.split("-")[0];      //split date values
         month = date.split("-")[1];
         day = date.split("-")[2];
 
-        hour = time.split(":")[0];
+        hour = time.split(":")[0];      //split time values
         minute = time.split(":")[1];
 
+        //set date and time values to formatted type (will be used while setting date and time information textboxes
         this.date = year + "-" + month + "-" + day;
         this.time = hour + ":"  + minute;
     }

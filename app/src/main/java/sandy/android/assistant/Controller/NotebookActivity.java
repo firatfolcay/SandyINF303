@@ -60,8 +60,8 @@ public class NotebookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notebook_recycler_view);
 
-        db = new DatabaseManagement(this);
-        constraintLayout = findViewById(R.id.notebookConstraintLayout);
+        db = new DatabaseManagement(this);          //database access object initialization
+        constraintLayout = findViewById(R.id.notebookConstraintLayout);             //initializations for view components.
         fabAddNewNoteToNotebook = findViewById(R.id.fabAddNewNoteToNotebook);
         notebookTitle = findViewById(R.id.textviewNotebookViewNotebookTitle);
         backButton = findViewById(R.id.buttonBackFromNotebookRecyclerView);
@@ -78,15 +78,15 @@ public class NotebookActivity extends AppCompatActivity {
         spinnerSetNotebookViewType = findViewById(R.id.spinnerSetNotebookViewType);
         spinnerSetNotebookViewType.setVisibility(View.VISIBLE);
 
-        Bundle b = getIntent().getExtras();
+        Bundle b = getIntent().getExtras();     //get Bundles from other activities
         if(b != null){
             if(b.get("NOTEBOOK_ID") != null){
                 selectedNotebook = db.getNotebookFromNotebookId(b.getInt("NOTEBOOK_ID"));
-                this.setNotebookViewContent(selectedNotebook);
+                this.setNotebookViewContent(selectedNotebook);      //update notebookviewcontent with returned information
             }
             else{
                 finish();
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();     //toast notebook open fail message
                 return;
             }
         }
@@ -96,30 +96,31 @@ public class NotebookActivity extends AppCompatActivity {
             return;
         }
 
+        //onItemSelected method to change window layout between spinner choice (notebookview and listview)
         spinnerSetNotebookViewType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
                 if (selectedItem.equals(getResources().getString(R.string.notebook_list_view_text))) {         //if list view is selected,
-                    if (notebookEditorViewConstraintLayout.getVisibility() == View.VISIBLE) {
+                    if (notebookEditorViewConstraintLayout.getVisibility() == View.VISIBLE) {       //make notebookView invisible and listview visible
                         notebookEditorViewConstraintLayout.setVisibility(View.INVISIBLE);
                         fabAddNewNoteToNotebook.setVisibility(View.VISIBLE);
                         listOfNotesOfNotebook.setVisibility(View.VISIBLE);
 
-                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));
+                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));     //set background color to dark blue
                     }
                 }
                 else if (selectedItem.equals(getResources().getString(R.string.notebook_notebook_view_text))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
-                    notebookEditorView.clearAllContents();
+                    notebookEditorView.clearAllContents();          //clear all contents of notebookeditorview
 
                     ArrayList<String> notebookEditorViewFragments = new ArrayList<String>();
                     ArrayList<Note> notesFromNotebook = new ArrayList<Note>();
-                    notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);
+                    notesFromNotebook = db.getNotesFromNotebook(selectedNotebook);          //get all attached notes from notebook
 
                     if (notesFromNotebook.size() > 0) {     //if notebook has notes in it
-                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));
+                        constraintLayout.setBackgroundColor(getResources().getColor(R.color.white));        //change background color to white
                         for (int index = 0; index < notesFromNotebook.size(); index++) {
                             notebookEditorViewFragments.add(notesFromNotebook.get(index).getContent());
                             String lineDivider = "<hr data-tag=" + '"' + "hr" + '"' + "/>";     //insert line divider between adjacent notes.
@@ -131,9 +132,9 @@ public class NotebookActivity extends AppCompatActivity {
                         for (int index = 0; index < notebookEditorViewFragments.size(); index++) {      //concatenate all html strings to build a notebook view inside editor.
                             notebookEditorViewHtmlString = notebookEditorViewHtmlString + notebookEditorViewFragments.get(index);
                         }
-                        fabAddNewNoteToNotebook.setVisibility(View.INVISIBLE);
+                        fabAddNewNoteToNotebook.setVisibility(View.INVISIBLE);          //set listview to invisible
                         listOfNotesOfNotebook.setVisibility(View.INVISIBLE);
-                        notebookEditorViewConstraintLayout.setVisibility(View.VISIBLE);
+                        notebookEditorViewConstraintLayout.setVisibility(View.VISIBLE);     //and notebookview to visible
                         notebookEditorView.render(notebookEditorViewHtmlString);        //render all concatenated html strings as editor content.
                         notebookEditorViewHtmlString = "";
                     }
@@ -152,13 +153,13 @@ public class NotebookActivity extends AppCompatActivity {
             }
         });
 
-        fabAddNewNoteToNotebook.setOnClickListener(new View.OnClickListener() {
+        fabAddNewNoteToNotebook.setOnClickListener(new View.OnClickListener() {         //onClick listener for attach note to notebook button
             @Override
             public void onClick(View v) {
                 //initialization of note selection screen for notebook
                 Intent intent = new Intent(getApplicationContext(), NotebookAttachNoteActivity.class);
                 intent.putExtra("NOTEBOOK_ID", selectedNotebook.getId());
-                startActivityForResult(intent, REQUEST_NOTEBOOK);
+                startActivityForResult(intent, REQUEST_NOTEBOOK);           //request notebook info
 
             }
         });
@@ -170,9 +171,9 @@ public class NotebookActivity extends AppCompatActivity {
             }
         });
 
-        editTitleButton.setOnClickListener(v -> {
+        editTitleButton.setOnClickListener(v -> {           //onClick listener for edit notebook title
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.notebook_edit_title_popup_view, null);
+            View popupView = inflater.inflate(R.layout.notebook_edit_title_popup_view, null);       //inflate notebook edit title popup
 
             int width = LinearLayout.LayoutParams.WRAP_CONTENT;
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -180,14 +181,14 @@ public class NotebookActivity extends AppCompatActivity {
 
             popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-            EditText notebookEditTitleEditText = (EditText) popupView.findViewById(R.id.notebookEditTitleEditText);
+            EditText notebookEditTitleEditText = (EditText) popupView.findViewById(R.id.notebookEditTitleEditText);     //initialize view components.
             Button notebookEditTitleSaveButton = (Button) popupView.findViewById(R.id.notebookEditTitleSaveButton);
             Button notebookEditTitleCancelButton = (Button) popupView.findViewById(R.id.notebookEditTitleCancelButton);
 
-            notebookEditTitleSaveButton.setOnClickListener(v1 -> {
+            notebookEditTitleSaveButton.setOnClickListener(v1 -> {      //onClick button for notebook edit title save button inside notebook popup
                 if (!notebookEditTitleEditText.getText().toString().isEmpty()) {           //if notebook title input isn't empty
-                    if (notebookEditTitleEditText.getText().toString().length() <= 10) {
-                        db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),
+                    if (notebookEditTitleEditText.getText().toString().length() <= 10) {        //if edited text length is shorter than 11
+                        db.updateNotebook(new Notebook(notebookEditTitleEditText.getText().toString()),     //update Notebook data with edited Title
                                 selectedNotebook);
                         onResume();                             //to update the current screen
                         popupWindow.dismiss();                  //dispose popup
@@ -199,7 +200,7 @@ public class NotebookActivity extends AppCompatActivity {
                 }
             });
 
-            notebookEditTitleCancelButton.setOnClickListener(v2 -> {
+            notebookEditTitleCancelButton.setOnClickListener(v2 -> {        //if cancel button is clicked
                 popupWindow.dismiss();          //dispose popup
             });
         });
@@ -207,13 +208,13 @@ public class NotebookActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() {         //on activity resume,
         super.onResume();
-        selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());
+        selectedNotebook = db.getNotebookFromNotebookId(selectedNotebook.getId());      //update notebookview content.
         this.setNotebookViewContent(selectedNotebook);
     }
 
-    public void setNotebookViewContent(Notebook n) {
+    public void setNotebookViewContent(Notebook n) {            //function to refresh notebook view content.
         notebookNotes = db.getNotesFromNotebook(n);
         notebookAdapter = new NotebookAdapter(this, notebookNotes, n, constraintLayout, db);
         listOfNotesOfNotebook.setAdapter(notebookAdapter);

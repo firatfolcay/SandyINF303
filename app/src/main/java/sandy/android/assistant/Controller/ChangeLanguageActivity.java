@@ -27,12 +27,12 @@ public class ChangeLanguageActivity extends LocalizationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language);
 
-        button_en = findViewById(R.id.button_en);
+        button_en = findViewById(R.id.button_en);       //initialize view attributes
         button_tr = findViewById(R.id.button_tr);
         button_save = findViewById(R.id.button_save_lang);
         button_cancel = findViewById(R.id.button_cancel_lang);
 
-        button_en.setOnClickListener(l->{
+        button_en.setOnClickListener(l->{                //if english button is selected, change the selection color around button and set selectedLang to english
             button_en.setBackgroundColor(getResources().getColor(R.color.darkBlue));
             button_en.setTextColor(getResources().getColor(R.color.white));
 
@@ -42,7 +42,7 @@ public class ChangeLanguageActivity extends LocalizationActivity {
             selectedLang = button_en;
         });
 
-        button_tr.setOnClickListener(l->{
+        button_tr.setOnClickListener(l->{                   //if turkish button is selected, change the selection color around button and set selectedLang to turkish
             button_tr.setBackgroundColor(getResources().getColor(R.color.darkBlue));
             button_tr.setTextColor(getResources().getColor(R.color.white));
 
@@ -52,24 +52,24 @@ public class ChangeLanguageActivity extends LocalizationActivity {
             selectedLang = button_tr;
         });
 
-        button_save.setOnClickListener(l->{
+        button_save.setOnClickListener(l->{         //onClick listener for change language save button
             if(selectedLang == null){
-                setResult(RESULT_CANCELED);
+                setResult(RESULT_CANCELED);         //finish activity and return cancel if no language is selected
                 finish();
                 return;
             }
             else if(selectedLang.equals(button_en)){
-                setLanguage("en");
+                setLanguage("en");                          //if english button is selected, change App language to English
             }
-            else if(selectedLang.equals(button_tr)){
+            else if(selectedLang.equals(button_tr)){        //if turkish button is selected, change App language to Turkish
                 setLanguage("tr");
             }
-            setResult(RESULT_OK);
+            setResult(RESULT_OK);                    //return ok to MainActivity.java
             finish();
         });
 
-        button_cancel.setOnClickListener(l->{
-            setResult(RESULT_CANCELED);
+        button_cancel.setOnClickListener(l->{           //onClick listener for cancel button
+            setResult(RESULT_CANCELED);             //finish activity and return cancel if cancel button is clicked.
             finish();
         });
     }

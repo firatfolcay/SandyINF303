@@ -41,7 +41,7 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notebook_attach_note_view);
 
-        db = new DatabaseManagement(this);
+        db = new DatabaseManagement(this);      //database access object initialization
 
         Bundle b = getIntent().getExtras();
         if(b != null){

@@ -141,7 +141,6 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         }
 
         private void deleteNote(int position){
-            //if you spam the delete button it might throw out of bounds exception
             try {
                 Note note = notebookNotes.get(position);
                 db.removeNoteFromNotebook(note);

@@ -15,25 +15,25 @@ import java.util.Date;
 
 public class TimePickerFragment extends DialogFragment {
 
-    private Integer hour;
+    private Integer hour;       //timepicker fragment variables
     private Integer minute;
 
     public TimePickerFragment(){
 
     }
 
-    public TimePickerFragment(Integer hour, Integer minute){
+    public TimePickerFragment(Integer hour, Integer minute){        //timepicker fragment constructor
         this.hour = hour;
         this.minute = minute;
     }
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {     //timepicker fragment onCreate dialog
 
         if(hour == null || minute == null) {
             Calendar calendar = Calendar.getInstance();
-            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            hour = calendar.get(Calendar.HOUR_OF_DAY);          //set hour minute to selected time value
             minute = calendar.get(Calendar.MINUTE);
         }
 

@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import sandy.android.assistant.R;
 
 public class CalendarSync {
-    private String eventTitle = "";
+    private String eventTitle = "";     //calendarsync variables
     private Notification eventNotification;
     private String eventDescription = "";
 
@@ -29,11 +29,13 @@ public class CalendarSync {
 
     }
 
-    public CalendarSync (String eventTitle, Notification eventNotification, String eventDescription) {
+    public CalendarSync (String eventTitle, Notification eventNotification, String eventDescription) {      //calendarsync constructor
         this.eventTitle = eventTitle;
         this.eventNotification = eventNotification;
         this.eventDescription = eventDescription;
     }
+
+    //getter setter methods to access private variables
 
     public String getEventTitle() {
         return eventTitle;
@@ -56,7 +58,8 @@ public class CalendarSync {
         this.eventDescription = eventDescription;
     }
 
-    public void addCalendarEvent(Context context, String title, String description, Notification notification) {       //function to add note information as calendar event
+    //function to add note information as calendar event
+    public void addCalendarEvent(Context context, String title, String description, Notification notification) {
 
         long startMillis = 0;
         long endMillis = 0;
@@ -100,7 +103,10 @@ public class CalendarSync {
         }
     }
 
-    public void addCalendarEventInBackground(Context context, String title, String description, Notification notification) {        //method that adds calendar events in background
+
+    //method that adds calendar events in background
+
+    public void addCalendarEventInBackground(Context context, String title, String description, Notification notification) {
         long startMillis = 0;
         long endMillis = 0;
         String eventDate = "";
@@ -363,7 +369,7 @@ public class CalendarSync {
         return returnval;
     }
 
-    public static String createNewCalendar(Context context) {       //method that creates a new "sandy personal assistant" calendar
+    public static String createNewCalendar(Context context) {       //method that creates a new calendar with name "sandy personal assistant"
         Uri calUri = CalendarContract.Calendars.CONTENT_URI
                 .buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
