@@ -1,3 +1,5 @@
+//espresso test for create notebook operation
+
 package sandy.android.assistant;
 
 import androidx.test.core.app.ActivityScenario;

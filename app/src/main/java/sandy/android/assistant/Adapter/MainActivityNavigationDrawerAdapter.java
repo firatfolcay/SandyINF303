@@ -1,3 +1,5 @@
+//Adapter Class that controls and operates elements inside created recycleView component in activity_main.xml
+
 package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
@@ -29,6 +31,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
     LayoutInflater inflater;
     Activity activity;
 
+    //adapter constructor method
     public MainActivityNavigationDrawerAdapter(Context context, ArrayList<Notebook> notebookArrayList, DatabaseManagement db) {
         inflater = LayoutInflater.from(context);
         this.notebookArrayList = notebookArrayList;
@@ -36,6 +39,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
         this.activity = (Activity) context;
     }
 
+    //action method that handles adapter logic when viewholder is created
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_notebook_cardview, parent, false);
@@ -43,6 +47,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
         return holder;
     }
 
+    //action method that handles adapter logic when viewholder is bound
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Notebook selectedNotebook = notebookArrayList.get(position);
@@ -55,13 +60,14 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
         return notebookArrayList.size();
     }
 
+    //viewholder class that is handled by adapter
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView notebookTitle;
         ImageView deleteNotebook;
         LinearLayout notebookSelectionLinearLayout;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {        //viewholder constructor method
             super(itemView);
 
             notebookTitle = (TextView) itemView.findViewById(R.id.notebookTitle);
@@ -74,7 +80,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
         }
 
-        public void setData(Notebook selectedNotebook, int position) {
+        public void setData(Notebook selectedNotebook, int position) {      //method that sets viewholder text information
 
 
             this.notebookTitle.setText(selectedNotebook.getTitle());
@@ -83,7 +89,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View v) {       //method that handles click actions on viewholder
             if (v == deleteNotebook) {
                 deleteNotebook(getLayoutPosition());
             }
@@ -93,7 +99,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
         }
 
-        private void deleteNotebook(int position) {
+        private void deleteNotebook(int position) {         //method that appies notebook delete operation
             Notebook notebookToDelete = notebookArrayList.get(position);
 
             Boolean returnVal = db.deleteNotebook(notebookToDelete);
@@ -108,7 +114,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
             refresh();
         }
 
-        private void openNotebook(int position) {
+        private void openNotebook(int position) {       //method that opens up selected notebook
             Notebook notebookToOpen = notebookArrayList.get(position);
             
             Intent intent = new Intent(activity.getApplicationContext(), NotebookActivity.class);
@@ -118,22 +124,23 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
             refresh();
         }
 
-        private void refresh(){
+        private void refresh(){         //method that refreshes viewholder components
             ArrayList<Notebook> notebooks = db.getAllNotebooks();
 
             notebookArrayList = notebooks;
         }
 
-        public void notifyRemoved(int position) {
+        public void notifyRemoved(int position) {       //notifies when an item is removed from viewholder
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, notebookArrayList.size());
         }
 
-        public void notifyInserted(int position) {
+        public void notifyInserted(int position) {          //notifies when an item is inserted into viewholder
             notifyItemInserted(position);
             notifyItemRangeChanged(position, notebookArrayList.size());
         }
 
+        //notifies when dataset is changed
         public void notifyChanged() {
             notifyDataSetChanged();
         }

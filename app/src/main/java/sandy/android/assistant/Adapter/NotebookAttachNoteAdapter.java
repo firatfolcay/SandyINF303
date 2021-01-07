@@ -1,3 +1,5 @@
+//Adapter Class that controls and operates elements inside created recycleView component in notebook_attach_note_view.xml
+
 package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
@@ -46,7 +48,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         this.activity = (Activity) context;
     }
 
-
+    //action method that handles adapter logic when viewholder is created
     @Override
     public NotebookAttachNoteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_notebook_attach_note_cardview, parent, false);
@@ -54,6 +56,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         return holder;
     }
 
+    //action method that handles adapter logic when viewholder is bound
     @Override
     public void onBindViewHolder(NotebookAttachNoteAdapter.MyViewHolder holder, int position) {
         Note selectedNote = notesToAttachList.get(position);
@@ -72,7 +75,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         return notesToAttachList;
     }
 
-
+    //viewholder class that is handled by adapter
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView noteTitle, noteDescription;
@@ -80,7 +83,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         LinearLayout noteToAttachLinearLayout;
         ArrayList<Integer> checkedItemsOfHolder = new ArrayList<Integer>();
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {        //viewholder constructor method
             super(itemView);
 
             noteTitle = (TextView) itemView.findViewById(R.id.noteToAttachTitle);
@@ -107,6 +110,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
 
         }
 
+        //method that sets viewholder text information
         public void setData(Note selectedNote, int position) {
 
             this.noteTitle.setText(selectedNote.getTitle());
@@ -119,6 +123,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
         }
 
 
+        //method that handles click actions on viewholder
         @Override
         public void onClick(View v) {
             if (v == noteToAttachLinearLayout) {
@@ -127,7 +132,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
 
         }
 
-
+        //notifies when dataset is changed
         public void notifyChanged() {
             notifyDataSetChanged();
         }

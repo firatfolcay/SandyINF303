@@ -1,3 +1,5 @@
+//espresso test for create note operation
+
 package sandy.android.assistant;
 
 import android.view.View;
@@ -78,14 +80,11 @@ public class CreateNoteTest {
     }
 
     //Checks if note was added
-    //FIXME: WILL FAIL IF PREVIOUS TEST NOTES ARE NOT CLEARED
-    //FIXME: Can't check body because couldn't figure out how to test the third party editor
     @Test
     public void test4_checkNote(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with title text
-        //FIXME: WILL FAIL IF THERE ARE MULTIPLE NOTES WITH TEST TITLE
         onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
 
         //Check if NoteEditorActivity is in view

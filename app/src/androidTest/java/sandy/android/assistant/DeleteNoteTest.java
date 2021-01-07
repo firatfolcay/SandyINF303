@@ -1,3 +1,5 @@
+//espresso test for delete note operation
+
 package sandy.android.assistant;
 
 import androidx.test.core.app.ActivityScenario;
@@ -35,8 +37,6 @@ public class DeleteNoteTest {
     }
 
     //Checks if note was added
-    //WILL FAIL IF THERE ARE MULTIPLE NOTES WITH EDIT TITLE
-    //FIXME: Can't check body because couldn't figure out how to test the third party editor
     @Test
     public void test2_checkNote(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);

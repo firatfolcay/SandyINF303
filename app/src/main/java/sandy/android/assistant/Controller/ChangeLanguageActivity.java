@@ -1,3 +1,5 @@
+//Activity Class to handle language selection operations
+
 package sandy.android.assistant.Controller;
 
 import android.content.Intent;

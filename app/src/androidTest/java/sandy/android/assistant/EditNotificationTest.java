@@ -1,3 +1,5 @@
+//espresso test for edit notification operation
+
 package sandy.android.assistant;
 
 import android.widget.DatePicker;
@@ -45,7 +47,7 @@ public class EditNotificationTest {
         // edit date
         onView(withId(R.id.datePickerButton)).perform(click());
 
-        onView(instanceOf(DatePicker.class)).perform(setDate(2022, 2,2));
+        onView(instanceOf(DatePicker.class)).perform(setDate(2025, 2,2));
         onView(allOf(instanceOf(MaterialButton.class), withText("OK"))).perform(click());
 
         // edit time
@@ -69,7 +71,7 @@ public class EditNotificationTest {
         onView(withId(R.id.listOfNotifications)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
 
         // check date
-        onView(withId(R.id.datePickertextView)).check(matches(withText("Date: 2-2-2022")));
+        onView(withId(R.id.datePickertextView)).check(matches(withText("Date: 2-2-2025")));
 
         // check time
         onView(withId(R.id.timePickertextView)).check(matches(withText("Hour: 13 Minute: 45")));

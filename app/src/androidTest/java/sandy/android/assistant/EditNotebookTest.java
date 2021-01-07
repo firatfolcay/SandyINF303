@@ -1,6 +1,9 @@
+//espresso test for edit notebook operation
+
 package sandy.android.assistant;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.FixMethodOrder;
@@ -17,13 +20,16 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static sandy.android.assistant.CreateNoteTest.clickXY;
 import static sandy.android.assistant.CreateNoteTest.typeString;
 
@@ -37,37 +43,75 @@ public class EditNotebookTest {
 
     @Test
     public void test1_addNewNote() {
-        ActivityScenario activityScenario = ActivityScenario.launch(NoteEditorActivity.class);
 
-        //Type text in title
-        onView(withId(R.id.noteeditor_title_text)).perform(click()).perform(typeText(TEST_TITLE1));
+        ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
-        //Type text in body
-        pressBack();
+        // check if main activity is displayed
+        onView(withId(R.id.mainActivityConstraintLayout)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+        try {
+            onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE1)), click()));
+            activityScenario = ActivityScenario.launch(MainActivity.class);
+            //onView(allOf(withParent(withParent(withParent(allOf(withId(R.id.cardView), withChild(withChild(withChild(allOf(withId(R.id.noteTitle), anyOf(withText(TEST_TITLE1)))))))))), withId(R.id.deleteNote))).perform(click());
+        } catch (Exception exc) {
+            //Check if new note button is visible
+            onView(withId(R.id.fab_create_new_note)).check(matches(isDisplayed()));
 
-        typeString(TEST_BODY, R.id.editor);
+            //Click the new note button
+            onView(withId(R.id.fab_create_new_note)).perform(click());
 
-        //Click save note
-        onView(withId(R.id.imageView_save_note)).perform(click());
+            //Check if NoteEditorActivity is in view
+            onView(withId(R.id.noteEditorActivityConstraintLayout));
 
-        ///////
+            //Type text in title
+            onView(withId(R.id.noteeditor_title_text)).perform(click()).perform(typeText(TEST_TITLE1));
 
-        activityScenario = ActivityScenario.launch(NoteEditorActivity.class);
+            //Type text in body
+            pressBack();
 
-        //Type text in title
-        onView(withId(R.id.noteeditor_title_text)).perform(click()).perform(typeText(TEST_TITLE2));
+            onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
 
-        //Type text in body
-        pressBack();
+            typeString(TEST_BODY, R.id.editor);
 
-        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+            //Click save note
+            onView(withId(R.id.imageView_save_note)).perform(click());
+        }
 
-        typeString(TEST_BODY, R.id.editor);
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
 
-        //Click save note
-        onView(withId(R.id.imageView_save_note)).perform(click());
+        }
+
+        // check if main activity is displayed
+        onView(withId(R.id.mainActivityConstraintLayout)).check(matches(isDisplayed()));
+
+        try {
+            onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE2)), click()));
+            } catch (Exception excep) {
+            //Check if new note button is visible
+            onView(withId(R.id.fab_create_new_note)).check(matches(isDisplayed()));
+
+            //Click the new note button
+            onView(withId(R.id.fab_create_new_note)).perform(click());
+
+            //Check if NoteEditorActivity is in view
+            onView(withId(R.id.noteEditorActivityConstraintLayout));
+
+            //Type text in title
+            onView(withId(R.id.noteeditor_title_text)).perform(click()).perform(typeText(TEST_TITLE2));
+
+            //Type text in body
+            pressBack();
+
+            onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+
+            typeString(TEST_BODY, R.id.editor);
+
+            //Click save note
+            onView(withId(R.id.imageView_save_note)).perform(click());
+        }
+
     }
 
     @Test
@@ -81,7 +125,25 @@ public class EditNotebookTest {
         onView(withId(R.id.buttonMainActivityNavigationDrawer)).perform(click());
 
         // select notebook
-        onView(allOf(withId(R.id.cardView), hasDescendant(allOf(withId(R.id.notebookTitle), withText(NOTEBOOK_TITLE))))).perform(click());
+        try {
+            onView(allOf(withId(R.id.cardView), hasDescendant(allOf(withId(R.id.notebookTitle), withText(NOTEBOOK_TITLE))))).perform(click());
+        } catch (NoMatchingViewException nm) {
+            // click new notebook
+            onView(withId(R.id.buttonAddNotebook)).perform(click());
+
+            // type title
+            onView(withId(R.id.notebookPopupEditText)).perform(click()).perform(typeText(NOTEBOOK_TITLE));
+
+            // click create
+            pressBack();
+            onView(withId(R.id.notebookPopupCreateButton)).perform(click());
+
+            // click notebook drawer
+            onView(withId(R.id.buttonMainActivityNavigationDrawer)).perform(click());
+
+            onView(allOf(withId(R.id.cardView), hasDescendant(allOf(withId(R.id.notebookTitle), withText(NOTEBOOK_TITLE))))).perform(click());
+
+        }
 
         // click attach note
         onView(withId(R.id.fabAddNewNoteToNotebook)).perform(click());
@@ -114,7 +176,7 @@ public class EditNotebookTest {
     }
 
     @Test
-    public void test4_removeNote(){
+    public void test4_removeNotes(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -128,10 +190,18 @@ public class EditNotebookTest {
 
         // remove note 1
         onView(allOf(withId(R.id.notesOfNotebookDelete), withParent(hasSibling(hasDescendant(allOf(withId(R.id.noteOfNotebookTitle), withText(TEST_TITLE1))))))).perform(click());
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(allOf(withId(R.id.notesOfNotebookDelete), withParent(hasSibling(hasDescendant(allOf(withId(R.id.noteOfNotebookTitle), withText(TEST_TITLE2))))))).perform(click());
     }
 
     @Test
-    public void test5_checkNoteRemoved(){
+    public void test5_checkNotesRemoved(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed

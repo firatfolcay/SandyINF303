@@ -1,3 +1,5 @@
+//notebook test suite that performs all notebook espresso tests in order
+
 package sandy.android.assistant;
 
 import org.junit.runner.RunWith;

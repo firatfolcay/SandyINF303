@@ -1,3 +1,6 @@
+//Activity Class that works as a Controller to handle user actions by calls between DatabaseManagement.java Model Class
+//and notification_editor.xml View Component
+
 package sandy.android.assistant.Controller;
 
 import android.app.Activity;

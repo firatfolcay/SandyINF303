@@ -1,3 +1,5 @@
+//note test suite that performs all note espresso tests in order
+
 package sandy.android.assistant;
 
 import org.junit.runner.RunWith;

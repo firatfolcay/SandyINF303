@@ -1,3 +1,6 @@
+//this class handles swipe gestures. We implemented this to make our program handle swipe gestures.
+//source that we provided from for this listener implementation : https://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
+
 package sandy.android.assistant.Listener;
 
 import android.content.Context;
@@ -6,8 +9,6 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
-//source that we provided from for this listener implementation : https://stackoverflow.com/questions/4139288/android-how-to-handle-right-to-left-swipe-gestures
 
 
 public class OnSwipeTouchListener implements OnTouchListener {          //an onSwipeTouchListener implementation of OnTouchListener that reacts to swipe gestures.

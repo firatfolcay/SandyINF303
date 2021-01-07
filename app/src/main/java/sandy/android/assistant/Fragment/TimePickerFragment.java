@@ -1,3 +1,5 @@
+//TimePickerFragment class that creates a time picker dialog.
+
 package sandy.android.assistant.Fragment;
 import android.app.Dialog;
 import android.app.TimePickerDialog;

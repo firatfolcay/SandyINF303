@@ -1,3 +1,5 @@
+//notification test suite that performs all notification espresso tests in order
+
 package sandy.android.assistant;
 
 import org.junit.runner.RunWith;

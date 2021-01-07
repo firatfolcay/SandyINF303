@@ -1,3 +1,5 @@
+//Adapter Class that controls and operates elements inside created recycleView component in notebook_recycler_view.xml
+
 package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
@@ -42,6 +44,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         this.activity = (Activity) context;
     }
 
+    //action method that handles adapter logic when viewholder is created
     @Override
     public NotebookAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_notes_of_notebook_cardview, parent, false);
@@ -49,6 +52,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         return holder;
     }
 
+    //action method that handles adapter logic when viewholder is bound
     @Override
     public void onBindViewHolder(NotebookAdapter.MyViewHolder holder, int position) {
         Note selectedNote = notebookNotes.get(position);
@@ -60,6 +64,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         return notebookNotes.size();
     }
 
+    //viewholder class that is handled by adapter
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView notebookTitle;
@@ -67,7 +72,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         LinearLayout notesOfNotebookLinearLayout;
         ImageView deleteButton;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {        //viewholder constructor method
             super(itemView);
             notebookTitle = (TextView) itemView.findViewById(R.id.noteOfNotebookTitle);
 
@@ -81,6 +86,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         }
 
+        //method that sets viewholder text information
         public void setData(Note selectedNote, int position) {
 
             this.notebookTitle.setText(selectedNote.getTitle());
@@ -100,6 +106,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         }
 
 
+        //method that handles click actions on viewholder
         @Override
         public void onClick(View v) {
             if(v == deleteButton){
@@ -111,6 +118,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         }
 
+        //method that applies notebook opening operations
         private void openNote(int position, View v) {
             Note note = notebookNotes.get(position);
 
@@ -140,6 +148,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
 
         }
 
+        //method that applies note delete operation
         private void deleteNote(int position){
             try {
                 Note note = notebookNotes.get(position);
@@ -152,10 +161,12 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
             }
         }
 
+        //method that refreshes viewholder components
         private void refresh(){
             notebookNotes = db.getNotesFromNotebook(notebook);
         }
 
+        //notifies when an item is inserted into viewholder
         public void notifyInserted(int position) {
             notifyItemInserted(position);
             notifyItemRangeChanged(position, notebookNotes.size());
@@ -165,6 +176,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
             notifyDataSetChanged();
         }
 
+        //notifies when an item is removed from viewholder
         public void notifyRemoved(int position) {
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, notebookNotes.size());

@@ -1,3 +1,5 @@
+//Notification Model Class
+
 package sandy.android.assistant.Model;
 
 import android.annotation.SuppressLint;

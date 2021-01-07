@@ -1,3 +1,5 @@
+//DatePickerFragment class that creates a Date Picker dialog.
+
 package sandy.android.assistant.Fragment;
 
 import android.app.DatePickerDialog;

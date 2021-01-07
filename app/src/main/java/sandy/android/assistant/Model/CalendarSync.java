@@ -1,3 +1,5 @@
+//Model Class that handles connection between Calendar Provider and Application. Executes Calendar Provider API queries.
+
 package sandy.android.assistant.Model;
 
 import android.annotation.SuppressLint;

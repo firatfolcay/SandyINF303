@@ -1,3 +1,5 @@
+//Adapter Class that controls and operates elements inside created recycleView component in notification_recycler_view.xml
+
 package sandy.android.assistant.Adapter;
 
 import android.app.Activity;
@@ -49,6 +51,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.activity = (Activity) context;
     }
 
+    //action method that handles adapter logic when viewholder is created
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_notification_cardview, parent, false);
@@ -56,6 +59,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return holder;
     }
 
+    //action method that handles adapter logic when viewholder is bound
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Note selectedNote = mNoteWithNotificationList.get(position);
@@ -69,13 +73,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNoteWithNotificationList.size();
     }
 
+    //viewholder class that is handled by adapter
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView notificationTitle, notificationDescription;
         ImageView deleteNotification;
         LinearLayout notificationSelectionLinearLayout;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {        //viewholder constructor method
             super(itemView);
 
             notificationTitle = (TextView) itemView.findViewById(R.id.notificationTitle);
@@ -89,6 +94,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         }
 
+        //method that sets viewholder text information
         public void setData(Note selectedNote, int position) {
 
 
@@ -98,6 +104,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
 
+        //method that handles click actions on viewholder
         @Override
         public void onClick(View v) {
             if (v == deleteNotification) {
@@ -109,6 +116,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         }
 
+        //method that handles delete notification operations
         private void deleteNotification(int position) {
             Notification notificationToDelete = mNoteWithNotificationList.get(position).getNotification();
 
@@ -131,6 +139,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             refresh();
         }
 
+        //method that applies open notification operations
         private void openNotification(int position) {
             Notification notificationToOpen = mNoteWithNotificationList.get(position).getNotification();
 
@@ -147,6 +156,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             refresh();
         }
 
+        //method that refreshes viewholder components
         private void refresh(){
             ArrayList<Note> notes = db.getAllNotes();
             ArrayList<Note> notesWithNotification = new ArrayList<Note>();
@@ -160,16 +170,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             mNoteWithNotificationList = notesWithNotification;
         }
 
+        //notifies when an item is removed from viewholder
         public void notifyRemoved(int position) {
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, mNoteWithNotificationList.size());
         }
 
+        //notifies when an item is inserted into viewholder
         public void notifyInserted(int position) {
             notifyItemInserted(position);
             notifyItemRangeChanged(position, mNoteWithNotificationList.size());
         }
 
+        //notifies when dataset is changed
         public void notifyChanged() {
             notifyDataSetChanged();
         }

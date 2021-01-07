@@ -1,8 +1,11 @@
+//espresso test for edit note operation
+
 package sandy.android.assistant;
 
 import android.view.View;
 
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.CoordinatesProvider;
 import androidx.test.espresso.action.GeneralClickAction;
@@ -16,18 +19,25 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import sandy.android.assistant.Controller.MainActivity;
+import sandy.android.assistant.Controller.NoteEditorActivity;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static android.view.KeyEvent.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
 import static sandy.android.assistant.CreateNoteTest.typeString;
 
 @RunWith(AndroidJUnit4.class)
@@ -46,7 +56,6 @@ public class EditNoteTest {
     }
 
     //Edits note
-    //WILL FAIL IF THERE ARE MULTIPLE NOTES WITH EDIT TITLE
     @Test
     public void test2_editNote(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
@@ -56,8 +65,57 @@ public class EditNoteTest {
 
         }
 
+        try {
+            onView(allOf(withParent(withParent(withParent(allOf(withId(R.id.cardView), withChild(withChild(withChild(allOf(withId(R.id.noteTitle), anyOf(withText(EDIT_TITLE)))))))))), withId(R.id.deleteNote))).perform(click());
+        } catch (Exception exc) {
+
+        }
         //Click on the note with title text
-        onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
+        try {
+            onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
+        } catch (Exception e) {
+            //Check if new note button is visible
+            onView(withId(R.id.fab_create_new_note)).check(matches(isDisplayed()));
+
+            //Click the new note button
+            onView(withId(R.id.fab_create_new_note)).perform(click());
+
+            //Check if NoteEditorActivity is in view
+            onView(withId(R.id.noteEditorActivityConstraintLayout));
+
+            activityScenario = ActivityScenario.launch(NoteEditorActivity.class);
+
+            //Type text in title
+            onView(withId(R.id.noteeditor_title_text)).perform(click()).perform(typeText(TEST_TITLE));
+
+            //Type text in body
+            pressBack();
+
+            onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+
+            typeString(TEST_BODY, R.id.editor);
+
+            //Click save note
+            onView(withId(R.id.imageView_save_note)).perform(click());
+
+            activityScenario = ActivityScenario.launch(MainActivity.class);
+
+            //Click on the note with title text
+            onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
+
+            //Check if NoteEditorActivity is in view
+            onView(withId(R.id.noteEditorActivityConstraintLayout));
+            try{
+                Thread.sleep(1000);
+            }catch(Exception ex){
+
+            }
+            activityScenario = ActivityScenario.launch(MainActivity.class);
+
+            onView(withId(R.id.mainActivityConstraintLayout)).check(matches(isDisplayed()));
+            onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
+        }
+
 
         //Check if NoteEditorActivity is in view
         onView(withId(R.id.noteEditorActivityConstraintLayout));
@@ -66,7 +124,6 @@ public class EditNoteTest {
         onView(withId(R.id.noteeditor_title_text)).perform(replaceText(EDIT_TITLE));
 
         //Edit text in body
-        //FIXME: pressing end doesn't work, cleartext sometimes doesn't either
         onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
 
         clearText(R.id.editor);
@@ -77,8 +134,6 @@ public class EditNoteTest {
     }
 
     //Checks if note was edited
-    //WILL FAIL IF THERE ARE MULTIPLE NOTES WITH TEST TITLE
-    //FIXME: Can't check body because couldn't figure out how to test the third party editor
     @Test
     public void test3_checkNote(){
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);

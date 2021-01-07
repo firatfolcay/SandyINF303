@@ -1,3 +1,5 @@
+//Notebook Model Class
+
 package sandy.android.assistant.Model;
 
 import java.util.ArrayList;

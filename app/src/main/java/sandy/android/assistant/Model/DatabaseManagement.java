@@ -1,3 +1,6 @@
+//SQLiteOpenHelper Database Access Class. This Class handles business logic, provides connection to SQLite internal DB and
+// requests queries from SQLite Database
+
 package sandy.android.assistant.Model;
 
 import java.util.ArrayList;

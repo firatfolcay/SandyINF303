@@ -1,3 +1,7 @@
+//Main Activity Class that initializes app and
+//checks permissions and controls connection between user actions and application responds
+// by calls between DatabaseManagement.java Model Class and activity_main.xml View Component
+
 package sandy.android.assistant.Controller;
 
 import androidx.annotation.Nullable;

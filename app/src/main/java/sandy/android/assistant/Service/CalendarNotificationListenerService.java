@@ -1,3 +1,12 @@
+//this notification service is worked after user gives permission to SANDY Personal Assistant to inspect other notifications.
+// If requested permissions are given, this service catches calendar notifications in order to send push notifications.
+//This is not the best solution to implement push notifications, but it's the only effective way because of
+//new Android restrictions in SDK's after 24. For now, background tasks are not provided by Android.
+//So we came up with this solution in order to push notifications. This service is connected to calendar application
+//in the phone. Because of this, this service will only work if calendar notification is triggered.
+//But there is always a possibility that service might not work, because Android background services
+//policy is strict in new SDK versions.
+
 package sandy.android.assistant.Service;
 
 import android.app.Notification;
@@ -25,14 +34,6 @@ import sandy.android.assistant.Controller.NotePreviewActivity;
 import sandy.android.assistant.R;
 
 
-//this notification service is worked after user gives permission to SANDY Personal Assistant to inspect other notifications.
-// If requested permissions are given, this service catches calendar notifications in order to send push notifications.
-//This is not the best solution to implement push notifications, but it's the only effective way because of
-//new Android restrictions in SDK's after 24. For now, background tasks are not provided by Android.
-//So we came up with this solution in order to push notifications. This service is connected to calendar application
-//in the phone. Because of this, this service will only work if calendar notification is triggered.
-//But there is always a possibility that service might not work, because Android background services
-//policy is strict in new SDK versions.
 
 public class CalendarNotificationListenerService extends NotificationListenerService {
     NotificationChannel channel;
