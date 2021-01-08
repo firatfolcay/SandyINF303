@@ -22,11 +22,11 @@ public class DatePickerFragment extends DialogFragment {
     private Integer month;
     private Integer day;
 
-    public DatePickerFragment(){
+    public DatePickerFragment() {
 
     }
 
-    public DatePickerFragment(Integer year, Integer month, Integer day){        //datepicker fragment constructor
+    public DatePickerFragment(Integer year, Integer month, Integer day) {        //datepicker fragment constructor
         this.year = year;
         this.month = month;
         this.day = day;
@@ -37,13 +37,13 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {         //onCreateDialog action
 
-        if(year == null || month == null || day == null) {
+        if (year == null || month == null || day == null) {
             Calendar calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);         //set year month day values to selected date
             month = calendar.get(Calendar.MONTH);
             day = calendar.get(Calendar.DAY_OF_MONTH);
         }
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener)getActivity(), year,month,day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);     //disables past date selections from date picker
 
         return datePickerDialog;

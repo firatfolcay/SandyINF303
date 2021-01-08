@@ -40,7 +40,6 @@ public class NotificationViewActivity extends AppCompatActivity {
         db = new DatabaseManagement(this);       //database access object initialization
 
 
-
         linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotifications.setLayoutManager(linearLayoutManager);

@@ -4,6 +4,7 @@
 package sandy.android.assistant.Model;
 
 import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -42,7 +43,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.execSQL(fk);
 
 
-        String notifications_sql = "create table " + NOTIFICATIONS_TABLE_NAME  +
+        String notifications_sql = "create table " + NOTIFICATIONS_TABLE_NAME +
                 " (" + NOTIFICATIONS_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
                 NOTIFICATIONS_COLUMN_DATE + " text" + ")";
         db.execSQL(notifications_sql);
@@ -76,8 +77,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     /**************************************************************************************************/
 
     /*methods below are for manipulating note data in database*/
-
-    public boolean insertNote (Note n) {    //method to insert a new note to database
+    public boolean insertNote(Note n) {    //method to insert a new note to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -85,7 +85,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        if(n.getNotification() != null) {
+        if (n.getNotification() != null) {
             insertNotification(n.getNotification());
             contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());
         }
@@ -95,7 +95,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public boolean updateNote (Note n, Note key) {    //method to update a note from database //key is the note to be updated #serdar
+    public boolean updateNote(Note n, Note key) {    //method to update a note from database //key is the note to be updated #serdar
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -103,12 +103,11 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         contentValues.put(NOTES_COLUMN_CONTENT, n.getContent());
         contentValues.put(NOTES_COLUMN_SAVEDATE, n.getSaveDate());
 
-        if(n.getNotification() != null) {                   //if new notification isn't null
+        if (n.getNotification() != null) {                   //if new notification isn't null
             if (key.getNotification() == null) {            //if old notification is null
                 insertNotification(n.getNotification());    //insert new notification
                 contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, getLastAddedNotification().getId());    //put id of last added notification to notes notification id column
-            }
-            else {                                                                  //if old notification isn't null
+            } else {                                                                  //if old notification isn't null
                 updateNotification(n.getNotification(), key.getNotification());     //update old notification with new one
             }
 
@@ -117,21 +116,21 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.update(NOTES_TABLE_NAME,
                 contentValues,
                 "id = ? ",
-                new String[] { Integer.toString(key.getId()) } );
+                new String[]{Integer.toString(key.getId())});
 
         return true;
     }
 
-    public Boolean deleteNote (Note n) {        //method to delete a note from database
+    public Boolean deleteNote(Note n) {        //method to delete a note from database
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
-            if(n.getNotification() != null) //delete the note's notification if it has one
+            if (n.getNotification() != null) //delete the note's notification if it has one
                 deleteNotification(n.getNotification()); // n must carry the notification id
 
             db.delete(NOTES_TABLE_NAME,
                     NOTES_COLUMN_ID + " = ? ",
-                    new String[] { Integer.toString(n.getId()) });
+                    new String[]{Integer.toString(n.getId())});
 
         } catch (Exception e) {
             return false;
@@ -140,18 +139,17 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Note getNoteFromNoteId(int note_id){       //method to fetch note data from given note id from database
+    public Note getNoteFromNoteId(int note_id) {       //method to fetch note data from given note id from database
         SQLiteDatabase db = this.getReadableDatabase();
         Notification notification = new Notification();
 
-        Cursor res =  db.rawQuery( "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_ID +"= " + note_id,
-                null );
+        Cursor res = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_ID + "= " + note_id,
+                null);
         res.moveToFirst();
 
         if (!res.isNull(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
             notification = getNotificationFromNotificationID(res.getInt(res.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
-        }
-        else{
+        } else {
             notification = null;
         }
 
@@ -165,7 +163,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     public Note getNoteFromNotificationId(int notification_id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor res = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTIFICATION_ID +"= " + notification_id, null);
+        Cursor res = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTIFICATION_ID + "= " + notification_id, null);
         res.moveToFirst();
 
         return new Note(res.getInt(res.getColumnIndex(NOTES_COLUMN_ID)),
@@ -176,27 +174,26 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
 
     }
 
-    public int getNoteCount(){      //method to fetch number of notes that exist in database
+    public int getNoteCount() {      //method to fetch number of notes that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTES_TABLE_NAME);
 
         return numRows;
     }
 
-    public ArrayList<Note> getAllNotes(){        //method to fetch data of all notes from database
+    public ArrayList<Note> getAllNotes() {        //method to fetch data of all notes from database
         SQLiteDatabase db = this.getReadableDatabase();
         Notification foundNotification = new Notification();
         ArrayList<Note> array_list = new ArrayList<Note>();
 
-        Cursor resNotes =  db.rawQuery( "select * from " + NOTES_TABLE_NAME, null );
+        Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME, null);
         resNotes.moveToFirst();
 
-        while(resNotes.isAfterLast() == false){
+        while (resNotes.isAfterLast() == false) {
             // gets the notification if the note has one
             if (!resNotes.isNull(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID))) {
                 foundNotification = getNotificationFromNotificationID(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_NOTIFICATION_ID)));
-            }
-            else
+            } else
                 foundNotification = null;
 
             // creates and adds note to the array to be returned
@@ -217,19 +214,18 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     /**************************************************************************************************/
 
     /*methods below are for manipulating notification data in database*/
-
-    public boolean insertNotification (Notification n) {    //method to insert a new notification to database
+    public boolean insertNotification(Notification n) {    //method to insert a new notification to database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(NOTIFICATIONS_COLUMN_DATE, n.getDate());
 
-        db.insert(NOTIFICATIONS_TABLE_NAME,null, contentValues);
+        db.insert(NOTIFICATIONS_TABLE_NAME, null, contentValues);
 
         return true;
     }
 
-    public boolean updateNotification (Notification n, Notification key) {    //method to update a notification from database
+    public boolean updateNotification(Notification n, Notification key) {    //method to update a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -238,22 +234,22 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.update(NOTIFICATIONS_TABLE_NAME,
                 contentValues,
                 NOTIFICATIONS_COLUMN_ID + "= ? ",
-                new String[] { Integer.toString(key.getId()) } );
+                new String[]{Integer.toString(key.getId())});
 
         return true;
     }
 
-    public boolean deleteNotification (Notification n) {        //method to delete a notification from database
+    public boolean deleteNotification(Notification n) {        //method to delete a notification from database
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(NOTES_COLUMN_NOTIFICATION_ID, (Integer) null);
 
-            db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTIFICATION_ID + "= ?", new String[] { Integer.toString(n.getId()) });
+            db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTIFICATION_ID + "= ?", new String[]{Integer.toString(n.getId())});
 
             db.delete(NOTIFICATIONS_TABLE_NAME,
                     NOTIFICATIONS_COLUMN_ID + " = ? ",
-                    new String[] { Integer.toString(n.getId()) });
+                    new String[]{Integer.toString(n.getId())});
 
         } catch (Exception e) {
             return false;
@@ -262,16 +258,16 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Notification getNotificationFromNotificationID(int notificationId){       //method to fetch notification data from given notification id from database
+    public Notification getNotificationFromNotificationID(int notificationId) {       //method to fetch notification data from given notification id from database
         SQLiteDatabase db = this.getReadableDatabase();
         Notification n = new Notification();
 
-        Cursor res =  db.rawQuery( "select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID + "= " + notificationId,
-                null );
+        Cursor res = db.rawQuery("select * from " + NOTIFICATIONS_TABLE_NAME + " where " + NOTIFICATIONS_COLUMN_ID + "= " + notificationId,
+                null);
         res.moveToFirst();
 
         while (res.isAfterLast() == false) {
-            if(!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))){
+            if (!res.isNull(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID))) {
                 n.setId(res.getInt(res.getColumnIndex(NOTIFICATIONS_COLUMN_ID)));
                 n.setDate(res.getString(res.getColumnIndex(NOTIFICATIONS_COLUMN_DATE)));
                 break;
@@ -282,7 +278,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return n;
     }
 
-    public int getNotificationCount(){      //method to fetch number of notifications that exist in database
+    public int getNotificationCount() {      //method to fetch number of notifications that exist in database
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, NOTIFICATIONS_TABLE_NAME);
         db.close();
@@ -290,8 +286,8 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return numRows;
     }
 
-    public Notification getLastAddedNotification (){        //method that returns last added notification
-        String selectQuery= "SELECT * FROM " + NOTIFICATIONS_TABLE_NAME;
+    public Notification getLastAddedNotification() {        //method that returns last added notification
+        String selectQuery = "SELECT * FROM " + NOTIFICATIONS_TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -311,8 +307,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
     /**************************************************************************************************/
 
     /*methods below are for manipulating notebook data in database*/
-
-    public void insertNotebook(Notebook n){     //method to insert Notebook inside SQLite Database
+    public void insertNotebook(Notebook n) {     //method to insert Notebook inside SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -321,7 +316,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.insert(NOTEBOOKS_TABLE_NAME, null, contentValues);
     }
 
-    public void updateNotebook(Notebook n, Notebook key){       //method to update an existing Notebook in SQLite Database
+    public void updateNotebook(Notebook n, Notebook key) {       //method to update an existing Notebook in SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -330,21 +325,21 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         db.update(NOTEBOOKS_TABLE_NAME,
                 contentValues,
                 NOTEBOOKS_COLUMN_ID + "= ? ",
-                new String[] { Integer.toString(key.getId()) } );
+                new String[]{Integer.toString(key.getId())});
     }
 
-    public boolean deleteNotebook(Notebook n){          //method to delete a Notebook from SQLite Database
+    public boolean deleteNotebook(Notebook n) {          //method to delete a Notebook from SQLite Database
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(NOTES_COLUMN_NOTEBOOK_ID, (Integer) null);
 
-            db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTEBOOK_ID + "= ?", new String[] { Integer.toString(n.getId()) });
+            db.update(NOTES_TABLE_NAME, contentValues, NOTES_COLUMN_NOTEBOOK_ID + "= ?", new String[]{Integer.toString(n.getId())});
 
             db.delete(NOTEBOOKS_TABLE_NAME,
                     NOTEBOOKS_COLUMN_ID + " = ? ",
-                    new String[] { Integer.toString(n.getId()) });
+                    new String[]{Integer.toString(n.getId())});
 
         } catch (Exception e) {
             return false;
@@ -353,19 +348,19 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return true;
     }
 
-    public Notebook getNotebookFromNotebookId(int id){      //method that returns Notebook object with given ID parameter
+    public Notebook getNotebookFromNotebookId(int id) {      //method that returns Notebook object with given ID parameter
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Integer> noteIds = new ArrayList<Integer>();
         String title = "";
 
-        Cursor notebook = db.rawQuery("select * from " + NOTEBOOKS_TABLE_NAME + " where " + NOTEBOOKS_COLUMN_ID + "= " + id,null);
+        Cursor notebook = db.rawQuery("select * from " + NOTEBOOKS_TABLE_NAME + " where " + NOTEBOOKS_COLUMN_ID + "= " + id, null);
         notebook.moveToFirst();
         title = notebook.getString(notebook.getColumnIndex(NOTEBOOKS_COLUMN_TITLE));
 
         //adds notes' ids to the corresponding notebook
-        Cursor notes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + id,null);
+        Cursor notes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + id, null);
         notes.moveToFirst();
-        while(!notes.isAfterLast()){
+        while (!notes.isAfterLast()) {
             noteIds.add(notes.getInt(notes.getColumnIndex(NOTES_COLUMN_ID)));
             notes.moveToNext();
         }
@@ -373,14 +368,14 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return new Notebook(id, title, noteIds);
     }
 
-    public ArrayList<Notebook> getAllNotebooks(){           //method that returns all notebooks with their notes' ids
+    public ArrayList<Notebook> getAllNotebooks() {           //method that returns all notebooks with their notes' ids
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Notebook> notebooks = new ArrayList<Notebook>();
 
         Cursor resNotebook = db.rawQuery("select * from " + NOTEBOOKS_TABLE_NAME, null);
         resNotebook.moveToFirst();
 
-        while(resNotebook.isAfterLast() == false){
+        while (resNotebook.isAfterLast() == false) {
             //adds notebook to the array to be returned
             notebooks.add(getNotebookFromNotebookId(resNotebook.getInt(resNotebook.getColumnIndex(NOTEBOOKS_COLUMN_ID))));
             resNotebook.moveToNext();
@@ -389,22 +384,21 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notebooks;
     }
 
-    public ArrayList<Note> getNotesFromNotebook(Notebook n){    //this function is called to display the notes inside of a notebook
+    public ArrayList<Note> getNotesFromNotebook(Notebook n) {    //this function is called to display the notes inside of a notebook
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Note> notes = new ArrayList<Note>();
 
         //if the notebook has the note ids it should be a bit faster to run this way
-        if(n.getNoteIds() != null){
-            if(n.getNoteIds().size() > 0){
-                for(Integer id: n.getNoteIds()){
+        if (n.getNoteIds() != null) {
+            if (n.getNoteIds().size() > 0) {
+                for (Integer id : n.getNoteIds()) {
                     notes.add(getNoteFromNoteId(id));
                 }
             }
-        }
-        else{
-            Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID +  "= " + n.getId(),null);
+        } else {
+            Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId(), null);
             resNotes.moveToFirst();
-            while(!resNotes.isAfterLast()){
+            while (!resNotes.isAfterLast()) {
                 notes.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
                 resNotes.moveToNext();
             }
@@ -412,7 +406,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         return notes;
     }
 
-    public void addNoteToNotebook(Note note, Notebook notebook){        //method that adds note to edited Notebook
+    public void addNoteToNotebook(Note note, Notebook notebook) {        //method that adds note to edited Notebook
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -424,7 +418,7 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
                 new String[]{"" + note.getId()});
     }
 
-    public void removeNoteFromNotebook(Note note){          //method that removes note from edited Notebook.
+    public void removeNoteFromNotebook(Note note) {          //method that removes note from edited Notebook.
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -441,10 +435,10 @@ public class DatabaseManagement extends SQLiteOpenHelper {      //DatabaseManage
         ArrayList<Note> notes = new ArrayList<Note>();
 
         Cursor resNotes = db.rawQuery("select * from " + NOTES_TABLE_NAME + " except " +
-                "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId(),null);
+                "select * from " + NOTES_TABLE_NAME + " where " + NOTES_COLUMN_NOTEBOOK_ID + "= " + n.getId(), null);
 
         resNotes.moveToFirst();
-        while(!resNotes.isAfterLast()){
+        while (!resNotes.isAfterLast()) {
             notes.add(getNoteFromNoteId(resNotes.getInt(resNotes.getColumnIndex(NOTES_COLUMN_ID))));
             resNotes.moveToNext();
         }

@@ -27,11 +27,11 @@ public class CalendarSync {
     private Notification eventNotification;
     private String eventDescription = "";
 
-    public CalendarSync () {
+    public CalendarSync() {
 
     }
 
-    public CalendarSync (String eventTitle, Notification eventNotification, String eventDescription) {      //calendarsync constructor
+    public CalendarSync(String eventTitle, Notification eventNotification, String eventDescription) {      //calendarsync constructor
         this.eventTitle = eventTitle;
         this.eventNotification = eventNotification;
         this.eventDescription = eventDescription;
@@ -42,6 +42,7 @@ public class CalendarSync {
     public String getEventTitle() {
         return eventTitle;
     }
+
     public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
     }
@@ -49,6 +50,7 @@ public class CalendarSync {
     public Notification getEventNotification() {
         return eventNotification;
     }
+
     public void setEventNotification(Notification eventNotification) {
         this.eventNotification = eventNotification;
     }
@@ -56,6 +58,7 @@ public class CalendarSync {
     public String getEventDescription() {
         return eventDescription;
     }
+
     public void setEventDescription(String eventDescription) {
         this.eventDescription = eventDescription;
     }
@@ -69,8 +72,8 @@ public class CalendarSync {
         String eventTime = "";
         String date_time = notification.getDate();
 
-        eventDate = date_time.substring(0,date_time.indexOf('T'));
-        eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+        eventDate = date_time.substring(0, date_time.indexOf('T'));
+        eventTime = date_time.substring(date_time.indexOf('T') + 1, date_time.indexOf('Z'));
 
         Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
         Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
@@ -80,11 +83,11 @@ public class CalendarSync {
         Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
 
         Calendar beginTime = Calendar.getInstance();
-        beginTime.set(eventYear, eventMonth-1, eventDay, eventHour, eventMinute);
+        beginTime.set(eventYear, eventMonth - 1, eventDay, eventHour, eventMinute);
         startMillis = beginTime.getTimeInMillis();
 
         Calendar endTime = Calendar.getInstance();
-        endTime.set(eventYear, eventMonth-1, eventDay, eventHour+1, eventMinute);
+        endTime.set(eventYear, eventMonth - 1, eventDay, eventHour + 1, eventMinute);
         endMillis = endTime.getTimeInMillis();
 
         Spanned eventDescription = Html.fromHtml(description);
@@ -99,8 +102,7 @@ public class CalendarSync {
         if (intent.resolveActivity(context.getPackageManager()) != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-        }
-        else {
+        } else {
             Toast.makeText(context, context.getResources().getString(R.string.calendar_sync_no_app), Toast.LENGTH_LONG);
         }
     }
@@ -116,8 +118,8 @@ public class CalendarSync {
         String eventId = "";
         String date_time = notification.getDate();
 
-        eventDate = date_time.substring(0,date_time.indexOf('T'));
-        eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+        eventDate = date_time.substring(0, date_time.indexOf('T'));
+        eventTime = date_time.substring(date_time.indexOf('T') + 1, date_time.indexOf('Z'));
 
         Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
         Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
@@ -127,11 +129,11 @@ public class CalendarSync {
         Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
 
         Calendar beginTime = Calendar.getInstance();
-        beginTime.set(eventYear, eventMonth-1, eventDay, eventHour, eventMinute);
+        beginTime.set(eventYear, eventMonth - 1, eventDay, eventHour, eventMinute);
         startMillis = beginTime.getTimeInMillis();
 
         Calendar endTime = Calendar.getInstance();
-        endTime.set(eventYear, eventMonth-1, eventDay, eventHour+1, eventMinute);
+        endTime.set(eventYear, eventMonth - 1, eventDay, eventHour + 1, eventMinute);
         endMillis = endTime.getTimeInMillis();
 
         Spanned eventDescription = Html.fromHtml(description);
@@ -180,7 +182,7 @@ public class CalendarSync {
         }
 
         int result = 0;
-        String projection[] = { "_id", "title" };
+        String projection[] = {"_id", "title"};
         Cursor cursor = context.getContentResolver().query(eventUri, null, null, null,
                 null);
 
@@ -218,8 +220,8 @@ public class CalendarSync {
         if (note.getNotification() != null) {
             String date_time = note.getNotification().getDate();
 
-            eventDate = date_time.substring(0,date_time.indexOf('T'));
-            eventTime = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+            eventDate = date_time.substring(0, date_time.indexOf('T'));
+            eventTime = date_time.substring(date_time.indexOf('T') + 1, date_time.indexOf('Z'));
 
             Integer eventYear = Integer.parseInt(eventDate.split("-")[0]);
             Integer eventMonth = Integer.parseInt(eventDate.split("-")[1]);
@@ -229,11 +231,11 @@ public class CalendarSync {
             Integer eventMinute = Integer.parseInt(eventTime.split(":")[1]);
 
             Calendar beginTime = Calendar.getInstance();
-            beginTime.set(eventYear, eventMonth-1, eventDay, eventHour, eventMinute);
+            beginTime.set(eventYear, eventMonth - 1, eventDay, eventHour, eventMinute);
             startMillis = beginTime.getTimeInMillis();
 
             Calendar endTime = Calendar.getInstance();
-            endTime.set(eventYear, eventMonth-1, eventDay, eventHour+1, eventMinute);
+            endTime.set(eventYear, eventMonth - 1, eventDay, eventHour + 1, eventMinute);
             endMillis = endTime.getTimeInMillis();
         }
 
@@ -285,7 +287,7 @@ public class CalendarSync {
         return eventUri;
     }
 
-    public String getCalendarId(Context context){       //method that returns a specific calendar id
+    public String getCalendarId(Context context) {       //method that returns a specific calendar id
         String returnval = null;
         List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL);
         String[] projectionString = projection.toArray(new String[3]);
@@ -313,7 +315,7 @@ public class CalendarSync {
                 calAccessLevel = cursor.getString(accessLevel);
 
                 System.out.println("calendar name = " + calName + " calendar id = " + calId + " access level = " + calAccessLevel);
-                if (calName.equals("sandy personal assistant calendar")){
+                if (calName.equals("sandy personal assistant calendar")) {
                     returnval = calId;
                     cursor.close();
                     break;
@@ -321,14 +323,13 @@ public class CalendarSync {
                 cursor.moveToNext();
             }
             cursor.close();
-        }
-        else {
+        } else {
             returnval = null;
         }
         return returnval;
     }
 
-    public static String getCalendarName(Context context){      //method that returns specific calendar Name
+    public static String getCalendarName(Context context) {      //method that returns specific calendar Name
         String returnval = null;
         List<String> projection = Arrays.asList(CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL);
         String[] projectionString = projection.toArray(new String[3]);
@@ -356,7 +357,7 @@ public class CalendarSync {
                 calAccessLevel = cursor.getString(accessLevel);
 
                 System.out.println("calendar name = " + calName + " calendar id = " + calId + " access level = " + calAccessLevel);
-                if (calName.equals("sandy personal assistant calendar")){
+                if (calName.equals("sandy personal assistant calendar")) {
                     returnval = calName;
                     cursor.close();
                     break;
@@ -364,8 +365,7 @@ public class CalendarSync {
                 cursor.moveToNext();
             }
             cursor.close();
-        }
-        else {
+        } else {
             returnval = null;
         }
         return returnval;

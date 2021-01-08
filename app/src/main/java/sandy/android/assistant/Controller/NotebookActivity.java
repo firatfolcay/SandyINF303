@@ -82,18 +82,16 @@ public class NotebookActivity extends AppCompatActivity {
         spinnerSetNotebookViewType.setVisibility(View.VISIBLE);
 
         Bundle b = getIntent().getExtras();     //get Bundles from other activities
-        if(b != null){
-            if(b.get("NOTEBOOK_ID") != null){
+        if (b != null) {
+            if (b.get("NOTEBOOK_ID") != null) {
                 selectedNotebook = db.getNotebookFromNotebookId(b.getInt("NOTEBOOK_ID"));
                 this.setNotebookViewContent(selectedNotebook);      //update notebookviewcontent with returned information
-            }
-            else{
+            } else {
                 finish();
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();     //toast notebook open fail message
                 return;
             }
-        }
-        else{
+        } else {
             finish();
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_open_fail_error), Toast.LENGTH_LONG).show();
             return;
@@ -113,8 +111,7 @@ public class NotebookActivity extends AppCompatActivity {
 
                         constraintLayout.setBackgroundColor(getResources().getColor(R.color.darkBlue));     //set background color to dark blue
                     }
-                }
-                else if (selectedItem.equals(getResources().getString(R.string.notebook_notebook_view_text))) {        //if note editor view is selected
+                } else if (selectedItem.equals(getResources().getString(R.string.notebook_notebook_view_text))) {        //if note editor view is selected
                     notebookEditorView = findViewById(R.id.notebookEditorView);
                     notebookEditorView.clearAllContents();          //clear all contents of notebookeditorview
 
@@ -127,7 +124,7 @@ public class NotebookActivity extends AppCompatActivity {
                         for (int index = 0; index < notesFromNotebook.size(); index++) {
                             notebookEditorViewFragments.add(notesFromNotebook.get(index).getContent());
                             String lineDivider = "<hr data-tag=" + '"' + "hr" + '"' + "/>";     //insert line divider between adjacent notes.
-                            if (index < notesFromNotebook.size()-1) {           //don't insert a line divider after last note.
+                            if (index < notesFromNotebook.size() - 1) {           //don't insert a line divider after last note.
                                 notebookEditorViewFragments.add(lineDivider);
                             }
                         }
@@ -140,8 +137,7 @@ public class NotebookActivity extends AppCompatActivity {
                         notebookEditorViewConstraintLayout.setVisibility(View.VISIBLE);     //and notebookview to visible
                         notebookEditorView.render(notebookEditorViewHtmlString);        //render all concatenated html strings as editor content.
                         notebookEditorViewHtmlString = "";
-                    }
-                    else {
+                    } else {
                         //notebook has no notes in it.
                     }
 
@@ -194,8 +190,7 @@ public class NotebookActivity extends AppCompatActivity {
                                 selectedNotebook);
                         onResume();                             //to update the current screen
                         popupWindow.dismiss();                  //dispose popup
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();
                     }
 

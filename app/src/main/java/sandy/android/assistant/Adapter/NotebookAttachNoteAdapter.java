@@ -100,8 +100,7 @@ public class NotebookAttachNoteAdapter extends RecyclerView.Adapter<NotebookAtta
                     int adapterPosition = getAdapterPosition();
                     if (isChecked) {
                         checkedItemsOfHolder.add(Integer.valueOf(adapterPosition));
-                    }
-                    else {
+                    } else {
                         checkedItemsOfHolder.remove(Integer.valueOf(adapterPosition));
                     }
 

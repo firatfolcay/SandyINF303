@@ -60,7 +60,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     Notification editNotification;
 
-    String year,month,day,hour,minute;
+    String year, month, day, hour, minute;
     String selectedDateString = null;
 
     @Override
@@ -84,8 +84,8 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
         //getting notification of the note if it has one and updates the screen
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            if(b.get("NOTIFICATION_ID") != null){       //if a notification id is returned from bundle extra,
+        if (b != null) {
+            if (b.get("NOTIFICATION_ID") != null) {       //if a notification id is returned from bundle extra,
                 //set editedNotification value to this value by sending returned notification id to database access object.
                 editNotification = db.getNotificationFromNotificationID(b.getInt("NOTIFICATION_ID"));
                 updateNotificationActivity(editNotification);       //refresh notification view
@@ -97,7 +97,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
             @Override
             public void onClick(View v) {
                 //if no date or time is selected, do not complete the action and return
-                if(date == null || time == null){
+                if (date == null || time == null) {
                     return;
                 }
                 //if both of date and time values are set,
@@ -106,13 +106,13 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                 //code stack below examines if only notification is edited or note is edited.
 
                 //if this activity is started from noteEditorActivity, note is being edited.
-                if(getCallingActivity().getClassName().equals(NoteEditorActivity.class.toString().replace("class ",""))){
+                if (getCallingActivity().getClassName().equals(NoteEditorActivity.class.toString().replace("class ", ""))) {
                     Intent data = new Intent(getApplicationContext(), NoteEditorActivity.class);
                     data.putExtra("NOTIFICATION_DATE", currentDateString);
                     setResult(Activity.RESULT_OK, data);
                 }
                 //if this activity is started from notificationViewActivity, only notification is being edited.
-                else if(getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ",""))){
+                else if (getCallingActivity().getClassName().equals(NotificationViewActivity.class.toString().replace("class ", ""))) {
                     Notification newNotification = new Notification(currentDateString);
                     //update Notification at database
                     db.updateNotification(newNotification, editNotification);
@@ -134,7 +134,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         timePickerButton.setOnClickListener(new View.OnClickListener() {        //if set time button is clicked
             @Override
             public void onClick(View v) {
-                if(editNotification != null)        //if notification is being edited
+                if (editNotification != null)        //if notification is being edited
                     //inflate timePicker with returned time information from bundle extra
                     timePicker = new TimePickerFragment(new Integer(hour), new Integer(minute));
                 else
@@ -147,9 +147,9 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
         datePickerButton.setOnClickListener(new View.OnClickListener() {        //if set date button is clicked
             @Override
             public void onClick(View v) {
-                if(editNotification != null)        //if notification is being edited
+                if (editNotification != null)        //if notification is being edited
                     //inflate datePicker with returned date information from bundle extra
-                    datePicker = new DatePickerFragment(new Integer(year), new Integer(month)-1, new Integer(day));
+                    datePicker = new DatePickerFragment(new Integer(year), new Integer(month) - 1, new Integer(day));
                 else
                     datePicker = new DatePickerFragment();      //else just inflate a datePicker with blank selection
 
@@ -212,13 +212,11 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     //it's before current'
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
                 }
-            }
-            else {
+            } else {
                 timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
                 time = hourOfDay + ":" + minute;        //set time variable with selected hour and minute information
             }
-        }
-        else {      //if date is changed
+        } else {      //if date is changed
             if (currentDateString.equals(selectedDateString)) {
                 if (datetime.getTimeInMillis() >= current.getTimeInMillis()) {
                     timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
@@ -227,8 +225,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     //it's before current'
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.notification_past_time_error), Toast.LENGTH_LONG).show();
                 }
-            }
-            else {
+            } else {
                 timePickerTextView.setText("Hour: " + hourOfDay + " Minute: " + minute);
                 time = hourOfDay + ":" + minute;        //set time variable with selected hour and minute information
             }
@@ -237,7 +234,7 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     }
 
-    public void updateNotificationActivity(Notification n){     //method that refreshes timePicker and datePicker date/time informations
+    public void updateNotificationActivity(Notification n) {     //method that refreshes timePicker and datePicker date/time informations
 
         parse();
         timePickerTextView.setText(getResources().getString(R.string.hour_text) + ": " + hour + " " + getResources().getString(R.string.minute_text) + ": " + minute);
@@ -245,14 +242,14 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
     }
 
-    public void parse(){        //method that parses notification date/time to a cleaner format
+    public void parse() {        //method that parses notification date/time to a cleaner format
         String date = "";
         String time = "";
         String date_time = editNotification.getDate();
 
 
-        date = date_time.substring(0,date_time.indexOf('T'));       //create substrings
-        time = date_time.substring(date_time.indexOf('T') +1, date_time.indexOf('Z'));
+        date = date_time.substring(0, date_time.indexOf('T'));       //create substrings
+        time = date_time.substring(date_time.indexOf('T') + 1, date_time.indexOf('Z'));
 
         year = date.split("-")[0];      //split date values
         month = date.split("-")[1];
@@ -263,6 +260,6 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
 
         //set date and time values to formatted type (will be used while setting date and time information textboxes
         this.date = year + "-" + month + "-" + day;
-        this.time = hour + ":"  + minute;
+        this.time = hour + ":" + minute;
     }
 }

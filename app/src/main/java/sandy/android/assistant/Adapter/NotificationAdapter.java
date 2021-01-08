@@ -64,7 +64,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Note selectedNote = mNoteWithNotificationList.get(position);
 
-        if(selectedNote != null)
+        if (selectedNote != null)
             holder.setData(selectedNote, position);
     }
 
@@ -98,8 +98,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void setData(Note selectedNote, int position) {
 
 
-                this.notificationTitle.setText(selectedNote.getTitle());
-                this.notificationDescription.setText(selectedNote.getNotification().getDate());
+            this.notificationTitle.setText(selectedNote.getTitle());
+            this.notificationDescription.setText(selectedNote.getNotification().getDate());
 
         }
 
@@ -109,8 +109,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void onClick(View v) {
             if (v == deleteNotification) {
                 deleteNotification(getLayoutPosition());
-            }
-            else if (v == notificationSelectionLinearLayout) {
+            } else if (v == notificationSelectionLinearLayout) {
                 openNotification(getLayoutPosition());
             }
 
@@ -131,8 +130,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 if (deletedRows > 0) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.notification_delete_error), Toast.LENGTH_LONG);
             }
 
@@ -147,9 +145,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 db.getNotificationFromNotificationID(notificationToOpen.getId());
                 Intent intent = new Intent(activity.getApplicationContext(), NotificationEditorActivity.class);
                 intent.putExtra("NOTIFICATION_ID", notificationToOpen.getId());
-                activity.startActivityForResult(intent,0);
-            }
-            catch(Exception e){
+                activity.startActivityForResult(intent, 0);
+            } catch (Exception e) {
                 Toast.makeText(activity, activity.getResources().getString(R.string.notification_open_error), Toast.LENGTH_LONG);
             }
 
@@ -157,7 +154,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         //method that refreshes viewholder components
-        private void refresh(){
+        private void refresh() {
             ArrayList<Note> notes = db.getAllNotes();
             ArrayList<Note> notesWithNotification = new ArrayList<Note>();
 

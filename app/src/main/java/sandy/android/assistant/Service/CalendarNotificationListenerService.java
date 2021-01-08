@@ -34,7 +34,6 @@ import sandy.android.assistant.Controller.NotePreviewActivity;
 import sandy.android.assistant.R;
 
 
-
 public class CalendarNotificationListenerService extends NotificationListenerService {
     NotificationChannel channel;
     NotificationManager notificationManager;
@@ -64,7 +63,7 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("calendar_notification_note_title", dbNotes.get(i).getTitle());     //put note title extra
                         intent.putExtra("calendar_notification_note_content", dbNotes.get(i).getContent());     //put note content extra
-                        intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));        //create a unique intent by parsing system millis as intent data
+                        intent.setData((Uri.parse("custom://" + System.currentTimeMillis())));        //create a unique intent by parsing system millis as intent data
                         //prepare pending intent that will be triggered when user clicks on notification.
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), dbNotes.get(i).getNotification().getId(), intent, 0);
 
@@ -75,8 +74,7 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
 
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                             builder = new android.app.Notification.Builder(this, channel.getId());
-                        }
-                        else {
+                        } else {
                             builder = new android.app.Notification.Builder(this);
                         }
                         builder.setContentTitle(dbNotes.get(i).getTitle());     //fills notification builder options
@@ -86,7 +84,7 @@ public class CalendarNotificationListenerService extends NotificationListenerSer
                         builder.setContentIntent(pendingIntent);
                         builder.setAutoCancel(true);
 
-                        NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
                         notificationManager.notify(dbNotes.get(i).getNotification().getId(), builder.build());      //push created notification to screen
                     }

@@ -47,17 +47,15 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
         db = new DatabaseManagement(this);      //database access object initialization
 
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            if(b.get("NOTEBOOK_ID") != null){
+        if (b != null) {
+            if (b.get("NOTEBOOK_ID") != null) {
                 selectedNotebook = db.getNotebookFromNotebookId(b.getInt("NOTEBOOK_ID"));
-            }
-            else{
+            } else {
                 finish();
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show();
                 return;
             }
-        }
-        else{
+        } else {
             finish();
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.operation_failed), Toast.LENGTH_LONG).show();
             return;
@@ -74,7 +72,6 @@ public class NotebookAttachNoteActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);        //defines LinearLayoutManager for vertical Notes Recycleview orientation
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         listOfNotesToAttach.setLayoutManager(linearLayoutManager);
-
 
 
         attachSelectedNotesButton.setOnClickListener(new View.OnClickListener() {

@@ -156,8 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                 notebookNavigationView.setVisibility(View.INVISIBLE);       //close navigation view
                                 refreshNotebookNavigationView();        //refresh navigation view
                                 popupWindow.dismiss();                  //dispose popup
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.notebook_title_char_limit_error), Toast.LENGTH_LONG).show();      //don't proceed if notebook title is longer than 10 characters.
                             }
 
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                notebookPopupCancelButton.setOnClickListener(new View.OnClickListener(){            //if notebook popup cancel button is clicked
+                notebookPopupCancelButton.setOnClickListener(new View.OnClickListener() {            //if notebook popup cancel button is clicked
                     @Override
                     public void onClick(View v) {
                         popupWindow.dismiss();          //dispose popup
@@ -182,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonChangeLanguage.setOnClickListener(l->{            //button listener that pops up change language screen
+        buttonChangeLanguage.setOnClickListener(l -> {            //button listener that pops up change language screen
             Intent intent = new Intent(getApplicationContext(), ChangeLanguageActivity.class);
-            startActivityForResult(intent,0);
+            startActivityForResult(intent, 0);
         });
 
         fab_create_new_note.setOnClickListener(new View.OnClickListener() {     //floating action button listener that creates a blank note editor screen.
@@ -211,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     notebookNavigationView.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onSwipeLeft() {
                 if (notebookNavigationView.getVisibility() == View.VISIBLE) {
@@ -226,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     notebookNavigationView.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onSwipeLeft() {
                 if (notebookNavigationView.getVisibility() == View.VISIBLE) {
@@ -272,9 +273,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {       //on change language activity result
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 0:
-                switch (resultCode){
+                switch (resultCode) {
                     case RESULT_OK:         //if language change operation is saved,
                         Intent intent = getIntent();
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);         //refresh the application screen
@@ -288,12 +289,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startNoteEditorActivity () {        //function that starts note editor activity
+    public void startNoteEditorActivity() {        //function that starts note editor activity
         Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);        //creates new intent that opens up note_editor.xml screen and runs NoteEditorActivity.java
         startActivity(intent);
     }
 
-    public void refreshNotebookNavigationView () {      //function to refresh notebook navigation view. Useful to refresh list data
+    public void refreshNotebookNavigationView() {      //function to refresh notebook navigation view. Useful to refresh list data
         notebooks = db.getAllNotebooks();
         mainActivityNavigationDrawerAdapter = new MainActivityNavigationDrawerAdapter(this, notebooks, db);
         listOfNotebooks.setAdapter(mainActivityNavigationDrawerAdapter);
@@ -324,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkNotificationListenerServicePermissions() {        //function that checks notification listener permissions requests if required
-        if(isPermissionRequired()){
+        if (isPermissionRequired()) {
             requestNotificationPermission();
         }
     }
@@ -337,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestNotificationPermission() {          //function that requests notification listener permission
-        Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+        Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
         startActivityForResult(intent, 101);
     }
 }

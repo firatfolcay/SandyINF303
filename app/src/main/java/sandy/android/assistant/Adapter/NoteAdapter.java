@@ -105,8 +105,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         public void onClick(View v) {
             if (v == deleteNote) {
                 deleteNote(getLayoutPosition());
-            }
-            else if (v == noteSelectionLinearLayout) {
+            } else if (v == noteSelectionLinearLayout) {
                 openNote(getLayoutPosition());
             }
 
@@ -129,8 +128,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 }
                 mNoteList = db.getAllNotes();
                 notifyRemoved(position);
-            }
-            else {
+            } else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.note_delete_error), Toast.LENGTH_LONG);
             }
         }
@@ -142,10 +140,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             try {
                 db.getNoteFromNoteId(noteToOpen.getId());
                 Intent intent = new Intent(mainActivity, NoteEditorActivity.class);
-                intent.putExtra("NOTE_ID",noteToOpen.getId());
+                intent.putExtra("NOTE_ID", noteToOpen.getId());
                 mainActivity.startActivity(intent);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 Toast.makeText(activity, activity.getResources().getString(R.string.note_not_found_error), Toast.LENGTH_LONG);
             }
         }

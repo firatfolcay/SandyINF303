@@ -11,17 +11,17 @@ public class Note {
     private Notification notification;
     private String saveDate = null;
 
-    public Note(){
+    public Note() {
     }
 
-    public Note(String title, String content, Notification notification, String date){      //note constructor
+    public Note(String title, String content, Notification notification, String date) {      //note constructor
         setTitle(title);
         this.content = content;
         this.notification = notification;
         this.saveDate = date;
     }
 
-    public Note(int id, String title, String content, Notification notification, String date){      //note constructor
+    public Note(int id, String title, String content, Notification notification, String date) {      //note constructor
         this.id = id;
         setTitle(title);
         this.content = content;
@@ -34,7 +34,7 @@ public class Note {
     }
 
     public void setTitle(String title) {
-        if(title == null){
+        if (title == null) {
             title = "";
         }
         this.title = title;
@@ -52,7 +52,7 @@ public class Note {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 

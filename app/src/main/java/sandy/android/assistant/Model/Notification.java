@@ -14,19 +14,19 @@ public class Notification {
     private int id;         //notification variables. this one better not have any default value; if it must, define it -1 or something negative
     private String date = "";
 
-    public Notification(){
+    public Notification() {
 
     }
 
-    public Notification(String date){
+    public Notification(String date) {
         this.setDate(date);
     }       //notification constructor
 
-    public Integer getId(){                     //getter setter methods to access private variables
+    public Integer getId() {                     //getter setter methods to access private variables
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,7 +34,7 @@ public class Notification {
         return date;
     }
 
-    public void setDate(String date){
+    public void setDate(String date) {
 
         this.date = date;
 

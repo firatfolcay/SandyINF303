@@ -92,8 +92,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
         public void onClick(View v) {       //method that handles click actions on viewholder
             if (v == deleteNotebook) {
                 deleteNotebook(getLayoutPosition());
-            }
-            else if (v == notebookSelectionLinearLayout) {
+            } else if (v == notebookSelectionLinearLayout) {
                 openNotebook(getLayoutPosition());
             }
 
@@ -106,8 +105,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
             if (returnVal) {
                 notifyRemoved(position);
-            }
-            else {
+            } else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.notebook_delete_error), Toast.LENGTH_LONG);
             }
 
@@ -116,7 +114,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
 
         private void openNotebook(int position) {       //method that opens up selected notebook
             Notebook notebookToOpen = notebookArrayList.get(position);
-            
+
             Intent intent = new Intent(activity.getApplicationContext(), NotebookActivity.class);
             intent.putExtra("NOTEBOOK_ID", notebookToOpen.getId());
             activity.startActivityForResult(intent, 0);
@@ -124,7 +122,7 @@ public class MainActivityNavigationDrawerAdapter extends RecyclerView.Adapter<Ma
             refresh();
         }
 
-        private void refresh(){         //method that refreshes viewholder components
+        private void refresh() {         //method that refreshes viewholder components
             ArrayList<Notebook> notebooks = db.getAllNotebooks();
 
             notebookArrayList = notebooks;

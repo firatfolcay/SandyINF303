@@ -59,7 +59,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
     DatabaseManagement db;
     boolean isFABOpen = false;
-    ArrayList <Note> notesFromDB = new ArrayList();
+    ArrayList<Note> notesFromDB = new ArrayList();
 
     CalendarSync calendarSync;
 
@@ -114,8 +114,8 @@ public class NoteEditorActivity extends AppCompatActivity {
 
         // GET ID FOR NOTE EDITING
         Bundle b = getIntent().getExtras();
-        if(b != null){
-            if(b.get("NOTE_ID") != null){
+        if (b != null) {
+            if (b.get("NOTE_ID") != null) {
                 editNote = db.getNoteFromNoteId(b.getInt("NOTE_ID"));
                 updateEditor(editNote);
             }
@@ -126,9 +126,9 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options.setOnClickListener(new View.OnClickListener() {      //onClick listener for NoteEditor options floating action button
             @Override
             public void onClick(View v) {
-                if(!isFABOpen){
+                if (!isFABOpen) {
                     showFABMenu();
-                }else{
+                } else {
                     closeFABMenu();
                 }
             }
@@ -145,9 +145,9 @@ public class NoteEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                for(Node item: editor.getContent().nodes){
-                    if(item.content.size() > 0){
-                        if(item.content.get(0).toString().isEmpty()){
+                for (Node item : editor.getContent().nodes) {
+                    if (item.content.size() > 0) {
+                        if (item.content.get(0).toString().isEmpty()) {
                             continue;   //if the current one is empty move to next item
                         }
                     }
@@ -178,11 +178,10 @@ public class NoteEditorActivity extends AppCompatActivity {
                                     if (calendarName == null) {
                                         CalendarSync.createNewCalendar(context);
                                     }
-                                } catch(Exception e) {
+                                } catch (Exception e) {
                                     System.out.println("calendar exception.");
                                 }
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(context, getApplicationContext().getText(R.string.calendar_no_permission_error), Toast.LENGTH_SHORT);
                             }
                             calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
@@ -196,14 +195,12 @@ public class NoteEditorActivity extends AppCompatActivity {
                                         calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                             }
                         }
 
-                    }
-                    else{        //if selected Note will be edited
+                    } else {        //if selected Note will be edited
                         String content = editor.getContentAsHTML();
                         String title = noteeditor_title_text.getText().toString();
                         Date currentTime = Calendar.getInstance().getTime();
@@ -226,35 +223,32 @@ public class NoteEditorActivity extends AppCompatActivity {
                                 if (calendarName == null) {
                                     CalendarSync.createNewCalendar(context);
                                 }
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 System.out.println("calendar exception.");
                             }
 
                             if (notification != null) {         //if a new notification time is selected
-                                    int numberOfRowsAffected = 0;
-                                    if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
-                                        numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);       //update this calendar entry.
-                                        if (numberOfRowsAffected > 0) {
-                                            Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
+                                int numberOfRowsAffected = 0;
+                                if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
+                                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, db.getLastAddedNotification().getId(), newNote);       //update this calendar entry.
+                                    if (numberOfRowsAffected > 0) {
+                                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {      //if edited Note has no notification attached before,
+                                    notesFromDB = db.getAllNotes();
+                                    for (int i = 0; i < notesFromDB.size(); i++) {
+                                        if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
+                                            calendarSync = new CalendarSync(notesFromDB.get(i).getTitle(), notesFromDB.get(i).getNotification(), notesFromDB.get(i).getContent());      //instantiate new calendarSync object
+                                            calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
+                                            Toast.makeText(context, context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                    else {      //if edited Note has no notification attached before,
-                                        notesFromDB = db.getAllNotes();
-                                        for (int i = 0; i < notesFromDB.size(); i++) {
-                                            if (notesFromDB.get(i).getSaveDate().equals(newNote.getSaveDate())) {      //this is not a good solution, maybe we should fix it by modifying DatabaseManagement.java
-                                                calendarSync = new CalendarSync(notesFromDB.get(i).getTitle(), notesFromDB.get(i).getNotification(), notesFromDB.get(i).getContent());      //instantiate new calendarSync object
-                                                calendarSync.addCalendarEventInBackground(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());
-                                                Toast.makeText(context, context.getResources().getString(R.string.calendar_event_insert_success), Toast.LENGTH_SHORT).show();
-                                            }
-                                            else {
-                                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
-                                            }
-                                        }
 
-                                    }
+                                }
 
-                            }
-                            else {      //if no new notification time selected
+                            } else {      //if no new notification time selected
                                 if (editNote.getNotification() != null) {       //if edited Note has already a notification attached
                                     int numberOfRowsAffected = 0;
                                     numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNote.getNotification().getId(), newNote);  //update calendar event values
@@ -263,8 +257,7 @@ public class NoteEditorActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -452,7 +445,7 @@ public class NoteEditorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NotificationEditorActivity.class);
 
-                if(editNote != null) {    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
+                if (editNote != null) {    //if the note is getting edited, it should send it's current Notification to NotificationEditorActivity. Otherwise it sends an empty intent which is handled already.
                     if (editNote.getNotification() != null) {
                         //do not send the object, send the id. It is handled that way in NotificationEditorActivity.
                         intent.putExtra("NOTIFICATION_ID", editNote.getNotification().getId());
@@ -466,17 +459,16 @@ public class NoteEditorActivity extends AppCompatActivity {
         fab_noteeditor_options_calendar.setOnClickListener(new View.OnClickListener() {         //onClick Listener for calendar synchronization
             @Override
             public void onClick(View v) {
-                    int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
-                    int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
+                int calendarReadPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR);
+                int calendarWritePermission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR);
 
-                    if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
-                        calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
-                        calendarSync.addCalendarEvent(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());     //call method that sends Note info to Calendar API
-                        closeFABMenu();
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
-                    }
+                if (calendarReadPermission == PERMISSION_GRANTED && calendarWritePermission == PERMISSION_GRANTED) {
+                    calendarSync = new CalendarSync(editNote.getTitle(), editNote.getNotification(), editNote.getContent());      //instantiate new calendarSync object
+                    calendarSync.addCalendarEvent(context, calendarSync.getEventTitle(), calendarSync.getEventDescription(), calendarSync.getEventNotification());     //call method that sends Note info to Calendar API
+                    closeFABMenu();
+                } else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.calendar_no_permission_error), Toast.LENGTH_LONG).show();
+                }
 
             }
 
@@ -488,7 +480,7 @@ public class NoteEditorActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //activity result handler.
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_IMAGE:     //if image from external storage is selected
                 switch (resultCode) {
                     case Activity.RESULT_OK:
@@ -520,12 +512,12 @@ public class NoteEditorActivity extends AppCompatActivity {
                 break;
 
             case REQUEST_NOTIFICATION:      //if a notification is added
-                switch(resultCode){
+                switch (resultCode) {
                     case Activity.RESULT_OK:
                         //gets back data from NotificationEditorActivity
                         String date = data.getStringExtra("NOTIFICATION_DATE");
 
-                        if(date.contains("null"))
+                        if (date.contains("null"))
                             break;
 
                         notification = new Notification(date);
@@ -551,8 +543,8 @@ public class NoteEditorActivity extends AppCompatActivity {
         notification = null;
     }
 
-    private void showFABMenu(){         //method that makes sub-FAB menus visible
-        isFABOpen=true;
+    private void showFABMenu() {         //method that makes sub-FAB menus visible
+        isFABOpen = true;
         fab_noteeditor_options_addimage.setVisibility(View.VISIBLE);
         fab_noteeditor_options_timer.setVisibility(View.VISIBLE);
         if (editNote != null) {
@@ -562,8 +554,8 @@ public class NoteEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void closeFABMenu(){        //method that makes sub-FAB menus invisible
-        isFABOpen=false;
+    private void closeFABMenu() {        //method that makes sub-FAB menus invisible
+        isFABOpen = false;
         fab_noteeditor_options_addimage.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_timer.setVisibility(View.INVISIBLE);
         fab_noteeditor_options_calendar.setVisibility(View.INVISIBLE);
@@ -586,9 +578,6 @@ public class NoteEditorActivity extends AppCompatActivity {
         Linkify.addLinks(spannable, Linkify.WEB_URLS);
         return Html.toHtml(spannable);
     }
-
-
-
 
 
 }

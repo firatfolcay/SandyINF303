@@ -11,20 +11,20 @@ public class Notebook {
     private ArrayList<Integer> noteIds = new ArrayList<Integer>();
 
 
-    public Notebook(){
+    public Notebook() {
 
     }
 
-    public Notebook(String title){
+    public Notebook(String title) {
         this.title = title;
     }       //notebook constructor
 
-    public Notebook(Integer id, String title){                  //notebook constructor
+    public Notebook(Integer id, String title) {                  //notebook constructor
         this.id = id;
         this.title = title;
     }
 
-    public Notebook(Integer id, String title, ArrayList<Integer> noteIds){          //notebook constructor
+    public Notebook(Integer id, String title, ArrayList<Integer> noteIds) {          //notebook constructor
         this.id = id;
         this.title = title;
         this.noteIds = noteIds;

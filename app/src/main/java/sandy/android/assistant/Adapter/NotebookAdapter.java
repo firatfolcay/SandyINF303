@@ -96,8 +96,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
                 for (int i = 0; i < noteContent.length(); i++) {
                     if (i == 20) {
                         break;
-                    }
-                    else {
+                    } else {
                         noteDescription = noteDescription + noteContent.charAt(i);
                     }
                 }
@@ -109,7 +108,7 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         //method that handles click actions on viewholder
         @Override
         public void onClick(View v) {
-            if(v == deleteButton){
+            if (v == deleteButton) {
                 deleteNote(getLayoutPosition());
             }
             if (v == notesOfNotebookLinearLayout) {
@@ -149,20 +148,19 @@ public class NotebookAdapter extends RecyclerView.Adapter<NotebookAdapter.MyView
         }
 
         //method that applies note delete operation
-        private void deleteNote(int position){
+        private void deleteNote(int position) {
             try {
                 Note note = notebookNotes.get(position);
                 db.removeNoteFromNotebook(note);
                 notebookNotes.remove(position);
                 notifyRemoved(position);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
 
         //method that refreshes viewholder components
-        private void refresh(){
+        private void refresh() {
             notebookNotes = db.getNotesFromNotebook(notebook);
         }
 

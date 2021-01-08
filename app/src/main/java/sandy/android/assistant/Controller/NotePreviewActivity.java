@@ -19,6 +19,7 @@ public class NotePreviewActivity extends AppCompatActivity {
     EditText notePreviewTitle;
     Editor notePreviewRenderer;
     ImageView buttonBackToMainFromPreview;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +30,8 @@ public class NotePreviewActivity extends AppCompatActivity {
         notePreviewRenderer = findViewById(R.id.notePreviewRenderer);
 
         Bundle b = getIntent().getExtras();         //get bundle extras from other activities
-        if(b != null){
-            if(b.get("calendar_notification_note_title") != null){              //if notification note title is returned
+        if (b != null) {
+            if (b.get("calendar_notification_note_title") != null) {              //if notification note title is returned
                 notePreviewTitle.setText(b.getString("calendar_notification_note_title"));      //fill note popup view with this data
                 notePreviewRenderer.render(b.getString("calendar_notification_note_content"));
             }
