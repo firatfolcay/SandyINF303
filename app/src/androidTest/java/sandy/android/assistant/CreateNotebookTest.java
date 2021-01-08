@@ -28,7 +28,7 @@ public class CreateNotebookTest {
     String NOTEBOOK_TITLE = "notebook1";
 
     @Test
-    public void test1_createNotebook(){
+    public void test1_createNotebook() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -49,7 +49,7 @@ public class CreateNotebookTest {
     }
 
     @Test
-    public void test2_checkNotebook(){
+    public void test2_checkNotebook() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -62,7 +62,6 @@ public class CreateNotebookTest {
         onView(allOf(withId(R.id.notebookTitle), withText(NOTEBOOK_TITLE))).check(matches(isDisplayed()));
 
     }
-
 
 
 }

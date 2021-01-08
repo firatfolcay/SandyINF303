@@ -88,7 +88,7 @@ public class EditNotebookTest {
 
         try {
             onView(withId(R.id.listOfNotes)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE2)), click()));
-            } catch (Exception excep) {
+        } catch (Exception excep) {
             //Check if new note button is visible
             onView(withId(R.id.fab_create_new_note)).check(matches(isDisplayed()));
 
@@ -115,7 +115,7 @@ public class EditNotebookTest {
     }
 
     @Test
-    public void test2_attachNotes(){
+    public void test2_attachNotes() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -156,7 +156,7 @@ public class EditNotebookTest {
     }
 
     @Test
-    public void test3_checkAttached(){
+    public void test3_checkAttached() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -176,7 +176,7 @@ public class EditNotebookTest {
     }
 
     @Test
-    public void test4_removeNotes(){
+    public void test4_removeNotes() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -201,7 +201,7 @@ public class EditNotebookTest {
     }
 
     @Test
-    public void test5_checkNotesRemoved(){
+    public void test5_checkNotesRemoved() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed

@@ -47,7 +47,7 @@ public class CreateNoteTest {
 
     //Create new note and check if in view
     @Test
-    public void test2_clickNewNote(){
+    public void test2_clickNewNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Check if new note button is visible
@@ -81,7 +81,7 @@ public class CreateNoteTest {
 
     //Checks if note was added
     @Test
-    public void test4_checkNote(){
+    public void test4_checkNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with title text
@@ -93,7 +93,7 @@ public class CreateNoteTest {
     }
 
     // https://stackoverflow.com/a/22798043
-    public static ViewAction clickXY(final int x, final int y){
+    public static ViewAction clickXY(final int x, final int y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 new CoordinatesProvider() {
@@ -114,12 +114,12 @@ public class CreateNoteTest {
     }
 
     //type string one character at a time with single keypresses
-    public static void typeString(String string, int id){
+    public static void typeString(String string, int id) {
         string = string.toLowerCase();
-        for(int i = 0; i < string.length(); i++){
-            if(Character.isLetter(string.charAt(i))){
-                onView(withId(id)).perform(pressKey(string.charAt(i)-68));             // +28(espresso keycode) -96(ascii)
-            } else if(string.charAt(i) == 10){
+        for (int i = 0; i < string.length(); i++) {
+            if (Character.isLetter(string.charAt(i))) {
+                onView(withId(id)).perform(pressKey(string.charAt(i) - 68));             // +28(espresso keycode) -96(ascii)
+            } else if (string.charAt(i) == 10) {
                 onView(withId(id)).perform(pressKey(66));                              //newline
             }
         }

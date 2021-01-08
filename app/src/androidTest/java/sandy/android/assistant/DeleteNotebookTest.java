@@ -34,7 +34,7 @@ public class DeleteNotebookTest {
     String NOTEBOOK_TEST = "notebook1";
 
     @Test
-    public void test1_deleteNotebook(){
+    public void test1_deleteNotebook() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -52,7 +52,7 @@ public class DeleteNotebookTest {
     }
 
     @Test
-    public void test2_checkDeleted(){
+    public void test2_checkDeleted() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // check if main activity is displayed
@@ -66,7 +66,7 @@ public class DeleteNotebookTest {
     }
 
     @Test
-    public void test3_checkNotes(){
+    public void test3_checkNotes() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with title text

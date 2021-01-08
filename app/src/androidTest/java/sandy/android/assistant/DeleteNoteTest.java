@@ -38,7 +38,7 @@ public class DeleteNoteTest {
 
     //Checks if note was added
     @Test
-    public void test2_checkNote(){
+    public void test2_checkNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with title text

@@ -34,7 +34,7 @@ public class DeleteNotificationTest {
     String TEST_TITLE = "notification test";
 
     @Test
-    public void test1_deleteNotification(){
+    public void test1_deleteNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // click notifications
@@ -45,7 +45,7 @@ public class DeleteNotificationTest {
     }
 
     @Test
-    public void test2_checkNotification(){
+    public void test2_checkNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // click notifications
@@ -57,7 +57,7 @@ public class DeleteNotificationTest {
     }
 
     @Test
-    public void test3_checkNote(){
+    public void test3_checkNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with title text

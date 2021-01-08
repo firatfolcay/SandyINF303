@@ -35,7 +35,7 @@ public class EditNotificationTest {
     String TEST_TITLE = "notification test";
 
     @Test
-    public void test1_editNotification(){
+    public void test1_editNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // click notifications
@@ -47,7 +47,7 @@ public class EditNotificationTest {
         // edit date
         onView(withId(R.id.datePickerButton)).perform(click());
 
-        onView(instanceOf(DatePicker.class)).perform(setDate(2025, 2,2));
+        onView(instanceOf(DatePicker.class)).perform(setDate(2025, 2, 2));
         onView(allOf(instanceOf(MaterialButton.class), withText("OK"))).perform(click());
 
         // edit time
@@ -61,7 +61,7 @@ public class EditNotificationTest {
     }
 
     @Test
-    public void test2_checkNotification(){
+    public void test2_checkNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // click notifications

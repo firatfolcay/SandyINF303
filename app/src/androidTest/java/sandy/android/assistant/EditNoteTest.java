@@ -57,11 +57,11 @@ public class EditNoteTest {
 
     //Edits note
     @Test
-    public void test2_editNote(){
+    public void test2_editNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
-        try{
+        try {
             Thread.sleep(1000);
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -105,9 +105,9 @@ public class EditNoteTest {
 
             //Check if NoteEditorActivity is in view
             onView(withId(R.id.noteEditorActivityConstraintLayout));
-            try{
+            try {
                 Thread.sleep(1000);
-            }catch(Exception ex){
+            } catch (Exception ex) {
 
             }
             activityScenario = ActivityScenario.launch(MainActivity.class);
@@ -135,7 +135,7 @@ public class EditNoteTest {
 
     //Checks if note was edited
     @Test
-    public void test3_checkNote(){
+    public void test3_checkNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         //Click on the note with edited title text
@@ -146,7 +146,7 @@ public class EditNoteTest {
     }
 
     // https://stackoverflow.com/a/22798043
-    public static ViewAction clickXY(final int x, final int y){
+    public static ViewAction clickXY(final int x, final int y) {
         return new GeneralClickAction(
                 Tap.SINGLE,
                 new CoordinatesProvider() {
@@ -167,11 +167,11 @@ public class EditNoteTest {
     }
 
     //clear text in focus
-    private void clearText(int id){
+    private void clearText(int id) {
         onView(withId(id)).perform(pressKey(KEYCODE_SYSTEM_NAVIGATION_DOWN));
         onView(withId(id)).perform(pressKey(KEYCODE_SYSTEM_NAVIGATION_DOWN));
         onView(withId(id)).perform(pressKey(KEYCODE_MOVE_END));
-        for(int i = 0; i < 30; i++){
+        for (int i = 0; i < 30; i++) {
             onView(withId(id)).perform(pressKey(KEYCODE_DEL));
         }
     }

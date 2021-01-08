@@ -45,7 +45,7 @@ public class CreateNotificationTest {
     String TEST_BODY = "Body\nof\ntext.";
 
     @Test
-    public void test1_createNote(){
+    public void test1_createNote() {
         ActivityScenario activityScenario = ActivityScenario.launch(NoteEditorActivity.class);
 
         //Type text in title
@@ -63,7 +63,7 @@ public class CreateNotificationTest {
     }
 
     @Test
-    public void test2_addNotification(){
+    public void test2_addNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // select note
@@ -79,7 +79,7 @@ public class CreateNotificationTest {
         onView(withId(R.id.datePickerButton)).perform(click());
 
         // set date
-        onView(instanceOf(DatePicker.class)).perform(setDate(2025, 1,30));
+        onView(instanceOf(DatePicker.class)).perform(setDate(2025, 1, 30));
         onView(allOf(instanceOf(MaterialButton.class), withText("OK"))).perform(click());
 
         // click set time
@@ -95,7 +95,7 @@ public class CreateNotificationTest {
     }
 
     @Test
-    public void test3_checkNotification(){
+    public void test3_checkNotification() {
         ActivityScenario activityScenario = ActivityScenario.launch(MainActivity.class);
 
         // click notifications
