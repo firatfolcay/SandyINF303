@@ -23,7 +23,7 @@ import java.util.TimeZone;
 import sandy.android.assistant.R;
 
 public class CalendarSync {
-    private String eventTitle = "";     //calendarsync variables
+    private String eventTitle = "";
     private Notification eventNotification;
     private String eventDescription = "";
 
@@ -31,7 +31,7 @@ public class CalendarSync {
 
     }
 
-    public CalendarSync(String eventTitle, Notification eventNotification, String eventDescription) {      //calendarsync constructor
+    public CalendarSync(String eventTitle, Notification eventNotification, String eventDescription) {
         this.eventTitle = eventTitle;
         this.eventNotification = eventNotification;
         this.eventDescription = eventDescription;

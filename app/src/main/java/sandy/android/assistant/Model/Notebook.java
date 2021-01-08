@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Notebook {
 
-    private Integer id;             //notebook variables
+    private Integer id;
     private String title = "";
     private ArrayList<Integer> noteIds = new ArrayList<Integer>();
 
@@ -17,14 +17,14 @@ public class Notebook {
 
     public Notebook(String title) {
         this.title = title;
-    }       //notebook constructor
+    }
 
-    public Notebook(Integer id, String title) {                  //notebook constructor
+    public Notebook(Integer id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public Notebook(Integer id, String title, ArrayList<Integer> noteIds) {          //notebook constructor
+    public Notebook(Integer id, String title, ArrayList<Integer> noteIds) {
         this.id = id;
         this.title = title;
         this.noteIds = noteIds;

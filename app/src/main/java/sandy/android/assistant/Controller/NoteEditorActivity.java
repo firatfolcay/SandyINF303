@@ -540,7 +540,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        notification = null;
     }
 
     private void showFABMenu() {         //method that makes sub-FAB menus visible

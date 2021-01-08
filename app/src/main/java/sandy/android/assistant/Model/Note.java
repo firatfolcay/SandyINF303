@@ -5,7 +5,7 @@ package sandy.android.assistant.Model;
 import java.util.ArrayList;
 
 public class Note {
-    private int id = 0;                 //variables of note
+    private int id = 0;
     private String title = "";
     private String content = "";
     private Notification notification;
@@ -14,14 +14,14 @@ public class Note {
     public Note() {
     }
 
-    public Note(String title, String content, Notification notification, String date) {      //note constructor
+    public Note(String title, String content, Notification notification, String date) {
         setTitle(title);
         this.content = content;
         this.notification = notification;
         this.saveDate = date;
     }
 
-    public Note(int id, String title, String content, Notification notification, String date) {      //note constructor
+    public Note(int id, String title, String content, Notification notification, String date) {
         this.id = id;
         setTitle(title);
         this.content = content;
