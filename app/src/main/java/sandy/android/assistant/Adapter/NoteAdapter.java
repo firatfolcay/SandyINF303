@@ -2,6 +2,7 @@
 
 package sandy.android.assistant.Adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -119,11 +122,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             if (returnVal) {
                 mNoteList.remove(position);
                 if (noteToDelete.getNotification() != null) {
+                    int calendarReadPermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CALENDAR);
+                    int calendarWritePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR);
 
-                    int deletedRows = 0;
-                    deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), noteToDelete.getNotification().getId());
-                    if (deletedRows > 0) {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
+                    if (calendarReadPermission == PermissionChecker.PERMISSION_GRANTED && calendarWritePermission == PermissionChecker.PERMISSION_GRANTED) {
+                        int deletedRows = 0;
+                        deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), noteToDelete.getNotification().getId());
+                        if (deletedRows > 0) {
+                            Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
                 mNoteList = db.getAllNotes();

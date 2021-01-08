@@ -2,6 +2,7 @@
 
 package sandy.android.assistant.Adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.irshulx.Editor;
@@ -125,10 +128,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             if (returnVal) {
                 notifyRemoved(position);
-                int deletedRows = 0;
-                deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), notificationToDelete.getId());
-                if (deletedRows > 0) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
+                int calendarReadPermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CALENDAR);
+                int calendarWritePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CALENDAR);
+
+                if (calendarReadPermission == PermissionChecker.PERMISSION_GRANTED && calendarWritePermission == PermissionChecker.PERMISSION_GRANTED) {
+                    int deletedRows = 0;
+                    deletedRows = calendarSync.deleteCalendarEntry(activity.getApplicationContext(), notificationToDelete.getId());
+                    if (deletedRows > 0) {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.calendar_event_deleted), Toast.LENGTH_LONG).show();
+                    }
                 }
             } else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.notification_delete_error), Toast.LENGTH_LONG);

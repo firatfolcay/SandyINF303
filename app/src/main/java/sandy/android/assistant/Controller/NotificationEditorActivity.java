@@ -3,6 +3,7 @@
 
 package sandy.android.assistant.Controller;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -26,6 +27,8 @@ import java.util.Date;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.DialogFragment;
 
 import sandy.android.assistant.Fragment.DatePickerFragment;
@@ -116,12 +119,17 @@ public class NotificationEditorActivity extends AppCompatActivity implements Dat
                     Notification newNotification = new Notification(currentDateString);
                     //update Notification at database
                     db.updateNotification(newNotification, editNotification);
-                    int numberOfRowsAffected = 0;
-                    //update calendar event that is attached to edited Notification
-                    numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNotification.getId(), db.getNoteFromNotificationId(editNotification.getId()));
-                    //if at least 1 row is affected, that means event is updated. Send toast message.
-                    if (numberOfRowsAffected > 0) {
-                        Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
+                    int calendarReadPermission = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CALENDAR);
+                    int calendarWritePermission = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_CALENDAR);
+
+                    if (calendarReadPermission == PermissionChecker.PERMISSION_GRANTED && calendarWritePermission == PermissionChecker.PERMISSION_GRANTED) {
+                        int numberOfRowsAffected = 0;
+                        //update calendar event that is attached to edited Notification
+                        numberOfRowsAffected = calendarSync.updateCalendarEntry(context, editNotification.getId(), db.getNoteFromNotificationId(editNotification.getId()));
+                        //if at least 1 row is affected, that means event is updated. Send toast message.
+                        if (numberOfRowsAffected > 0) {
+                            Toast.makeText(context, context.getResources().getString(R.string.calendar_event_updated), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
