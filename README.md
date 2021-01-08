@@ -62,6 +62,6 @@
   Some screenshots from application:
   --------------------------------------
 
-  ![](https://user-images.githubusercontent.com/61140691/103993631-f44c6380-51a6-11eb-81f9-7ccc5a28356d.png) ![](https://user-images.githubusercontent.com/61140691/103993761-21991180-51a7-11eb-8d58-b6dd0bdc385b.png)![](https://user-images.githubusercontent.com/61140691/103993998-763c8c80-51a7-11eb-8f4d-743174f744d9.png) ![](https://user-images.githubusercontent.com/61140691/103994105-979d7880-51a7-11eb-9056-44728e285012.png) ![](https://user-images.githubusercontent.com/61140691/103992632-78055080-51a5-11eb-82e7-9325ce1e3a88.png)
+  ![](https://user-images.githubusercontent.com/61140691/103997424-1c8a9100-51ac-11eb-9700-a48a57c36be2.png) ![](https://user-images.githubusercontent.com/61140691/103993761-21991180-51a7-11eb-8d58-b6dd0bdc385b.png)![](https://user-images.githubusercontent.com/61140691/103993998-763c8c80-51a7-11eb-8f4d-743174f744d9.png) ![](https://user-images.githubusercontent.com/61140691/103994105-979d7880-51a7-11eb-9056-44728e285012.png) ![](https://user-images.githubusercontent.com/61140691/103992632-78055080-51a5-11eb-82e7-9325ce1e3a88.png)
       
 
