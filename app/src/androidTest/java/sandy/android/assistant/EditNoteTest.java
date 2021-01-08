@@ -91,7 +91,7 @@ public class EditNoteTest {
             //Type text in body
             pressBack();
 
-            onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+            onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 600));
 
             typeString(TEST_BODY, R.id.editor);
 
@@ -124,7 +124,7 @@ public class EditNoteTest {
         onView(withId(R.id.noteeditor_title_text)).perform(replaceText(EDIT_TITLE));
 
         //Edit text in body
-        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 600));
 
         clearText(R.id.editor);
         typeString(EDIT_BODY, R.id.editor);

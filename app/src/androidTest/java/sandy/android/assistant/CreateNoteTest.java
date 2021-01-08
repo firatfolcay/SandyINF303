@@ -71,7 +71,7 @@ public class CreateNoteTest {
         //Type text in body
         pressBack();
 
-        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 600));
 
         typeString(TEST_BODY, R.id.editor);
 

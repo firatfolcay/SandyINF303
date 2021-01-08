@@ -54,7 +54,7 @@ public class CreateNotificationTest {
         //Type text in body
         pressBack();
 
-        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 450));
+        onView(withId(R.id.noteEditorActivityConstraintLayout)).perform(clickXY(100, 600));
 
         typeString(TEST_BODY, R.id.editor);
 
@@ -80,14 +80,14 @@ public class CreateNotificationTest {
 
         // set date
         onView(instanceOf(DatePicker.class)).perform(setDate(2025, 1, 30));
-        onView(allOf(instanceOf(MaterialButton.class), withText("OK"))).perform(click());
+        onView(allOf(instanceOf(MaterialButton.class), anyOf(withText("OK"), withText("TAMAM")))).perform(click());
 
         // click set time
         onView(withId(R.id.timePickerButton)).perform(click());
 
         // set time
         onView(instanceOf(TimePicker.class)).perform(setTime(9, 30));
-        onView(allOf(instanceOf(MaterialButton.class), withText("OK"))).perform(click());
+        onView(allOf(instanceOf(MaterialButton.class), anyOf(withText("OK"), withText("TAMAM")))).perform(click());
 
         // save notification
         onView(withId(R.id.saveNotificationButton)).perform(click());
@@ -105,9 +105,9 @@ public class CreateNotificationTest {
         onView(withId(R.id.listOfNotifications)).perform(actionOnItem(hasDescendant(withText(TEST_TITLE)), click()));
 
         // check date
-        onView(withId(R.id.datePickertextView)).check(matches(withText("Date: 30-1-2025")));
+        onView(withId(R.id.datePickertextView)).check(matches(anyOf(withText("Date: 30-1-2025"), withText("Tarih: 30-1-2025"))));
 
         // check time
-        onView(withId(R.id.timePickertextView)).check(matches(withText("Hour: 9 Minute: 30")));
+        onView(withId(R.id.timePickertextView)).check(matches(anyOf(withText("Hour: 9 Minute: 30"), withText("Saat: 9 Dakika: 30"))));
     }
 }
